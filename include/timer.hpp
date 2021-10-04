@@ -55,7 +55,7 @@ class Time
 {
  public:
 
-  double start;
+  float start;
 
   bool exists;
 
@@ -64,15 +64,15 @@ class Time
 
   std::size_t ncalls;
 
-  double total;
+  float total;
 
-  double sn_time, sn_bw;
-  double dn_time, dn_bw;
-  double tn_time, tn_bw;
-  double cm_time, cm_bw;
+  float sn_time, sn_bw;
+  float dn_time, dn_bw;
+  float tn_time, tn_bw;
+  float cm_time, cm_bw;
 
-  double flops;
-  double gflops;
+  float flops;
+  float gflops;
 
   Time()
   {
@@ -93,9 +93,9 @@ class Time
 
   std::string sprint(bool combinedstats)
   {
-    double nc = double(ncalls);
+    float nc = float(ncalls);
     char s[4096];
-    double diff = std::abs(total - sn_time - dn_time - tn_time - cm_time) / std::abs(total);
+    float diff = std::abs(total - sn_time - dn_time - tn_time - cm_time) / std::abs(total);
     if (combinedstats == true)
       sprintf(
           s,
@@ -164,7 +164,7 @@ class Timer
     timer_map = new std::map<std::string, Time>;
   }
 
-  double Wtime()
+  float Wtime()
   {
     struct timeval t;
     gettimeofday(&t, (struct timezone*)0);
@@ -202,7 +202,7 @@ class Timer
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-  void record_sn(double time, double bw)
+  void record_sn(float time, float bw)
   {
     assert(timer_map);
     curiter->second.sn_time += time;
@@ -210,20 +210,20 @@ class Timer
     // printf("sn_bw=%lf bw=%lf\n", curiter->second.sn_bw, bw);
   }
 
-  void record_dn(double time, double bw)
+  void record_dn(float time, float bw)
   {
     assert(timer_map);
     curiter->second.dn_time += time;
     curiter->second.dn_bw += bw;
   }
 
-  void record_tn(double time, double bw)
+  void record_tn(float time, float bw)
   {
     assert(timer_map);
     curiter->second.tn_time += time;
     curiter->second.tn_bw += bw;
   }
-  void record_cm(double time, double bw)
+  void record_cm(float time, float bw)
   {
     assert(timer_map);
     curiter->second.cm_time += time;
@@ -236,11 +236,11 @@ class Timer
   void Stop()
   {
     assert(timer_map);
-    double start = curiter->second.start;
+    float start = curiter->second.start;
     iqs::mpi::Barrier();
-    double now = Wtime();
+    float now = Wtime();
     curiter->second.total += (now - start);
-    curiter->second.flops += double(UL(1) << UL(num_qubits - 1)) * 38.0;
+    curiter->second.flops += float(UL(1) << UL(num_qubits - 1)) * 38.0;
     curiter->second.gflops = curiter->second.flops / curiter->second.total / 1e9;
   }
 
@@ -332,7 +332,7 @@ private:
   // The constructor for the Timer() class can allocate dynamic memory. If this happens,
   // then both Timer variables involved in the assignment will have a reference to the dynamic
   // memory. When each class is destructed, it is possible that each will attempt
-  // to free the dynamic memory resulting in a <double free'ing> runtime error.
+  // to free the dynamic memory resulting in a <float free'ing> runtime error.
   //
   // By making the class assignment operator, private, we can find and address this issue
   // through a compiler error during compilation.

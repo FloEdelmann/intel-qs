@@ -48,8 +48,8 @@ int main(int argc, char **argv)
   // number of repetition of the (stochastic) noisy circuit
   unsigned num_noisy_circuits=num_gates*10;
   // T_1 and T_2 times for slow decoherence
-  double T_1_slow=1000. , T_2_slow=500. ;
-  double T_1_fast=40.   , T_2_fast=20.  ;
+  float T_1_slow=1000. , T_2_slow=500. ;
+  float T_1_fast=40.   , T_2_fast=20.  ;
   // T_1 and T_2 times for slow decoherence
 /// ---------------------------------------------------------- ///
 
@@ -120,7 +120,7 @@ int main(int argc, char **argv)
  
 // ---------------- slow decoherence
   if (myrank==0) std::cout << " slow decoherence \n";
-  double over_sq_1 = 0.;
+  float over_sq_1 = 0.;
   for (unsigned j=0; j<num_noisy_circuits; j++)
   {
       psi1.Initialize("base", 0);
@@ -138,12 +138,12 @@ int main(int argc, char **argv)
                     << " psi1 =" << psi1.GetTotalExperimentalGateCount()
                     << " (they should be " << num_gates+num_qubits << ") \n";
   }
-  over_sq_1 = over_sq_1/(double)num_noisy_circuits;
+  over_sq_1 = over_sq_1/(float)num_noisy_circuits;
 
 
   // ---------------- fast decoherence
   if (myrank==0) std::cout << " fast decoherence \n";
-  double over_sq_2 = 0.;
+  float over_sq_2 = 0.;
   for (unsigned j=0; j<num_noisy_circuits; j++)
   {
       psi2.Initialize("base", 0);
@@ -157,7 +157,7 @@ int main(int argc, char **argv)
       psi2.ApplyNoiseGatesOnAllQubits();
       over_sq_2 = over_sq_2 + std::norm( psi0.ComputeOverlap(psi2) ) ;
   }
-  over_sq_2 = over_sq_2/(double)num_noisy_circuits;
+  over_sq_2 = over_sq_2/(float)num_noisy_circuits;
 
   // ---------------- 
   // computation of the overlap between the ideal state and those exposed to noise
@@ -167,5 +167,5 @@ int main(int argc, char **argv)
                 << " Overlap-squared between ideal and 'fast decoherence' state = "
                 << over_sq_2 << "\n";
 
-//  double e = psi2.MaxAbsDiff(psi1);
+//  float e = psi2.MaxAbsDiff(psi1);
 }

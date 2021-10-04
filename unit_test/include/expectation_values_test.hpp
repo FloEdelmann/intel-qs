@@ -26,12 +26,12 @@ class ExpectationValuesTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 6;
-  double accepted_error_ = 1e-14;
+  float accepted_error_ = 1e-14;
   std::vector<unsigned> observables_;
   std::vector<unsigned> qubits_;
-  double expectation_ = 0.;
-  double coeff_ = 1.;
-  double sqrt2_ = std::sqrt(2.);
+  float expectation_ = 0.;
+  float coeff_ = 1.;
+  float sqrt2_ = std::sqrt(2.);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ TEST_F(ExpectationValuesTest, YZBaseChange)
   // In the implementation, the matrix G is used.
   // G is matrix from change of basis Y --> Z, such that Ginv.Z.G = Y 
   iqs::TinyMatrix<ComplexDP, 2, 2, 32> G;
-  double f = 1. / std::sqrt(2.);
+  float f = 1. / std::sqrt(2.);
   G(0, 0) = G(1, 0) = ComplexDP(f , 0.);
   G(0, 1) = ComplexDP(0.,-f);
   G(1, 1) = ComplexDP(0., f);
@@ -196,8 +196,8 @@ TEST_F(ExpectationValuesTest, GeneralMethod)
   psi.ApplyHadamard(0);
   psi.ApplyHadamard(1);
   // |psi> = |+-0100>
-  ASSERT_DOUBLE_EQ(psi.GetProbability(0), 0.5);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(1), 0.5);
+  ASSERT_FLOAT_EQ(psi.GetProbability(0), 0.5);
+  ASSERT_FLOAT_EQ(psi.GetProbability(1), 0.5);
   
   // observable = X0 . X1 . Z2 . Z3
   qubits_      = {0,1,2,3};

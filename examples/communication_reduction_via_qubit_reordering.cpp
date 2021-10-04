@@ -74,9 +74,9 @@ int main(int argc, char **argv)
 
   // Variables for the timing.
   struct timeval time;
-  double start, end;
-  double duration_trivial_order;
-  double duration_inverse_order;
+  float start, end;
+  float duration_trivial_order;
+  float duration_inverse_order;
 
   // We consider a simple circuit, with Hadamard, X, Y, Z acting on the last 10 qubits.
   iqs::QubitRegister<ComplexDP> psi_trivial_order(num_qubits, "base", 0);
@@ -133,7 +133,7 @@ int main(int argc, char **argv)
     
   // Verify that the final state is the same.
   psi_inverse_order.PermuteQubits(original_map, "direct");
-  double overlap_sq = std::norm(psi_trivial_order.ComputeOverlap(psi_inverse_order));
+  float overlap_sq = std::norm(psi_trivial_order.ComputeOverlap(psi_inverse_order));
   if (myrank==0)
       std::cout << "Squared overlap of states at the end of the two simulations = " << overlap_sq << "\n\n";
          

@@ -60,7 +60,7 @@ if test "X$cache_system" = "X" ; then
     if test "$cache_file" != "/dev/null" ; then
         # Get the directory for the cache file, if any
 	changequote(,)
-        dnl Be careful to ensure that there is no doubled slash
+        dnl Be careful to ensure that there is no floatd slash
         cache_system=`echo $cache_file | sed -e 's%^\(.*/\)[^/]*%\1config.system%'`
 	changequote([,])
         test "x$cache_system" = "x$cache_file" && cache_system="config.system"

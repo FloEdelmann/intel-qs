@@ -26,7 +26,7 @@ class RandomNumberGeneratorTest : public ::testing::Test
   // just before the 'destructor'
 //  void TearDown() override {}
 
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
 };
 	
 //////////////////////////////////////////////////////////////////////////////
@@ -35,8 +35,8 @@ class RandomNumberGeneratorTest : public ::testing::Test
 TEST_F(RandomNumberGeneratorTest, BasicUse)
 {
   std::size_t num_samples = 10;
-  double random [num_samples];
-  iqs::RandomNumberGenerator<double> rng;
+  float random [num_samples];
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t seed = 777;
   rng.SetSeedStreamPtrs(seed);
 
@@ -49,9 +49,9 @@ TEST_F(RandomNumberGeneratorTest, BasicUse)
   ASSERT_EQ(rng.GetNumGeneratedOrSkippedPoolNumbers() , 0 );
 
   // New stream, it should be a copy of the previous one since seed is the same.
-  iqs::RandomNumberGenerator<double> rng_copy;
+  iqs::RandomNumberGenerator<float> rng_copy;
   rng_copy.SetSeedStreamPtrs(seed);
-  double random_copy [num_samples];
+  float random_copy [num_samples];
   // Generate the samples.
   rng_copy.UniformRandomNumbers(random_copy, num_samples, 0., 1.);
   for (std::size_t j=0; j<num_samples; ++j)
@@ -69,8 +69,8 @@ TEST_F(RandomNumberGeneratorTest, Visualization)
       GTEST_SKIP();
 
   std::size_t num_samples = 20*2000;
-  double random [num_samples];
-  iqs::RandomNumberGenerator<double> rng;
+  float random [num_samples];
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t seed = 777;
   rng.SetSeedStreamPtrs(seed);
 
@@ -94,8 +94,8 @@ TEST_F(RandomNumberGeneratorTest, Visualization)
 TEST_F(RandomNumberGeneratorTest, DifferentSeed)
 {
   std::size_t num_samples = 100;
-  double random [num_samples];
-  iqs::RandomNumberGenerator<double> rng;
+  float random [num_samples];
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t seed = 717;
   rng.SetSeedStreamPtrs(seed);
   // Generate the samples.
@@ -103,9 +103,9 @@ TEST_F(RandomNumberGeneratorTest, DifferentSeed)
   ASSERT_TRUE(random[0] != random[num_samples-1]);
 
   // New stream, it should be different.
-  iqs::RandomNumberGenerator<double> rng_2;
+  iqs::RandomNumberGenerator<float> rng_2;
   rng_2.SetSeedStreamPtrs(seed+1);
-  double random_2 [num_samples];
+  float random_2 [num_samples];
   // Generate the samples.
   rng_2.UniformRandomNumbers(random_2, num_samples, 0., 1.);
   // Verify that the two set of numbers have null intersection.
@@ -124,8 +124,8 @@ TEST_F(RandomNumberGeneratorTest, LargeRandomVectors)
 #else
   std::size_t num_samples = (1UL << 16);
 #endif
-  double random [num_samples];
-  iqs::RandomNumberGenerator<double> rng;
+  float random [num_samples];
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t seed = 717;
   rng.SetSeedStreamPtrs(seed);
   // Generate the samples.
@@ -139,16 +139,16 @@ TEST_F(RandomNumberGeneratorTest, SkipMethod)
 {
   std::size_t half_samples = 40;
   std::size_t num_samples = 2*half_samples;
-  double random [num_samples];
-  iqs::RandomNumberGenerator<double> rng;
+  float random [num_samples];
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t seed = 717;
   rng.SetSeedStreamPtrs(seed);
   // Generate the samples.
   rng.UniformRandomNumbers(random, num_samples, 0., 1., "local");
 
   // New stream, it should corresponds to the second half of the previous stream.
-  iqs::RandomNumberGenerator<double> rng_2;
-  double random_2 [half_samples];
+  iqs::RandomNumberGenerator<float> rng_2;
+  float random_2 [half_samples];
   rng_2.SetSeedStreamPtrs(seed);
   rng_2.SkipAhead(half_samples,"local");
   // Generate the samples.
@@ -163,7 +163,7 @@ TEST_F(RandomNumberGeneratorTest, SkipMethod)
   rng.GaussianRandomNumbers(random, num_samples, "local");
 #if 0
   // Preliminary tests seems to indicate that, without MKL, one needs 2 uses of
-  // the generator per uniform double and 3 usus for Gaussian double.
+  // the generator per uniform float and 3 usus for Gaussian float.
   // A systematic study is not required at this point.
   rng_2.SkipAhead(half_samples,"local");
 #else
@@ -186,7 +186,7 @@ TEST_F(RandomNumberGeneratorTest, VslGenerator)
 {
   std::size_t quarter_samples = 8;
   std::size_t num_samples = 4*quarter_samples;
-  double random [num_samples];
+  float random [num_samples];
   std::size_t seed = 717;
   int errcode;
 
@@ -197,7 +197,7 @@ TEST_F(RandomNumberGeneratorTest, VslGenerator)
   assert(errcode == VSL_STATUS_OK);
 
   // New stream with same seed that will be used to verify alternative to skip.
-  double random_2 [quarter_samples];
+  float random_2 [quarter_samples];
   VSLStreamStatePtr stream_2;
   errcode = vslNewStream(&stream_2, VSL_BRNG_MT2203+0, seed);
   assert(errcode == VSL_STATUS_OK);

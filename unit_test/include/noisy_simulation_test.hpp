@@ -46,9 +46,9 @@ class NoisySimulationTest : public ::testing::Test
   }
 
   int num_qubits_= 6;
-  double T1_ = 6.;
-  double T2_ = 4.;
-  double accepted_error_ = 1e-15;
+  float T1_ = 6.;
+  float T2_ = 4.;
+  float accepted_error_ = 1e-15;
   int pool_rank_id_;
   int num_ranks_;
 };
@@ -72,16 +72,16 @@ TEST_F(NoisySimulationTest, OneStateAtATime)
   // |psi> = |-+0111>
 
   iqs::QubitRegister<ComplexDP> noisy_psi (psi);
-  ASSERT_DOUBLE_EQ( noisy_psi.ComputeOverlap(psi).real(), 1.);
+  ASSERT_FLOAT_EQ( noisy_psi.ComputeOverlap(psi).real(), 1.);
   // Set the dissipation and decoherence times.
   noisy_psi.SetNoiseTimescales(T1_, T2_);
   // Noise gates require random numbers.
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   noisy_psi.SetRngPtr(&rnd_generator);
   // A certain time duration is spend with all qubits idle.
-  double duration=5;
+  float duration=5;
   for (int qubit=0; qubit<num_qubits_; ++qubit)
       noisy_psi.ApplyNoiseGate(qubit,duration);
   ASSERT_TRUE( noisy_psi.ComputeOverlap(psi).real() < 1.-accepted_error_);
@@ -105,33 +105,33 @@ TEST_F(NoisySimulationTest, TwoStates)
 
   // The pool has two states, |0> and |1>.
   int qubit = 0;
-  double incoherent_sum, probability;
+  float incoherent_sum, probability;
   probability = psi.GetProbability(qubit);
-  ASSERT_DOUBLE_EQ( double(my_state_id), probability );
+  ASSERT_FLOAT_EQ( float(my_state_id), probability );
   // Sum up the probabilities incoherently.
   incoherent_sum
-    = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<double>(probability);
-  ASSERT_DOUBLE_EQ( incoherent_sum, 1. );
+    = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<float>(probability);
+  ASSERT_FLOAT_EQ( incoherent_sum, 1. );
 
   // Now initialize all states of the pool to |"0">.
   psi.Initialize("base",0);
   iqs::QubitRegister<ComplexDP> noisy_psi (psi);
   // Noise gates require random numbers.
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   noisy_psi.SetRngPtr(&rnd_generator);
   // If purely dissipation, the population in state |0> should increase.
   noisy_psi.SetNoiseTimescales(T1_, T1_/2);
-  double duration=T1_;
+  float duration=T1_;
   for (int q=0; q<num_qubits_; ++q)
   {
       noisy_psi.ApplyNoiseGate(q,duration);
   }
   probability = noisy_psi.GetProbability(qubit);
   incoherent_sum
-    = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<double>(probability);
-  double incoherent_average = incoherent_sum / double(num_states);
+    = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<float>(probability);
+  float incoherent_average = incoherent_sum / float(num_states);
 //iqs::mpi::PoolPrint("~~~~ prob : " + std::to_string(probability), true);//FIXME
 //iqs::mpi::PoolPrint("~~~~ aver : " + std::to_string(incoherent_average), true);//FIXME
   ASSERT_GT( incoherent_average, accepted_error_ );
@@ -163,14 +163,14 @@ TEST_F(NoisySimulationTest, OneStatePerRank)
       // At this point: my_state_id=0 --> |0>
       //                my_state_id=k --> |k%2^n>
       int qubit = 0;
-      double probability = psi.GetProbability(qubit);
-      ASSERT_DOUBLE_EQ(probability, double(index%2));
-      double incoherent_sum
-        = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<double>(probability);
+      float probability = psi.GetProbability(qubit);
+      ASSERT_FLOAT_EQ(probability, float(index%2));
+      float incoherent_sum
+        = iqs::mpi::Environment::IncoherentSumOverAllStatesOfPool<float>(probability);
       if (num_states%2==0)
-          ASSERT_DOUBLE_EQ( incoherent_sum, double(num_states  )/2. );
+          ASSERT_FLOAT_EQ( incoherent_sum, float(num_states  )/2. );
       else
-          ASSERT_DOUBLE_EQ( incoherent_sum, double(num_states-1)/2. );
+          ASSERT_FLOAT_EQ( incoherent_sum, float(num_states-1)/2. );
   }
   else
       ASSERT_TRUE(false);

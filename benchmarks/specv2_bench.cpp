@@ -21,7 +21,7 @@ void benchmark(const std::vector<std::array<int, 2>> &pairs, const char *name, F
   for (const auto &p : pairs)
     func(p[0], p[1]);
   auto end = std::chrono::steady_clock::now();
-  auto elapsed = std::chrono::duration_cast<std::chrono::duration<double>>(end - start);
+  auto elapsed = std::chrono::duration_cast<std::chrono::duration<float>>(end - start);
   if (Environment::GetRank() == 0) std::cout  << name  <<  ": "  <<  elapsed.count()  <<  " seconds\n";
 }
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
   // Comparison variables
   iqs::QubitRegister<ComplexDP>* psi0 = nullptr;
-  const double tol = 1e-9;
+  const float tol = 1e-9;
 
   std::vector<std::array<int, 2>> pairs;
   for (int i = 0; i < nbits; ++i)

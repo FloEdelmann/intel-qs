@@ -7,11 +7,11 @@
 
 #include <mpi.h>
 
-static int verify_doubles(double *buf, int count, double expected_value)
+static int verify_floats(float *buf, int count, float expected_value)
 {
     int errors = 0;
     for (int i = 0; i < count; i++) {
-        double absdiff = fabs(buf[i] - expected_value);
+        float absdiff = fabs(buf[i] - expected_value);
         if (absdiff>1.e-4) errors++;
     }
     return errors;
@@ -85,25 +85,25 @@ int main(int argc, char * argv[])
 
     int n = (argc > 1) ? atoi(argv[1]) : 1000;
 
-    double * sbuf1 = NULL;
-    double * rbuf1 = NULL;
-    double * sbuf2 = NULL;
-    double * rbuf2 = NULL;
+    float * sbuf1 = NULL;
+    float * rbuf1 = NULL;
+    float * sbuf2 = NULL;
+    float * rbuf2 = NULL;
 
-    MPI_Aint bytes = n*sizeof(double);
+    MPI_Aint bytes = n*sizeof(float);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &sbuf1);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &rbuf1);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &sbuf2);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &rbuf2);
 
     for (int i=0; i<n; i++) {
-        sbuf1[i] = (double)rank;
+        sbuf1[i] = (float)rank;
     }
     for (int i=0; i<n; i++) {
         rbuf1[i] = 0.0;
     }
     for (int i=0; i<n; i++) {
-        sbuf2[i] = (double)rank;
+        sbuf2[i] = (float)rank;
     }
     for (int i=0; i<n; i++) {
         rbuf2[i] = 0.0;
@@ -112,13 +112,13 @@ int main(int argc, char * argv[])
     /* Correctness checking first */
 
     MPI_Barrier(MPI_COMM_WORLD);
-    MPI_Allreduce(sbuf1, rbuf1, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(sbuf1, rbuf1, n, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
-    BigMPI_Allreduce(sbuf1, rbuf2, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    BigMPI_Allreduce(sbuf1, rbuf2, n, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     MPI_Barrier(MPI_COMM_WORLD);
 
-    const double val = (double)size*(size-1)/2.;
-    int error1 = verify_doubles(rbuf1, n, val);
+    const float val = (float)size*(size-1)/2.;
+    int error1 = verify_floats(rbuf1, n, val);
     if (error1>0) {
         printf("There were %d errors out of %d elements!\n", error1, n);
         for (int i=0; i<n; i++) {
@@ -127,7 +127,7 @@ int main(int argc, char * argv[])
         }
         fflush(stdout);
     }
-    int error2 = verify_doubles(rbuf2, n, val);
+    int error2 = verify_floats(rbuf2, n, val);
     if (error2>0) {
         printf("There were %d errors out of %d elements!\n", error2, n);
         for (int i=0; i<n; i++) {
@@ -138,17 +138,17 @@ int main(int argc, char * argv[])
     }
 
     /* collective communication */
-    double t0, t1, dtmpi, dtusr;
+    float t0, t1, dtmpi, dtusr;
     MPI_Barrier(MPI_COMM_WORLD);
     
     t0 = MPI_Wtime();
-    MPI_Allreduce(sbuf1, rbuf1, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(sbuf1, rbuf1, n, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     t1 = MPI_Wtime();
     dtmpi = t1-t0;
     MPI_Barrier(MPI_COMM_WORLD);
     
     t0 = MPI_Wtime();
-    BigMPI_Allreduce(sbuf2, rbuf2, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    BigMPI_Allreduce(sbuf2, rbuf2, n, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
     t1 = MPI_Wtime();
     dtusr = t1-t0;
     

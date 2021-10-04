@@ -240,7 +240,7 @@ bool QubitRegister<Type>::ApplySwap_helper(unsigned qubit_1, unsigned qubit_2, T
 /// @param target_position position of the target qubit in the current permutation
 /// @param m 2x2 matrix corresponding to the quantum gate
 template <class Type>
-double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_position,
+float QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_position,
                                          TM2x2<Type> const&m)
 {
   assert(LocalSize() > 1);
@@ -270,7 +270,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
   else
       assert((lcl_size_half % lcl_chunk) == 0);
 
-  double t, tnet = 0;
+  float t, tnet = 0;
   Type *state0=nullptr, *state1=nullptr;
 
   // Case L < M <= H
@@ -472,7 +472,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
         }
   }
 
-  double netsize = 2.0 * sizeof(Type) * 2.0 * double(lcl_size_half), netbw = netsize / tnet;
+  float netsize = 2.0 * sizeof(Type) * 2.0 * float(lcl_size_half), netbw = netsize / tnet;
   if (timer) timer->record_cm(tnet, netbw);
 #endif
 

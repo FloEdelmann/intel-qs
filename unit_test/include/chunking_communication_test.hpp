@@ -28,8 +28,8 @@ class ChunkingCommunicationTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 14;
-  double accepted_error_ = 1e-15;
-  double accepted_error_loose_ = 1e-12;
+  float accepted_error_ = 1e-15;
+  float accepted_error_loose_ = 1e-12;
 
   unsigned nprocs_ = iqs::mpi::Environment::GetStateSize();
   unsigned log2_nprocs_ = iqs::ilog2( iqs::floor_power_of_two(nprocs_));
@@ -57,9 +57,9 @@ TEST_F(ChunkingCommunicationTest, Initialization)
 
   ComplexDP amplitude;
   // Test the only non-zero entry.
-  ASSERT_DOUBLE_EQ(psi_half.GetGlobalAmplitude(1).real(), 1.);
-  ASSERT_DOUBLE_EQ(psi_quarter.GetGlobalAmplitude(10200).real(), 1.);
-  ASSERT_DOUBLE_EQ(psi_eighth.GetGlobalAmplitude(5003).real(), 1.);
+  ASSERT_FLOAT_EQ(psi_half.GetGlobalAmplitude(1).real(), 1.);
+  ASSERT_FLOAT_EQ(psi_quarter.GetGlobalAmplitude(10200).real(), 1.);
+  ASSERT_FLOAT_EQ(psi_eighth.GetGlobalAmplitude(5003).real(), 1.);
 
   // Apply gates such that |psi_half> = |+++...+>
   psi_half.ApplyPauliX(0);
@@ -168,7 +168,7 @@ TEST_F(ChunkingCommunicationTest, InitializeRandomlyButSame)
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
   // random number generator
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rng;
+  iqs::RandomNumberGenerator<float> rng;
   rng.SetSeedStreamPtrs(rng_seed);
   psi.SetRngPtr(&rng);
   //
@@ -179,16 +179,16 @@ TEST_F(ChunkingCommunicationTest, InitializeRandomlyButSame)
 
   // Initilize the copy: |copy> = |psi>
   iqs::QubitRegister<ComplexDP> psi_copy (psi);
-  ASSERT_DOUBLE_EQ(psi_copy.MaxAbsDiff(psi), 0 );
-  ASSERT_DOUBLE_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
+  ASSERT_FLOAT_EQ(psi_copy.MaxAbsDiff(psi), 0 );
+  ASSERT_FLOAT_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
   //
   // Reinitialize |copy> by generating its amplitudes.
-  iqs::RandomNumberGenerator<double> rng_copy;
+  iqs::RandomNumberGenerator<float> rng_copy;
   rng_copy.SetSeedStreamPtrs(rng_seed);
   psi_copy.SetRngPtr(&rng_copy);
   psi_copy.Initialize("rand",num_states);
-  ASSERT_DOUBLE_EQ(psi_copy.MaxAbsDiff(psi), 0 );
-  ASSERT_DOUBLE_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
+  ASSERT_FLOAT_EQ(psi_copy.MaxAbsDiff(psi), 0 );
+  ASSERT_FLOAT_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -216,9 +216,9 @@ TEST_F(ChunkingCommunicationTest, Hadamard)
   // |psi_2> = |0-> = |q0=0> x |q1=->
   ComplexDP amplitude = ComplexDP(1./std::sqrt(2.), 0. );
   ASSERT_EQ(psi_2.GetGlobalAmplitude(0), amplitude);
-  ASSERT_DOUBLE_EQ(psi_2.GetGlobalAmplitude(1).real(), 0.);
+  ASSERT_FLOAT_EQ(psi_2.GetGlobalAmplitude(1).real(), 0.);
   ASSERT_EQ(psi_2.GetGlobalAmplitude(2),-amplitude);
-  ASSERT_DOUBLE_EQ(psi_2.GetGlobalAmplitude(3).imag(), 0.);
+  ASSERT_FLOAT_EQ(psi_2.GetGlobalAmplitude(3).imag(), 0.);
 
   iqs::QubitRegister<ComplexDP> psi_3 (num_qubits_,"base",3);
   psi_3.ApplyHadamard(0);

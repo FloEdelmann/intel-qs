@@ -28,8 +28,8 @@ class ApplySwapGateTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 10;
-  double accepted_error_ = 1e-15;
-  double sqrt2_ = std::sqrt(2.);
+  float accepted_error_ = 1e-15;
+  float sqrt2_ = std::sqrt(2.);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -86,14 +86,14 @@ TEST_F(ApplySwapGateTest, Explicit3QubitExample)
   // |psi> = {0,1,2,3,4,5,6,7}
   if (print_state) psi.Print("state should have amplitudes from 0 to 7");
   for (std::size_t j=0; j<psi.GlobalSize(); ++j)
-      ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(j).real(), j);
+      ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(j).real(), j);
 
   psi.ApplySwap(0, 1);
   // |psi> = {0,2,1,3,4,6,5,7}
-  std::vector<double> expected_state = {0,2,1,3,4,6,5,7};
+  std::vector<float> expected_state = {0,2,1,3,4,6,5,7};
   if (print_state) psi.Print("SWAP qubit 0 and 1");
   for (std::size_t j=0; j<psi.GlobalSize(); ++j)
-      ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(j).real(), expected_state[j]);
+      ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(j).real(), expected_state[j]);
   psi.ApplySwap(0, 1);
   // |psi> = {0,1,2,3,4,5,6,7}
 
@@ -102,7 +102,7 @@ TEST_F(ApplySwapGateTest, Explicit3QubitExample)
   expected_state = {0,4,2,6,1,5,3,7};
   if (print_state) psi.Print("SWAP qubit 0 and 2 (from trivial)");
   for (std::size_t j=0; j<psi.GlobalSize(); ++j)
-      ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(j).real(), expected_state[j]);
+      ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(j).real(), expected_state[j]);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ TEST_F(ApplySwapGateTest, Explicit3QubitExample)
 TEST_F(ApplySwapGateTest, ComparisonWithThreeCnots)
 {
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   // The "rand" style cannot be used directly in the creation of the state.
   iqs::QubitRegister<ComplexDP> psi_1(num_qubits_, "base", 0);
@@ -129,7 +129,7 @@ TEST_F(ApplySwapGateTest, ComparisonWithThreeCnots)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = 4;
@@ -139,7 +139,7 @@ TEST_F(ApplySwapGateTest, ComparisonWithThreeCnots)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   // Qubits like n-1 and n-2 are (probably) distributed/glbal qubits.
@@ -151,7 +151,7 @@ TEST_F(ApplySwapGateTest, ComparisonWithThreeCnots)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   unsigned num_qubits = 17;
 #endif
   std::size_t rng_seed = 12345;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   // The "rand" style cannot be used directly in the creation of the state.
   iqs::QubitRegister<ComplexDP> psi_1(num_qubits, "base", 0);
@@ -183,7 +183,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = 14;
@@ -193,7 +193,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = num_qubits-1;
@@ -203,7 +203,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = num_qubits-3;
@@ -213,7 +213,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = num_qubits-3;
@@ -223,7 +223,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = num_qubits-3;
@@ -233,7 +233,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
   // Compare two implementations of the SWAP gate.
   qubit1 = 8;
@@ -243,7 +243,7 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   psi_2.ApplyCPauliX(qubit2, qubit1);
   psi_2.ApplyCPauliX(qubit1, qubit2);
   // Check that the max abs difference amplitude by amplitude.
-  ASSERT_DOUBLE_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
+  ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 }
 
 //////////////////////////////////////////////////////////////////////////////

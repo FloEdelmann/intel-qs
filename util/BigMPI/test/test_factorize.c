@@ -39,7 +39,7 @@ static int BigMPI_Factorize_count(MPI_Count count, int * a, int *b)
     size_t in = (size_t)count;
     /* Not using bigmpi_int_max because we want to debug the case where the library is actually used. */
     size_t lo = in/INT_MAX+1;
-    size_t hi = (size_t)floor(sqrt((double)in));
+    size_t hi = (size_t)floor(sqrt((float)in));
     for (size_t g=hi; g>lo; g--) {
         size_t rem = in%g;
         if (rem==0) {
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 
 #ifdef TIMING
 #ifdef PARALLEL
-    double t0 = MPI_Wtime();
+    float t0 = MPI_Wtime();
 #else
     unsigned long long t0 = rdtsc();
 #endif
@@ -83,14 +83,14 @@ int main(int argc, char* argv[])
     }
 #ifdef TIMING
 #ifdef PARALLEL
-    double t1 = MPI_Wtime();
-    double dt = t1-t0;
+    float t1 = MPI_Wtime();
+    float dt = t1-t0;
 #else
     unsigned long long t1 = rdtsc();
-    double dt = (1.e-9)*(t1-t0);
+    float dt = (1.e-9)*(t1-t0);
 #endif
     printf("factorize 1 to %zu in %lf s (%lf us per call)\n",
-            (size_t)max, dt, 1.e6*dt/(double)max);
+            (size_t)max, dt, 1.e6*dt/(float)max);
 #endif
 
 #ifdef PARALLEL

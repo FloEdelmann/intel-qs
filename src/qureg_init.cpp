@@ -166,15 +166,15 @@ void QubitRegister<Type>::Allocate(std::size_t new_num_qubits, std::size_t tmp_s
   // Print some information.
   if (do_print_extra_info && !myrank)
   {
-      double MB = 1024.0 * 1024.0;
-      double s;
-      s = double(num_ranks_per_node) * double(nbytes);
+      float MB = 1024.0 * 1024.0;
+      float s;
+      s = float(num_ranks_per_node) * float(nbytes);
       printf("Total storage per node  = %.2lf MB \n", s / MB);
-      s = double(num_ranks_per_node) * double(LocalSize()) * double(sizeof(state[0]));
+      s = float(num_ranks_per_node) * float(LocalSize()) * float(sizeof(state[0]));
       printf("      storage per state = %.2lf MB \n", s / MB);
       if (nprocs > 1)
       {
-          s = double(num_ranks_per_node) * double(TmpSize()) * double(sizeof(state[0]));
+          s = float(num_ranks_per_node) * float(TmpSize()) * float(sizeof(state[0]));
           printf("      temporary storage = %.5lf MB \n", s / MB);
       }
   }
@@ -237,7 +237,7 @@ void QubitRegister<Type>::Initialize(std::string style, std::size_t base_index)
   }
 #endif
 
-  double t0 = time_in_seconds();
+  float t0 = time_in_seconds();
 
   std::size_t lcl = LocalSize();
 #if defined(__ICC) || defined(__INTEL_COMPILER)
@@ -354,7 +354,7 @@ if (beginning != end) printf( (buffer.str()).c_str() );
 #endif
 
 #if 0
-  double t1 = time_in_seconds();
+  float t1 = time_in_seconds();
   if (myrank == 0) {
     printf("[%u] Time to init: %lf\n", myrank, t1 - t0);
   }

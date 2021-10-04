@@ -115,13 +115,13 @@ int main(int argc, char **argv)
       i+=1;
   }
   // Compute the probability of qubit 0 to be in |1>.
-  double probability = psi0.GetProbability(0);
+  float probability = psi0.GetProbability(0);
 
 /////////////////////////////////////////////////////////////////////////////////////////
   // Noisy circuit. 
 
   // Declare the random number generator and initialize its seed.
-  iqs::RandomNumberGenerator<double> rng;
+  iqs::RandomNumberGenerator<float> rng;
   std::size_t rng_seed = 77777;
   rng.SetSeedStreamPtrs( rng_seed );
 
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
   psi1.SetRngPtr(&rng);
 
   // Circuit formed by Hadamard gates:
-  double overlap_squared_noisy = 0.;
-  double probability_noisy = 0.;
+  float overlap_squared_noisy = 0.;
+  float probability_noisy = 0.;
   for (unsigned j=0; j<num_ensemble_states/num_pool_states; j++)
   {
       std::cout << "-- Run noisy circuit (rank=" << my_rank << ", repetition=" << j <<")\n";
@@ -149,11 +149,11 @@ int main(int argc, char **argv)
       overlap_squared_noisy += std::norm( psi0.ComputeOverlap(psi1) );
   }
   // Incoherent average across the pool and repetitions.
-  overlap_squared_noisy = env.IncoherentSumOverAllStatesOfPool<double> (overlap_squared_noisy);
-  overlap_squared_noisy /= double(num_ensemble_states);
+  overlap_squared_noisy = env.IncoherentSumOverAllStatesOfPool<float> (overlap_squared_noisy);
+  overlap_squared_noisy /= float(num_ensemble_states);
   //
-  probability_noisy = env.IncoherentSumOverAllStatesOfPool<double> (probability_noisy);
-  probability_noisy /= double(num_ensemble_states);
+  probability_noisy = env.IncoherentSumOverAllStatesOfPool<float> (probability_noisy);
+  probability_noisy /= float(num_ensemble_states);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

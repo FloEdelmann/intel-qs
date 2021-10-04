@@ -44,19 +44,19 @@ int main(int argc, char* argv[])
     int n = (argc>1) ? atoi(argv[1]) : 10000;
     //MPI_Datatype * dtout = malloc(n*sizeof(MPI_Datatype));
     MPI_Datatype dtout;
-    double t0 = MPI_Wtime();
+    float t0 = MPI_Wtime();
     for (int i=0; i<n; i++) {
-        //MPIX_Type_contiguous_x((MPI_Count)i, MPI_DOUBLE, &(dtout[i]));
+        //MPIX_Type_contiguous_x((MPI_Count)i, MPI_FLOAT, &(dtout[i]));
         //MPI_Type_commit(&(dtout[i]));
         MPI_Count bigcount = (i%10)*(MPI_Count)INT_MAX+(i%100);
-        MPIX_Type_contiguous_x(bigcount, MPI_DOUBLE, &dtout);
+        MPIX_Type_contiguous_x(bigcount, MPI_FLOAT, &dtout);
         MPI_Type_commit(&dtout);
         MPI_Type_free(&dtout);
     }
-    double t1 = MPI_Wtime();
-    double dt = t1-t0;
+    float t1 = MPI_Wtime();
+    float dt = t1-t0;
     printf("create, commit (free?) %d Type_contig_x in %lf s (%lf us per call)\n",
-            n, dt, 1.e6*dt/(double)n);
+            n, dt, 1.e6*dt/(float)n);
 
     //for (int i=0; i<n; i++) {
     //    MPI_Type_free(&(dtout[i]));

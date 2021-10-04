@@ -288,7 +288,7 @@ namespace utest
     {
         state.resize(1 << p.num_elements);
         for (std::size_t i = 0; i < state.size(); i++)
-            state[i] = {double(i % 3), double(i % 16)};
+            state[i] = {float(i % 3), float(i % 16)};
     }
  
     // Permute the order of the entries according to the Permutation pnew.
@@ -311,7 +311,7 @@ namespace utest
         // printf("\n");
     
         std::uint64_t t0 = __rdtsc();
-        double s0 = iqs::sec();
+        float s0 = iqs::sec();
         for (std::size_t i = 0; i < state.size(); i++)
         {
             // 'i'  is the index in the old data representation.
@@ -323,9 +323,9 @@ namespace utest
             state_new[to] = state[i];
         }
         std::uint64_t t1 = __rdtsc();
-        double s1 = iqs::sec();
-        double bw = double(state.size()) * double(sizeof(state[0])) * 2.0 / double(s1 - s0);
-        if (do_print) printf("cycles per shuffle: %.2lf bw=%.2lf GB/s\n", double(t1 - t0) / double(state.size()), bw / 1e9);
+        float s1 = iqs::sec();
+        float bw = float(state.size()) * float(sizeof(state[0])) * 2.0 / float(s1 - s0);
+        if (do_print) printf("cycles per shuffle: %.2lf bw=%.2lf GB/s\n", float(t1 - t0) / float(state.size()), bw / 1e9);
     
         p = pnew;
         state = state_new;
@@ -367,7 +367,7 @@ TEST_F(PermutationTest, PermutationOfSpecializedStateClass)
   s.print();
   // Original order:
   for (std::size_t i=0; i<(1<<num_bits_); ++i)
-      ASSERT_DOUBLE_EQ(s.state[i].imag(), double(i));
+      ASSERT_FLOAT_EQ(s.state[i].imag(), float(i));
 
   iqs::Permutation p({2, 0, 1});
 //  p.Print();
@@ -386,16 +386,16 @@ TEST_F(PermutationTest, PermutationOfSpecializedStateClass)
   for (std::size_t i=0; i<(1<<num_bits_); ++i)
   {
       // From data to program.
-      ASSERT_DOUBLE_EQ(s.state[i].imag(), expected_data2program[i]);
+      ASSERT_FLOAT_EQ(s.state[i].imag(), expected_data2program[i]);
       // From program to data.
-      ASSERT_DOUBLE_EQ(i, s.state[expected_program2data[i]].imag());
+      ASSERT_FLOAT_EQ(i, s.state[expected_program2data[i]].imag());
   }
 
   s.permute(iqs::Permutation({0, 1, 2}));
   s.print();
   // Back to original order:
   for (std::size_t i=0; i<(1<<num_bits_); ++i)
-      ASSERT_DOUBLE_EQ(s.state[i].imag(), double(i));
+      ASSERT_FLOAT_EQ(s.state[i].imag(), float(i));
 }
 
 //////////////////////////////////////////////////////////////////////////////

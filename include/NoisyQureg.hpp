@@ -369,7 +369,7 @@ void NoisyQureg<Type>::NoiseGate_OLD(unsigned const qubit )
   // It may happen that "axis" still requires a "minus sign"
   if (false)
   {
-      std::vector<double> R_u , R_minus_u ;
+      std::vector<float> R_u , R_minus_u ;
       BaseType si(std::sin(angle)) , co(std::cos(angle)) ;
       R_u = { co + axis[0]*axis[0]*(1.-co) ,
               axis[0]*axis[1]*(1.-co) - axis[2]*si ,

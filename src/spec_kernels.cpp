@@ -158,7 +158,7 @@ __attribute__((noinline))
 void Loop_SN(std::size_t gstart, std::size_t gend,
              Type *state0, Type *state1,
              std::size_t indsht0, std::size_t indsht1,
-             GateSpec1Q spec, Timer *timer, double angle)
+             GateSpec1Q spec, Timer *timer, float angle)
 {
   assert((UL(state0) % 256) == 0);
   assert((UL(state1) % 256) == 0);
@@ -166,7 +166,7 @@ void Loop_SN(std::size_t gstart, std::size_t gend,
   __assume_aligned(state0, 256);
   __assume_aligned(state1, 256);
 #endif
-  double ttot = 0., tnov = 0., ttmp1, ttmp2;
+  float ttot = 0., tnov = 0., ttmp1, ttmp2;
   ttmp1 = sec();
 
   // Declare constants
@@ -235,11 +235,11 @@ void Loop_SN(std::size_t gstart, std::size_t gend,
   if (timer)
   {
     ttot = sec() - ttmp1;
-    double datab = ((state0 == state1) ? 2.0 : 4.0) *
-        sizeof(state0[0]) * double(gend - gstart);
+    float datab = ((state0 == state1) ? 2.0 : 4.0) *
+        sizeof(state0[0]) * float(gend - gstart);
     
-    double flops = double(1L << 19) * 38.0;
-    double gflops = flops / ttot / 1e9;
+    float flops = float(1L << 19) * 38.0;
+    float gflops = flops / ttot / 1e9;
 
     timer->record_sn(ttot, datab / ttot);
   }
@@ -251,9 +251,9 @@ __attribute__((noinline))
 void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
              Type *state0, Type *state1,
              std::size_t indsht0, std::size_t indsht1,
-             GateSpec1Q spec, Timer *timer, double angle)
+             GateSpec1Q spec, Timer *timer, float angle)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  float ttmp1 = sec(), ttot = 0.;
   assert((UL(state0) % 256) == 0);
   assert((UL(state1) % 256) == 0);
 #if defined(__ICC) || defined(__INTEL_COMPILER)
@@ -326,7 +326,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
  if(timer)
   {
       ttot = sec() - ttmp1;     
-      double datab = 2.0 * sizeof(state0[0]) * double(gend - gstart);
+      float datab = 2.0 * sizeof(state0[0]) * float(gend - gstart);
       timer->record_dn(ttot, datab / ttot);
   }
 }
@@ -338,9 +338,9 @@ void Loop_TN(Type *state,
              std::size_t c21, std::size_t c22, std::size_t c23,
              std::size_t c31, std::size_t c32, 
              std::size_t index_shift, GateSpec2Q spec,
-             Timer *timer, double angle)
+             Timer *timer, float angle)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  float ttmp1 = sec(), ttot = 0.;
   assert((UL(state) % 256) == 0);
 #if defined(__ICC) || defined(__INTEL_COMPILER)
   __assume_aligned(state, 256);
@@ -410,8 +410,8 @@ void Loop_TN(Type *state,
   if (timer)
   {
     ttot = sec() - ttmp1;
-    double datab =
-      4.0 * sizeof(state[0]) * double((c12 - c11) / c13) * double((c22 - c21) / c23) * double(c32 - c31);
+    float datab =
+      4.0 * sizeof(state[0]) * float((c12 - c11) / c13) * float((c22 - c21) / c23) * float(c32 - c31);
     timer->record_tn(ttot, datab / ttot);
   }
 }
@@ -420,35 +420,35 @@ void Loop_TN(Type *state,
 template void Loop_SN<ComplexSP>(std::size_t gstart, std::size_t gend,
                                  ComplexSP *state0, ComplexSP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
-                                 GateSpec1Q spec, Timer *timer, double angle);
+                                 GateSpec1Q spec, Timer *timer, float angle);
 
 template void Loop_SN<ComplexDP>(std::size_t gstart, std::size_t gend,
                                  ComplexDP *state0, ComplexDP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
-                                 GateSpec1Q spec, Timer *timer, double angle);
+                                 GateSpec1Q spec, Timer *timer, float angle);
 
 template void Loop_DN<ComplexSP>(std::size_t gstart, std::size_t gend, std::size_t pos,
                                  ComplexSP *state0, ComplexSP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
-                                 GateSpec1Q spec, Timer *timer, double angle);
+                                 GateSpec1Q spec, Timer *timer, float angle);
 
 template void Loop_DN<ComplexDP>(std::size_t gstart, std::size_t gend, std::size_t pos,
                                  ComplexDP *state0, ComplexDP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
-                                 GateSpec1Q spec, Timer *timer, double angle);
+                                 GateSpec1Q spec, Timer *timer, float angle);
 
 template void Loop_TN<ComplexSP>(ComplexSP *state,
                                  std::size_t c11, std::size_t c12, std::size_t c13,
                                  std::size_t c21, std::size_t c22, std::size_t c23,
                                  std::size_t c31, std::size_t c32, 
                                  std::size_t index_shift, GateSpec2Q spec, 
-                                 Timer *timer, double angle);
+                                 Timer *timer, float angle);
 
 template void Loop_TN<ComplexDP>(ComplexDP *state,
                                  std::size_t c11, std::size_t c12, std::size_t c13,
                                  std::size_t c21, std::size_t c22, std::size_t c23,
                                  std::size_t c31, std::size_t c32, 
                                  std::size_t index_shift, GateSpec2Q spec, 
-                                 Timer *timer, double angle);
+                                 Timer *timer, float angle);
 
 } // close namespace iqs

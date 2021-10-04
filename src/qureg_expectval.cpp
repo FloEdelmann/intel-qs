@@ -113,8 +113,8 @@ QubitRegister<Type>::ExpectationValue(std::vector<unsigned> &qubits,
       assert(observables[j]>0 && observables[j]<4);
   }
 
-// Special cases defined above for single or double Pauli matrices.
-// Recall that the special case with double Pauli matrix uses Apply2QubitGate()
+// Special cases defined above for single or float Pauli matrices.
+// Recall that the special case with float Pauli matrix uses Apply2QubitGate()
 // that is currently available only for the single-MPI-rank case.
   unsigned nprocs = 1;
   nprocs = iqs::mpi::Environment::GetStateSize();
@@ -187,7 +187,7 @@ QubitRegister<Type>::ExpectationValue(std::vector<unsigned> &qubits,
   BaseType global_value ;
 #ifdef INTELQS_HAS_MPI
   MPI_Comm comm = iqs::mpi::Environment::GetStateComm();
-  // MPI_Allreduce(&local_value, &global_value, 1, MPI_DOUBLE, MPI_SUM, comm);
+  // MPI_Allreduce(&local_value, &global_value, 1, MPI_FLOAT, MPI_SUM, comm);
   iqs::mpi::MPI_Allreduce_x(&local_value, &global_value, 1, MPI_SUM, comm);
 #else
   global_value = local_value;

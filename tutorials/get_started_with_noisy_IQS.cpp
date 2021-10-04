@@ -110,7 +110,7 @@ int main(int argc, char **argv)
   // To generate random numbers, IQS provides a wrapper around VSL random number generator.
   // If MKL is not available, a standard MT19937 generator is used.
   // We need to declare the (pseudo) random number generator...
-  iqs::RandomNumberGenerator<double> rng;
+  iqs::RandomNumberGenerator<float> rng;
   // ... and initialize its seed:
   std::size_t rng_seed = 77777;
   rng.SetSeedStreamPtrs( rng_seed );
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
   // All angles of rotations are random. However once the circuit we want to simulate
   // is determined, there is no stochasticity in the rotation angles across the ensemble.
   // The rotation angles must therefore be given as *pool* random numbers.
-  std::vector<double> x_angles (num_qubits), y_angles (num_qubits), z_angles (num_qubits);
+  std::vector<float> x_angles (num_qubits), y_angles (num_qubits), z_angles (num_qubits);
   rng.UniformRandomNumbers( x_angles.data(), x_angles.size(), 0., M_PI, "pool");
   rng.UniformRandomNumbers( y_angles.data(), y_angles.size(), 0., M_PI, "pool");
   rng.UniformRandomNumbers( z_angles.data(), z_angles.size(), 0., M_PI, "pool");
@@ -156,7 +156,7 @@ int main(int argc, char **argv)
 #endif
 
   // Compute the probability of qubit 0 to be in |1>.
-  double probability = psi.GetProbability(0);
+  float probability = psi.GetProbability(0);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Quantum state evolution in presence of noise
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
   // Here we use the same.
   psi_slow.SetRngPtr(&rng);
   // T_1 and T_2 times for slow decoherence
-  double T_1_slow=1000. , T_2_slow=500. ;
+  float T_1_slow=1000. , T_2_slow=500. ;
   psi_slow.SetNoiseTimescales(T_1_slow, T_2_slow);
 
   // State for fast decoherence.
@@ -176,17 +176,17 @@ int main(int argc, char **argv)
   // Here too we use the same random number generator.
   psi_fast.SetRngPtr(&rng);
   // T_1 and T_2 times for fast decoherence
-  double T_1_fast=40.   , T_2_fast=20.  ;
+  float T_1_fast=40.   , T_2_fast=20.  ;
   psi_fast.SetNoiseTimescales(T_1_fast, T_2_fast);
 
   // All single-qubit rotations have the same duration:
-  double duration = 1.5;
+  float duration = 1.5;
  
 // ---------------- slow decoherence
   if (my_rank==0) std::cout << "\n---- slow decoherence \n\n";
   iqs::mpi::PoolBarrier();
-  double overlap_squared_slow = 0.;
-  double probability_slow = 0.;
+  float overlap_squared_slow = 0.;
+  float probability_slow = 0.;
   for (int j=0; j<num_ensemble_states/num_pool_states; j++)
   {
       // Quantum circuit with explicit noise gates added to simulate noise.
@@ -228,15 +228,15 @@ int main(int argc, char **argv)
   }
 
   // Compute average per group in the pool.
-  overlap_squared_slow /= (double)(num_ensemble_states/num_pool_states);
-  probability_slow /= (double)(num_ensemble_states/num_pool_states);
+  overlap_squared_slow /= (float)(num_ensemble_states/num_pool_states);
+  probability_slow /= (float)(num_ensemble_states/num_pool_states);
 
   // Incoherent average across the pool.
-  overlap_squared_slow = env.IncoherentSumOverAllStatesOfPool<double> (overlap_squared_slow);
-  overlap_squared_slow /= double(iqs::mpi::Environment::GetNumStates());
+  overlap_squared_slow = env.IncoherentSumOverAllStatesOfPool<float> (overlap_squared_slow);
+  overlap_squared_slow /= float(iqs::mpi::Environment::GetNumStates());
   //
-  probability_slow = env.IncoherentSumOverAllStatesOfPool<double> (probability_slow);
-  probability_slow /= double(iqs::mpi::Environment::GetNumStates());
+  probability_slow = env.IncoherentSumOverAllStatesOfPool<float> (probability_slow);
+  probability_slow /= float(iqs::mpi::Environment::GetNumStates());
 
   // NOTE: For the noise model considered, noise gates can be fused with each other.
   //       In fact, the overall effect on the ensemble is the same for two consecutive
@@ -252,8 +252,8 @@ int main(int argc, char **argv)
 // ---------------- fast decoherence
   if (my_rank==0) std::cout << "---- fast decoherence \n\n";
   iqs::mpi::PoolBarrier();
-  double overlap_squared_fast = 0.;
-  double probability_fast = 0.;
+  float overlap_squared_fast = 0.;
+  float probability_fast = 0.;
   for (int j=0; j<num_ensemble_states/num_pool_states; j++)
   {
       // Quantum circuit with explicit noise gates added to simulate noise.
@@ -296,11 +296,11 @@ int main(int argc, char **argv)
   }
 
   // Compute average over all ensemble.
-  overlap_squared_fast = env.IncoherentSumOverAllStatesOfPool<double> (overlap_squared_fast);
-  overlap_squared_fast /= double(num_ensemble_states);
+  overlap_squared_fast = env.IncoherentSumOverAllStatesOfPool<float> (overlap_squared_fast);
+  overlap_squared_fast /= float(num_ensemble_states);
   //
-  probability_fast = env.IncoherentSumOverAllStatesOfPool<double> (probability_fast);
-  probability_fast /= double(num_ensemble_states);
+  probability_fast = env.IncoherentSumOverAllStatesOfPool<float> (probability_fast);
+  probability_fast /= float(num_ensemble_states);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Quantum state initialization and ideal circuit
@@ -318,7 +318,7 @@ int main(int argc, char **argv)
                 << "Probability with slow decoherence = " << probability_slow << "\n"
                 << "Probability with fast decoherence = " << probability_fast << "\n\n";
 
-//  double e = psi2.MaxAbsDiff(psi1);
+//  float e = psi2.MaxAbsDiff(psi1);
 
   return 1;
 }

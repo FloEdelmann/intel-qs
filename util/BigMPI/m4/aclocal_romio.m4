@@ -41,7 +41,7 @@ program failed to produce an object file])
     rm -f confftest.f confftest.o
     if test -n "$nameform4" ; then
 	echo "Fortran externals are lower case and have two trailing underscores"
-	FORTRANNAMES="FORTRANDOUBLEUNDERSCORE"
+	FORTRANNAMES="FORTRANFLOATUNDERSCORE"
     elif test -n "$nameform1" ; then
         # We don't set this in CFLAGS; it is a default case
         echo "Fortran externals have a trailing underscore and are lowercase"

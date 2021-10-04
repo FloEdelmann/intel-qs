@@ -201,8 +201,8 @@ void Loop_SN(std::size_t start, std::size_t end, Type *state0, Type *state1,
        m11 = m[1][1];
 
   std::string label;
-  double frac_of_state_accessed;
-  double ttot = 0., tnov = 0., ttmp1, ttmp2;
+  float frac_of_state_accessed;
+  float ttot = 0., tnov = 0., ttmp1, ttmp2;
   ttmp1 = sec();
 
   if(specialize == false)
@@ -227,11 +227,11 @@ void Loop_SN(std::size_t start, std::size_t end, Type *state0, Type *state1,
   if (timer)
   {
       ttot = sec() - ttmp1;
-      double datab = ((state0 == state1) ? 2.0 : 4.0) * 
-                     frac_of_state_accessed * sizeof(state0[0]) * double(end - start);
+      float datab = ((state0 == state1) ? 2.0 : 4.0) * 
+                     frac_of_state_accessed * sizeof(state0[0]) * float(end - start);
       // printf("datab=%lf len=%lu time=%lf bw=%lf\n", datab, end-start, ttot, datab / ttot / 1e9);
-      double flops = double(1L << 19) * 38.0;
-      double gflops = flops / ttot / 1e9;
+      float flops = float(1L << 19) * 38.0;
+      float gflops = flops / ttot / 1e9;
       // printf("label=%s ttot = %.4lfs bw = %.2lf GB/s\n",
       //        label.c_str(), ttot, datab / ttot / 1e9);
 
@@ -309,8 +309,8 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
        m11 = m[1][1];
 
   std::string label;
-  double frac_of_state_accessed;
-  double ttot = 0., tnov = 0., ttmp1, ttmp2;
+  float frac_of_state_accessed;
+  float ttot = 0., tnov = 0., ttmp1, ttmp2;
   ttmp1 = sec();
 
   size_t nthreads = 1;
@@ -367,9 +367,9 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
   if(timer)
   {
       ttot = sec() - ttmp1;     
-      double datab = 2.0 * frac_of_state_accessed * sizeof(state0[0]) * double(gend - gstart);
-      double flops = double(1L << 19) * 38.0;
-      double gflops = flops / ttot / 1e9;
+      float datab = 2.0 * frac_of_state_accessed * sizeof(state0[0]) * float(gend - gstart);
+      float flops = float(1L << 19) * 38.0;
+      float gflops = flops / ttot / 1e9;
       // printf("label=%s ttot = %.4lfs bw = %.2lf GB/s\n",
       //         label.c_str(), ttot, datab / ttot / 1e9);
 
@@ -402,7 +402,7 @@ void Loop_TN(Type *state,
              std::size_t c31, std::size_t c32, 
              std::size_t ind_shift, TM2x2<Type> const&m, bool specialize, Timer *timer)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  float ttmp1 = sec(), ttot = 0.;
   Type m00 = m[0][0],
        m01 = m[0][1],
        m10 = m[1][0],
@@ -475,10 +475,10 @@ void Loop_TN(Type *state,
   if (timer)
   {
     ttot = sec() - ttmp1;
-    double datab =
-      4.0 * sizeof(state[0]) * double((c12 - c11) / c13) * double((c22 - c21) / c23) * double(c32 - c31);
-    double flops = double(1L << 19) * 38.0;
-    double gflops = flops / ttot / 1e9;
+    float datab =
+      4.0 * sizeof(state[0]) * float((c12 - c11) / c13) * float((c22 - c21) / c23) * float(c32 - c31);
+    float flops = float(1L << 19) * 38.0;
+    float gflops = flops / ttot / 1e9;
     // printf("label=%s ttot = %.4lfs bw = %.2lf GB/s\n",
     //        "ScaleState", ttot, datab / ttot / 1e9);
     timer->record_tn(ttot, datab / ttot);
@@ -502,16 +502,16 @@ template <typename Type>
 void ScaleState(std::size_t start, std::size_t end, Type *state, 
                 const Type &s, Timer *timer)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  float ttmp1 = sec(), ttot = 0.;
   if (s != Type(1., 0.)) {
 #pragma omp parallel for    
     for (std::size_t i = start;  i < end; i++) state[i] *= s;
   }
   if (timer) {
     ttot = sec() - ttmp1;
-    double datab = 2.0 * sizeof(state[0]) * double(end - start);
-    double flops = double(1L << 19) * 38.0;
-    double gflops = flops / ttot / 1e9;
+    float datab = 2.0 * sizeof(state[0]) * float(end - start);
+    float flops = float(1L << 19) * 38.0;
+    float gflops = flops / ttot / 1e9;
     // printf("label=%s ttot = %.4lfs bw = %.2lf GB/s\n",
     //        "ScaleState", ttot, datab / ttot / 1e9);
     timer->record_sn(ttot, datab / ttot);

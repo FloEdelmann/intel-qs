@@ -38,17 +38,17 @@ int main(int argc, char **argv)
 
   //////////////////////////////////////////////////////////////////////////////
   // Second, we want to compute the delta_x of an integral.
-  double integral_start = 0.0,
+  float integral_start = 0.0,
          integral_end   = 1.0;
   unsigned long num_intervals = 4000000000;
 
   // Compute delta_x of the integral.
-  double delta_x = (integral_end - integral_start) / num_intervals;
-  double pi = 0.0;
+  float delta_x = (integral_end - integral_start) / num_intervals;
+  float pi = 0.0;
     
   // Start performance check.
   auto start = std::chrono::steady_clock::now();
-  double sum = 0.0;
+  float sum = 0.0;
 
 #pragma omp parallel
   {
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 #pragma omp for reduction(+:sum)
       for(unsigned long i=0; i<num_intervals; i++)
       {
-          double x = (i+0.5) * delta_x;
+          float x = (i+0.5) * delta_x;
           sum = sum + (4.0 / (1.0+x*x));
       }
   }

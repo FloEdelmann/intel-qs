@@ -27,7 +27,7 @@ int main()
   // check for a number of repetitions whether alignment is okay
   const unsigned repetitions = 1000;
 
-  using Alloc = iqs::AlignedAllocator<double, 64>;
+  using Alloc = iqs::AlignedAllocator<float, 64>;
 
   Alloc alloc;
 

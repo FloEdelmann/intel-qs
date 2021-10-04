@@ -44,7 +44,7 @@ int main(int argc, char** argv)
                 << " in groups of 2^" << std::log2(local_value) << "\n";
 
   struct timeval time;
-  double start, end;
+  float start, end;
   std::size_t dumb_counter=0;
 
   // Start the timer.

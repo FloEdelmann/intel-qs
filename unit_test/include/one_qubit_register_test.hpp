@@ -31,7 +31,7 @@ class OneQubitRegisterTest : public ::testing::Test
 //  void TearDown() override {}
 
   const std::size_t num_qubits_ = 1;
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
 };
 	
 //////////////////////////////////////////////////////////////////////////////
@@ -44,20 +44,20 @@ TEST_F(OneQubitRegisterTest, InitializeInComputationalBasis)
   iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
   // |psi_0> = |0>
   amplitude = psi_0.GetGlobalAmplitude(0);
-  ASSERT_DOUBLE_EQ(amplitude.real(), 1.);
-  ASSERT_DOUBLE_EQ(amplitude.imag(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.real(), 1.);
+  ASSERT_FLOAT_EQ(amplitude.imag(), 0.);
   amplitude = psi_0.GetGlobalAmplitude(1);
-  ASSERT_DOUBLE_EQ(amplitude.real(), 0.);
-  ASSERT_DOUBLE_EQ(amplitude.imag(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.real(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.imag(), 0.);
 
   iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
   // |psi_1> = |1>
   amplitude = psi_1.GetGlobalAmplitude(0);
-  ASSERT_DOUBLE_EQ(amplitude.real(), 0.);
-  ASSERT_DOUBLE_EQ(amplitude.imag(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.real(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.imag(), 0.);
   amplitude = psi_1.GetGlobalAmplitude(1);
-  ASSERT_DOUBLE_EQ(amplitude.real(), 1.);
-  ASSERT_DOUBLE_EQ(amplitude.imag(), 0.);
+  ASSERT_FLOAT_EQ(amplitude.real(), 1.);
+  ASSERT_FLOAT_EQ(amplitude.imag(), 0.);
 }
 
 // FIXME until the RNG issues are solved.
@@ -75,18 +75,18 @@ TEST_F(OneQubitRegisterTest, InitializeRandomly)
 TEST_F(OneQubitRegisterTest, GetCorrectProbability)
 {
   iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
-  ASSERT_DOUBLE_EQ(psi_0.GetProbability(0), 0.);
+  ASSERT_FLOAT_EQ(psi_0.GetProbability(0), 0.);
   psi_0.ApplyHadamard(0);
   // |psi_0> = |+>
   ASSERT_LE( std::abs(psi_0.GetProbability(0)-0.5) , accepted_error_ );
 
   iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
-  ASSERT_DOUBLE_EQ(psi_1.GetProbability(0), 1.);
+  ASSERT_FLOAT_EQ(psi_1.GetProbability(0), 1.);
   psi_1.ApplyPauliX(0);
   // |psi_1> = |0>
-  ASSERT_DOUBLE_EQ(psi_1.GetProbability(0), 0.);
+  ASSERT_FLOAT_EQ(psi_1.GetProbability(0), 0.);
   // |psi_1> = exp(-i theta X/2)|0> = cos(theta/2) |0> -i sin(theta/2)|1>
-  double theta = 1.1;
+  float theta = 1.1;
   psi_1.ApplyRotationX(0,theta);
   ASSERT_LE( std::abs(psi_1.GetProbability(0)-std::sin(theta/2)*std::sin(theta/2)),
              accepted_error_ );

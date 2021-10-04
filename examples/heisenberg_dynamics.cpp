@@ -75,7 +75,7 @@ int main(int argc, char **argv)
     fprintf(stderr, "Number of qubits: %i \n",num_qubits);
   }
   
-  double expectval = 0.;
+  float expectval = 0.;
   
   
   iqs::QubitRegister<ComplexDP> psi(num_qubits,"base",1);
@@ -83,9 +83,9 @@ int main(int argc, char **argv)
   psi.EnableStatistics();
 
   // Set model parameters
-  double J = 1.;
-  double g = 1.0;
-  double dt = 0.1;
+  float J = 1.;
+  float g = 1.0;
+  float dt = 0.1;
  
   // Initial state before Trotter step:
   // Rotated slightly in X-Z plane, with first spin 180deg from others

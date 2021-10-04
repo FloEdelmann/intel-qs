@@ -16,14 +16,14 @@ __attribute__((noinline))
 void Loop_SN(std::size_t gstart, std::size_t gend,
              Type *state0, Type *state1,
              std::size_t indsht0, std::size_t indsht1,
-	           GateSpec1Q spec, Timer *timer, double angle);
+	           GateSpec1Q spec, Timer *timer, float angle);
 
 template< typename Type >
 __attribute__((noinline))
 void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
              Type *state0, Type *state1,
              std::size_t indsht0, std::size_t indsht1,
-	           GateSpec1Q spec, Timer *timer, double angle=0);
+	           GateSpec1Q spec, Timer *timer, float angle=0);
 
 template <class Type>
 __attribute__((noinline))
@@ -32,7 +32,7 @@ void Loop_TN(Type *state,
              std::size_t c21, std::size_t c22, std::size_t c23,
              std::size_t c31, std::size_t c32, 
              std::size_t ind_shift, GateSpec2Q spec, Timer *timer, 
-             double angle=0);
+             float angle=0);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

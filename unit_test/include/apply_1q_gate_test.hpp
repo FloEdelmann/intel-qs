@@ -31,11 +31,11 @@ class Apply1QGateTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 4;
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
   // The gates involve the last qubit. If the state is |000j>, one has:
   int qubit_ = num_qubits_-1;
   std::size_t j0_ = 0, j1_ = 8; // j0_ is index when j=0, j1_ is index when j=1.
-  double sqrt2_ = std::sqrt(2.);
+  float sqrt2_ = std::sqrt(2.);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ TEST_F(Apply1QGateTest, Hadamard)
   // Initial state |000>|0>
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
   psi.ApplyHadamard(qubit_);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 1./sqrt2_, 0 };
   amplitude_1 = { 1./sqrt2_, 0 };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -59,7 +59,7 @@ TEST_F(Apply1QGateTest, Hadamard)
   // Initial state |000>|1>
   psi.Initialize("base",j1_);
   psi.ApplyHadamard(qubit_);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 1./sqrt2_, 0 };
   amplitude_1 = {-1./sqrt2_, 0 };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -70,7 +70,7 @@ TEST_F(Apply1QGateTest, Hadamard)
   psi.Initialize("base",j0_);
   psi.ApplyHadamard(qubit_);
   psi.ApplyHadamard(qubit_);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 1. , 0. };
   amplitude_1 = { 0. , 0. };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -79,7 +79,7 @@ TEST_F(Apply1QGateTest, Hadamard)
   psi.Initialize("base",j1_);
   psi.ApplyHadamard(qubit_);
   psi.ApplyHadamard(qubit_);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 0. , 0. };
   amplitude_1 = { 1. , 0. };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -91,12 +91,12 @@ TEST_F(Apply1QGateTest, Hadamard)
 // exp( -i X theta/2 )
 TEST_F(Apply1QGateTest, RotationX)
 {
-  double angle = 0.83;
+  float angle = 0.83;
   ComplexDP amplitude_0, amplitude_1;
   // Initial state |000>|0>
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationX(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { std::cos(angle/2.), 0                 };
   amplitude_1 = { 0                 ,-std::sin(angle/2.)};
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -104,7 +104,7 @@ TEST_F(Apply1QGateTest, RotationX)
   // Initial state |000>|1>
   psi.Initialize("base",j1_);
   psi.ApplyRotationX(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 0                 ,-std::sin(angle/2.)};
   amplitude_1 = { std::cos(angle/2.), 0                 };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -113,7 +113,7 @@ TEST_F(Apply1QGateTest, RotationX)
   psi.Initialize("base",j0_);
   psi.ApplyHadamard(qubit_);
   psi.ApplyRotationX(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { std::cos(angle/2.)/sqrt2_, -std::sin(angle/2.)/sqrt2_};
   amplitude_1 = { std::cos(angle/2.)/sqrt2_, -std::sin(angle/2.)/sqrt2_};
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -122,7 +122,7 @@ TEST_F(Apply1QGateTest, RotationX)
   psi.Initialize("base",j1_);
   psi.ApplyHadamard(qubit_);
   psi.ApplyRotationX(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  std::cos(angle/2.)/sqrt2_,  std::sin(angle/2.)/sqrt2_};
   amplitude_1 = { -std::cos(angle/2.)/sqrt2_, -std::sin(angle/2.)/sqrt2_};
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -134,12 +134,12 @@ TEST_F(Apply1QGateTest, RotationX)
 // exp( -i Y theta/2 )
 TEST_F(Apply1QGateTest, RotationY)
 {
-  double angle = 0.75;
+  float angle = 0.75;
   ComplexDP amplitude_0, amplitude_1;
   // Initial state |000>|0>
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationY(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  std::cos(angle/2.), 0.};
   amplitude_1 = {  std::sin(angle/2.), 0.};
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -147,7 +147,7 @@ TEST_F(Apply1QGateTest, RotationY)
   // Initial state |000>|1>
   psi.Initialize("base",j1_);
   psi.ApplyRotationY(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { -std::sin(angle/2.), 0.};
   amplitude_1 = {  std::cos(angle/2.), 0.};
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -159,12 +159,12 @@ TEST_F(Apply1QGateTest, RotationY)
 // exp( -i Z theta/2 )
 TEST_F(Apply1QGateTest, RotationZ)
 {
-  double angle = 0.35;
+  float angle = 0.35;
   ComplexDP amplitude_0, amplitude_1;
   // Initial state |000>|0>
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationZ(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  std::cos(angle/2.), -std::sin(angle/2.) };
   amplitude_1 = {  0.                , 0.                    };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -172,7 +172,7 @@ TEST_F(Apply1QGateTest, RotationZ)
   // Initial state |000>|1>
   psi.Initialize("base",j1_);
   psi.ApplyRotationZ(qubit_,angle);
-  ASSERT_DOUBLE_EQ(psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  0.                , 0.                    };
   amplitude_1 = {  std::cos(angle/2.), std::sin(angle/2.) };
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(j0_), amplitude_0, accepted_error_);
@@ -195,8 +195,8 @@ TEST_F(Apply1QGateTest, CustomGate)
   {
       psi.Apply1QubitGate(qubit, G);
   }
-  ASSERT_DOUBLE_EQ( psi.GetProbability(0), psi.GetProbability(2) );
-  ASSERT_DOUBLE_EQ( psi.GetProbability(1), psi.GetProbability(3) );
+  ASSERT_FLOAT_EQ( psi.GetProbability(0), psi.GetProbability(2) );
+  ASSERT_FLOAT_EQ( psi.GetProbability(1), psi.GetProbability(3) );
   // The accepted error is sometimes exceeded when gcc is used.
   ASSERT_NEAR( psi.GetProbability(0), 1.-psi.GetProbability(1), accepted_error_*10 );
 }

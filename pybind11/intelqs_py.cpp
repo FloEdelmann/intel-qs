@@ -70,23 +70,23 @@ PYBIND11_MODULE(intelqs_py, m)
 //////////////////////////////////////////////////////////////////////////////
 
     // Random Number Generator
-    py::class_<iqs::RandomNumberGenerator<double>>(m, "RandomNumberGenerator")
+    py::class_<iqs::RandomNumberGenerator<float>>(m, "RandomNumberGenerator")
         .def(py::init<>())
-        .def("GetSeed", &iqs::RandomNumberGenerator<double>::GetSeed)
-        .def("SetSeedStreamPtrs", &iqs::RandomNumberGenerator<double>::SetSeedStreamPtrs)
-        .def("SkipeAhead", &iqs::RandomNumberGenerator<double>::SkipAhead)
-        .def("UniformRandomNumbers", &iqs::RandomNumberGenerator<double>::UniformRandomNumbers)
-        .def("GaussianRandomNumbers", &iqs::RandomNumberGenerator<double>::GaussianRandomNumbers)
-        .def("RandomIntegersInRange", &iqs::RandomNumberGenerator<double>::RandomIntegersInRange)
+        .def("GetSeed", &iqs::RandomNumberGenerator<float>::GetSeed)
+        .def("SetSeedStreamPtrs", &iqs::RandomNumberGenerator<float>::SetSeedStreamPtrs)
+        .def("SkipeAhead", &iqs::RandomNumberGenerator<float>::SkipAhead)
+        .def("UniformRandomNumbers", &iqs::RandomNumberGenerator<float>::UniformRandomNumbers)
+        .def("GaussianRandomNumbers", &iqs::RandomNumberGenerator<float>::GaussianRandomNumbers)
+        .def("RandomIntegersInRange", &iqs::RandomNumberGenerator<float>::RandomIntegersInRange)
         .def("GetUniformRandomNumbers",
-             [](iqs::RandomNumberGenerator<double> &rng, std::size_t size,
-                double a, double b, std::string shared) {
-                std::vector<double> random_values(size);
+             [](iqs::RandomNumberGenerator<float> &rng, std::size_t size,
+                float a, float b, std::string shared) {
+                std::vector<float> random_values(size);
                 rng.UniformRandomNumbers(random_values.data(), size, a, b, shared);
                 return random_values;
              }, "Return an array of 'size' random number from the uniform distribution [a,b[.")
 #ifdef WITH_MPI_AND_MKL
-        .def("SetRndStreamPtrs", &iqs::RandomNumberGenerator<double>::SetRndStreamPtrs)
+        .def("SetRndStreamPtrs", &iqs::RandomNumberGenerator<float>::SetRndStreamPtrs)
 #endif
         .def("__repr__", []() { return "<RandomNumberGenerator specialized for MKL.>"; } );
 
@@ -418,7 +418,7 @@ std::cout << "ciao\n";
         .def_static("PoolBarrier", &iqs::mpi::PoolBarrier)
         .def_static("StateBarrier", &iqs::mpi::StateBarrier)
 
-        .def_static("IncoherentSumOverAllStatesOfPool", &Environment::IncoherentSumOverAllStatesOfPool<double>)
+        .def_static("IncoherentSumOverAllStatesOfPool", &Environment::IncoherentSumOverAllStatesOfPool<float>)
         .def_static("UpdateStateComm", &Environment::UpdateStateComm);
 
 }

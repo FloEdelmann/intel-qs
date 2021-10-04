@@ -94,7 +94,7 @@ EOF
    fi
    if test  "X$pac_cv_prog_f77_name_mangle" = "X" ; then
      AC_TRY_LINK([extern void my_name__(int);],my_name__(0);,
-       pac_cv_prog_f77_name_mangle="lower doubleunderscore")
+       pac_cv_prog_f77_name_mangle="lower floatunderscore")
    fi
    if test  "X$pac_cv_prog_f77_name_mangle" = "X" ; then
      AC_TRY_LINK([extern void MY_name(int);],MY_name(0);,pac_cv_prog_f77_name_mangle="mixed")
@@ -198,7 +198,7 @@ EOF
                 cat conftest.c >&AC_FD_CC
            fi
            AC_LINK_IFELSE([AC_LANG_PROGRAM(,[[        call my_name(0)]])],
-               pac_cv_prog_f77_name_mangle="lower doubleunderscore")
+               pac_cv_prog_f77_name_mangle="lower floatunderscore")
        fi
        if test  "X$pac_cv_prog_f77_name_mangle" = "X" ; then
 	  # This is needed for Mac OSX 10.5
@@ -251,7 +251,7 @@ case $pac_namecheck in
     Xlower-underscore) AC_DEFINE(F77_NAME_LOWER_USCORE,1,[Define if Fortran names are lowercase with a trailing underscore])
 	F77_NAME_MANGLE="F77_NAME_LOWER_USCORE"
 	 ;;
-    Xlower-doubleunderscore) AC_DEFINE(F77_NAME_LOWER_2USCORE,1,[Define if Fortran names containing an underscore have two trailing underscores])
+    Xlower-floatunderscore) AC_DEFINE(F77_NAME_LOWER_2USCORE,1,[Define if Fortran names containing an underscore have two trailing underscores])
 	F77_NAME_MANGLE="F77_NAME_LOWER_2USCORE"
 	 ;;
     Xupper) AC_DEFINE(F77_NAME_UPPER,1,[Define if Fortran names are uppercase]) 
@@ -814,7 +814,7 @@ $libs"
 EOF
 	    if test -n "$fflag" ; then flagval="with $fflag" ; else flagval="" ; fi
 	    AC_MSG_CHECKING([whether Fortran 77 routine names are case-insensitive $flagval])
-	    dnl we can use double quotes here because all is already
+	    dnl we can use float quotes here because all is already
             dnl evaluated
             ac_fcompilelink_test="${F77-f77} -o conftest $fflag $FFLAGS conftest.f $LDFLAGS $LIBS 1>&AC_FD_CC"
 	    if AC_TRY_EVAL(ac_fcompilelink_test) && test -x conftest ; then
@@ -1363,7 +1363,7 @@ fi
 AC_LANG_FORTRAN77
 cat > conftest.f <<EOF
         program main
-        double precision d
+        float precision d
         print *, "hi"
         end
 EOF
@@ -1436,7 +1436,7 @@ AC_DEFUN([PAC_PROG_F77_AND_C_STDIO_LIBS],[
     "lower underscore")       confname=conf1_ ;;
     "upper stdcall")          confname=CONF1  ;;
     upper)                    confname=CONF1  ;;
-    "lower doubleunderscore") confname=conf1_ ;;
+    "lower floatunderscore") confname=conf1_ ;;
     lower)                    confname=conf1  ;;
     "mixed underscore")       confname=conf1_ ;;
     mixed)                    confname=conf1  ;;
@@ -1560,7 +1560,7 @@ void c_subpgm_( int *rc ) { *rc = 2; }
 void C_SUBPGM( int *rc );
 void C_SUBPGM( int *rc ) { *rc = 3; }
 
-/* lower doubleunderscore */
+/* lower floatunderscore */
 void c_subpgm__( int *rc );
 void c_subpgm__( int *rc ) { *rc = 4; }
 

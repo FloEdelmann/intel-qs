@@ -27,20 +27,20 @@ int main(int argc, char * argv[])
     int m = (argc > 2) ? atoi(argv[2]) : 17777;
     MPI_Count n = l * test_int_max + m;
 
-    double * baseptr = NULL;
+    float * baseptr = NULL;
     MPI_Win win;
     MPI_Aint winsize = (rank==0 ? n : 0);
 #if MPI_VERSION >= 3
     /* Allocate all the window memory on rank 0 */
-    MPI_Win_allocate(winsize, sizeof(double), MPI_INFO_NULL, MPI_COMM_WORLD, &baseptr, &win);
+    MPI_Win_allocate(winsize, sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &baseptr, &win);
     MPI_Win_lock_all(0, win);
 #else
-    MPI_Alloc_mem(winsize*sizeof(double), MPI_INFO_NULL, &baseptr);
-    MPI_Win_create(baseptr, size, sizeof(double), MPI_INFO_NULL, MPI_COMM_WORLD, &win);
+    MPI_Alloc_mem(winsize*sizeof(float), MPI_INFO_NULL, &baseptr);
+    MPI_Win_create(baseptr, size, sizeof(float), MPI_INFO_NULL, MPI_COMM_WORLD, &win);
 #endif
 
     if (rank==0) {
-        for (size_t i=0; i<(n/sizeof(double)); i++) {
+        for (size_t i=0; i<(n/sizeof(float)); i++) {
             baseptr[i] = 0.0;
         }
 #if MPI_VERSION >= 3
@@ -49,17 +49,17 @@ int main(int argc, char * argv[])
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
-    double * buf = NULL;
+    float * buf = NULL;
     MPI_Alloc_mem((MPI_Aint)n, MPI_INFO_NULL, &buf);
-    for (size_t i=0; i<(n/sizeof(double)); i++) {
+    for (size_t i=0; i<(n/sizeof(float)); i++) {
         buf[i] = 1.0;
     }
 
 #if MPI_VERSION < 3
     MPI_Win_lock(MPI_LOCK_EXCLUSIVE, 0 /* target */, 0 /* assert */, win);
 #endif
-    MPIX_Accumulate_x(buf, n/sizeof(double), MPI_DOUBLE,
-                      0 /* target */, 0 /* disp */, n/sizeof(double), MPI_DOUBLE, MPI_SUM, win);
+    MPIX_Accumulate_x(buf, n/sizeof(float), MPI_FLOAT,
+                      0 /* target */, 0 /* disp */, n/sizeof(float), MPI_FLOAT, MPI_SUM, win);
 #if MPI_VERSION >= 3
     MPI_Win_flush(0,win);
 #else
@@ -72,11 +72,11 @@ int main(int argc, char * argv[])
 #if MPI_VERSION >= 3
         MPI_Win_sync(win);
 #endif
-        double expected = size;
-        size_t errors = verify_doubles(baseptr, n/sizeof(double), expected);
+        float expected = size;
+        size_t errors = verify_floats(baseptr, n/sizeof(float), expected);
         if (errors > 0) {
             printf("There were %zu errors!", errors);
-            for (size_t i=0; i<(n/(sizeof(double))); i++) {
+            for (size_t i=0; i<(n/(sizeof(float))); i++) {
                 printf("baseptr[%zu] = %lf (expected %lf)\n", i, baseptr[i], expected);
             }
         }

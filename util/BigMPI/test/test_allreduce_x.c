@@ -32,26 +32,26 @@ int main(int argc, char * argv[])
     int m = (argc > 2) ? atoi(argv[2]) : 17777;
     MPI_Count n = l * test_int_max + m;
 
-    double * sbuf = NULL;
-    double * rbuf = NULL;
+    float * sbuf = NULL;
+    float * rbuf = NULL;
 
-    MPI_Aint bytes = n*sizeof(double);
+    MPI_Aint bytes = n*sizeof(float);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &sbuf);
     MPI_Alloc_mem(bytes, MPI_INFO_NULL, &rbuf);
 
     for (MPI_Count i=0; i<n; i++) {
-        sbuf[i] = (double)rank+1.;
+        sbuf[i] = (float)rank+1.;
     }
     for (MPI_Count i=0; i<n; i++) {
         rbuf[i] = 0.0;
     }
 
     /* collective communication */
-    MPIX_Allreduce_x(sbuf, rbuf, n, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    MPIX_Allreduce_x(sbuf, rbuf, n, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
 
     size_t errors = 0;
-    double val = (double)size*(size+1.)/2.;
-    errors = verify_doubles(rbuf, n, val);
+    float val = (float)size*(size+1.)/2.;
+    errors = verify_floats(rbuf, n, val);
     if (errors) {
         printf("There were %zu errors out of %zu elements!\n", errors, (size_t)n);
         for (MPI_Count i=0; i<n; i++) {

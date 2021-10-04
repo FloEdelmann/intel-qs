@@ -47,7 +47,7 @@ class MultipleStatesTest : public ::testing::Test
   }
 
   int num_qubits_= 8;
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
   int pool_rank_id_;
   int num_ranks_;
 };
@@ -101,8 +101,8 @@ TEST_F(MultipleStatesTest, OneStatePerRank)
       psi.ApplyPauliX(1);
       psi.ApplyHadamard(1);
       amplitude = psi.GetGlobalAmplitude(index);
-      ASSERT_DOUBLE_EQ(amplitude.real(),1.);
-      ASSERT_DOUBLE_EQ(amplitude.imag(),0.);
+      ASSERT_FLOAT_EQ(amplitude.real(),1.);
+      ASSERT_FLOAT_EQ(amplitude.imag(),0.);
   }
   else
       ASSERT_TRUE(false);
@@ -185,15 +185,15 @@ std::cout << "state_id= " << my_state_id << " over "
 
       // When num_useful_ranks>2, the last qubit is global.
       psi.ApplyCPauliX(0,num_qubits_-1);
-      ASSERT_DOUBLE_EQ(psi.GetProbability(num_qubits_-1),double(index));
+      ASSERT_FLOAT_EQ(psi.GetProbability(num_qubits_-1),float(index));
       // Undo all the computation performed after the initialization.
       psi.ApplyHadamard(num_qubits_-1);
       psi.ApplyCPauliZ(0,num_qubits_-1);
       psi.ApplyHadamard(num_qubits_-1);
       psi.ApplyPauliZ(1);
       amplitude = psi.GetGlobalAmplitude(index);
-      ASSERT_DOUBLE_EQ(amplitude.real(),1.);
-      ASSERT_DOUBLE_EQ(amplitude.imag(),0.);
+      ASSERT_FLOAT_EQ(amplitude.real(),1.);
+      ASSERT_FLOAT_EQ(amplitude.imag(),0.);
   }
   else
       ASSERT_TRUE( num_dummy_ranks>0 );

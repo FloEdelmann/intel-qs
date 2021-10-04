@@ -64,7 +64,7 @@ void GenerateGateSet(std::vector <std::pair<std::string,TM2x2<Type>>> &sqg,
   T(1, 0) = Type(0.0, 0.0); T(1, 1) = Type(cos(M_PI/4.0), sin(M_PI/4.0));
   T.name = "t";
 
-  double f = 1. / std::sqrt(2.);
+  float f = 1. / std::sqrt(2.);
   H(0, 0) = H(0, 1) = H(1, 0) = Type(f, 0.);
   H(1, 1) = Type(-f, 0.);
   H.name = "h";
@@ -111,14 +111,14 @@ int main(int argc, char **argv)
 
   // To generate a random state, we need to create a random number generator first.
   iqs::mpi::PoolPrint("---- State initialization |psi_1>.\n");
-  iqs::RandomNumberGenerator<double> rnd_generator_1;
+  iqs::RandomNumberGenerator<float> rnd_generator_1;
   rnd_generator_1.SetSeedStreamPtrs(20971);
   iqs::QubitRegister<ComplexDP> psi1(num_qubits, "base", 0, 2097152);
   psi1.SetRngPtr(&rnd_generator_1);
   psi1.Initialize("rand",1);
 
   iqs::mpi::PoolPrint("---- State initialization |psi_2>.\n");
-  iqs::RandomNumberGenerator<double> rnd_generator_2;
+  iqs::RandomNumberGenerator<float> rnd_generator_2;
   rnd_generator_2.SetSeedStreamPtrs(20971);
   iqs::QubitRegister<ComplexDP> psi2(num_qubits, "base", 0, 2097152);
   psi2.SetRngPtr(&rnd_generator_2);

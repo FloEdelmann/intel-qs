@@ -248,14 +248,14 @@ Type QubitRegister<Type>::ComputeOverlap( QubitRegister<Type> &psi)
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief ???
 template <class Type>
-double QubitRegister<Type>::Entropy()
+float QubitRegister<Type>::Entropy()
 {
   std::size_t lcl = LocalSize();
-  double local_Hp = 0;
+  float local_Hp = 0;
 
   if(timer) timer->Start("ENT", 0);
 
-  double ttot = 0., ttmp1 = sec();
+  float ttot = 0., ttmp1 = sec();
 #if defined(__ICC) || defined(__INTEL_COMPILER)
 #pragma omp parallel for reduction(+ : local_Hp)
 #else
@@ -263,14 +263,14 @@ double QubitRegister<Type>::Entropy()
 #endif
   for (std::size_t i = 0; i < lcl; i++)
   {
-      double pj = std::norm(state[i]) ;
-      if (pj != double(0.))
+      float pj = std::norm(state[i]) ;
+      if (pj != float(0.))
       {
           local_Hp -= pj * std::log(pj);
       }
   }
 
-  double global_Hp;
+  float global_Hp;
 #ifdef INTELQS_HAS_MPI
   MPI_Comm comm = iqs::mpi::Environment::GetStateComm();
   iqs::mpi::MPI_Allreduce_x(&local_Hp, &global_Hp, 1, MPI_SUM, comm);
@@ -282,32 +282,32 @@ double QubitRegister<Type>::Entropy()
  
   if (timer)
   {
-      double datab = double(sizeof(state[0])) * double(lcl) / ttot;
+      float datab = float(sizeof(state[0])) * float(lcl) / ttot;
       timer->record_sn(ttot, datab / ttot);
       timer->Stop();
   }
 
-  return global_Hp / (double)log(double(2.0));
+  return global_Hp / (float)log(float(2.0));
 }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief ???
 template <class Type>
-std::vector<double> QubitRegister<Type>::GoogleStats()
+std::vector<float> QubitRegister<Type>::GoogleStats()
 {
-  std::vector <double> stats;
+  std::vector <float> stats;
 
   std::size_t lcl = LocalSize();
-  double two2n = double(GlobalSize());
+  float two2n = float(GlobalSize());
   
-  double entropy = 0, avgselfinfo=0,
+  float entropy = 0, avgselfinfo=0,
          m2 = 0, m3 = 0, m4 = 0, m5 = 0, m6 = 0, 
          m7 = 0, m8 = 0, m9 = 0, m10 = 0; 
 
   if(timer) timer->Start("ENT", 0);
 
-  double ttot = 0., ttmp1 = sec();
+  float ttot = 0., ttmp1 = sec();
 
 #if defined(__ICC) || defined(__INTEL_COMPILER)
 #pragma omp parallel for reduction(+ : entropy, avgselfinfo, m2, m3, m4, m5, m6, m7, m8, m9, m10)
@@ -318,15 +318,15 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
   // #pragma novector
   for (std::size_t i = 0; i < lcl; i++)
   {
-    double pj = std::norm(state[i]) ;
-    if (pj != double(0.))
+    float pj = std::norm(state[i]) ;
+    if (pj != float(0.))
     {
-        double nl = log(pj);
-        // double nl = pj*pj;
+        float nl = log(pj);
+        // float nl = pj*pj;
         entropy -= pj * nl;
         avgselfinfo -= nl;
     }
-    double pj2  = pj *  pj,
+    float pj2  = pj *  pj,
            pj3  = pj2 * pj,
            pj4  = pj2 * pj2,
            pj5  = pj3 * pj2,
@@ -346,8 +346,8 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
     m10 += pj10;
   }
 
-  double global_entropy;
-  double global_avgselfinfo;
+  float global_entropy;
+  float global_avgselfinfo;
 #ifdef INTELQS_HAS_MPI
   MPI_Comm comm = iqs::mpi::Environment::GetStateComm();
   iqs::mpi::MPI_Allreduce_x(&entropy, &global_entropy, 1, MPI_SUM, comm);
@@ -356,22 +356,22 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
   global_entropy = entropy;
   global_avgselfinfo = avgselfinfo;
 #endif
-  global_entropy /= (double)std::log(double(2.0));
+  global_entropy /= (float)std::log(float(2.0));
   stats.push_back(global_entropy);
-  global_avgselfinfo /= (double)log(double(2.0));
+  global_avgselfinfo /= (float)log(float(2.0));
   global_avgselfinfo /= two2n;
   stats.push_back(global_avgselfinfo);
 
   // compute moments
-  std::vector <double> m = {m2, m3, m4, m5, m6, m7, m8, m9, m10},
+  std::vector <float> m = {m2, m3, m4, m5, m6, m7, m8, m9, m10},
                        factor(m.size()), 
                        global_m(m.size());
-  double factorial = 1.0;
+  float factorial = 1.0;
   for(auto i = 0; i < m.size(); i++)
   {
       auto k = i + 2;
-      factorial *= double(k);
-      factor[i] = pow(two2n, double(k - 1)) / factorial;
+      factorial *= float(k);
+      factor[i] = pow(two2n, float(k - 1)) / factorial;
 
       m[i] *= factor[i];
 #ifdef INTELQS_HAS_MPI
@@ -386,7 +386,7 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
 
   if (timer)
   {
-      double datab = double(sizeof(state[0])) * double(lcl) / ttot;
+      float datab = float(sizeof(state[0])) * float(lcl) / ttot;
       timer->record_sn(ttot, datab / ttot);
       timer->Stop();
   }
@@ -494,14 +494,14 @@ void QubitRegister<Type>::Print(std::string x, std::vector<std::size_t> qubits)
 
   BaseType glb_cumulative_probability;
 #ifdef INTELQS_HAS_MPI
-  MPI_Reduce(&cumulative_probability, &glb_cumulative_probability, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
+  MPI_Reduce(&cumulative_probability, &glb_cumulative_probability, 1, MPI_FLOAT, MPI_SUM, 0, comm);
 #else
   glb_cumulative_probability = cumulative_probability;
 #endif
   if (my_rank == 0)
   {
       assert(my_rank==0);
-      printf("]; %% cumulative probability = %lf\n", (double)glb_cumulative_probability);
+      printf("]; %% cumulative probability = %lf\n", (float)glb_cumulative_probability);
   }
 
   iqs::mpi::StateBarrier();
@@ -617,16 +617,16 @@ void QubitRegister<Type>::dumpbin(std::string fn)
   assert(size < INT_MAX);
   MPI_Offset offset = size * UL(myrank * sizeof(Type));
 
-  double t0 = sec();
+  float t0 = sec();
   iqs::mpi::StateBarrier();
-  MPI_File_write_at(fh, offset, (void *)(&(state[0])), size, MPI_DOUBLE_COMPLEX, &status);
+  MPI_File_write_at(fh, offset, (void *)(&(state[0])), size, MPI_FLOAT_COMPLEX, &status);
   iqs::mpi::StateBarrier();
-  double t1 = sec();
+  float t1 = sec();
   MPI_File_close(&fh);
   if (myrank == 0)
   {
-      double bw = double(UL(sizeof(state[0])) * size) / (t1 - t0) / 1e6;
-      printf("Dumping state to %s took %lf sec (%lf MB/s)\n", (const char *)fn.c_str(), (double)(t1 - t0), (double)bw);
+      float bw = float(UL(sizeof(state[0])) * size) / (t1 - t0) / 1e6;
+      printf("Dumping state to %s took %lf sec (%lf MB/s)\n", (const char *)fn.c_str(), (float)(t1 - t0), (float)bw);
   }
 #else
   assert(0);

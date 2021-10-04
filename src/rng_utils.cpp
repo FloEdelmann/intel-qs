@@ -20,7 +20,7 @@ RandomNumberGenerator<Type>::RandomNumberGenerator(RandomNumberGenerator * sourc
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// The next two methods will be specialized for 'float' and 'double' below.
+// The next two methods will be specialized for 'float' and 'float' below.
 // If Type is another typename, then report the error.
 
 template <typename Type>
@@ -103,7 +103,7 @@ void RandomNumberGenerator<Type>::SkipAhead ( std::size_t num_skip, std::string 
 {
   // The use of .discard() depends on the actual implementation of the distribution.
   // Sometimes more than one use of the std::mt19937 generator are needed, even to
-  // generate a single uniformly distributed (double) number.
+  // generate a single uniformly distributed (float) number.
   // To avoid problems, one generate and discards random numbers.
 
 #if 1
@@ -147,13 +147,13 @@ void RandomNumberGenerator<float>::UniformRandomNumbers
 }
 
 template <>
-void RandomNumberGenerator<double>::UniformRandomNumbers
-( double *value, std::size_t size , double a, double b, std::string shared )
+void RandomNumberGenerator<float>::UniformRandomNumbers
+( float *value, std::size_t size , float a, float b, std::string shared )
 {
   std::mt19937 * generator;
   generator = this->SelectGeneratorAndUpdateCounter(size, shared);
 
-  double * temp_ptr = value;
+  float * temp_ptr = value;
   // If [a,b) is not [0,1), translate and scale the random numbers.
   for (std::size_t i=0; i<size; ++i)
   {
@@ -179,9 +179,9 @@ void RandomNumberGenerator<Type>::RandomIntegersInRange
   {
       rand = u_distribution(*generator);
       rand = (Type)a + rand * Type(b - a);
-      // Note that there are problems with double-->int conversion:
-      // - the range of double (output of floor) is larger;
-      // - but not all integers are exactly representable within the double range.
+      // Note that there are problems with float-->int conversion:
+      // - the range of float (output of floor) is larger;
+      // - but not all integers are exactly representable within the float range.
       *temp_ptr = (int)std::floor(rand);
       ++temp_ptr;
   }
@@ -210,14 +210,14 @@ void RandomNumberGenerator<float>::GaussianRandomNumbers
 }
 
 template <>
-void RandomNumberGenerator<double>::GaussianRandomNumbers
-( double *value, std::size_t size , std::string shared )
+void RandomNumberGenerator<float>::GaussianRandomNumbers
+( float *value, std::size_t size , std::string shared )
 {
   std::mt19937 * generator;
   // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
   generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
 
-  double * temp_ptr = value;
+  float * temp_ptr = value;
   for (std::size_t i=0; i<size; ++i)
   {
        *temp_ptr = n_distribution(*generator);
@@ -344,8 +344,8 @@ void RandomNumberGenerator<float>::UniformRandomNumbers
 }
 
 template <>
-void RandomNumberGenerator<double>::UniformRandomNumbers
-( double *value, std::size_t size , double a, double b, std::string shared )
+void RandomNumberGenerator<float>::UniformRandomNumbers
+( float *value, std::size_t size , float a, float b, std::string shared )
 {
   VSLStreamStatePtr stream;
   stream = this->SelectGeneratorAndUpdateCounter(size, shared);
@@ -381,8 +381,8 @@ void RandomNumberGenerator<float>::GaussianRandomNumbers
 }
 
 template <>
-void RandomNumberGenerator<double>::GaussianRandomNumbers
-( double *value, std::size_t size , std::string shared )
+void RandomNumberGenerator<float>::GaussianRandomNumbers
+( float *value, std::size_t size , std::string shared )
 {
   VSLStreamStatePtr stream;
   // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
@@ -396,7 +396,7 @@ void RandomNumberGenerator<double>::GaussianRandomNumbers
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class RandomNumberGenerator<float>;
-template class RandomNumberGenerator<double>;
+template class RandomNumberGenerator<float>;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -422,14 +422,14 @@ void ShuffleFisherYates( std::vector<Type> &array,
   }
 }
 
-template void ShuffleFisherYates<int,double>
-  (std::vector<int>     &, RandomNumberGenerator<double> *, std::string);
-template void ShuffleFisherYates<float,double>
-  (std::vector<float>   &, RandomNumberGenerator<double> *, std::string);
-template void ShuffleFisherYates<double,double>
-  (std::vector<double>  &, RandomNumberGenerator<double> *, std::string);
-template void ShuffleFisherYates<unsigned,double>
-  (std::vector<unsigned>&, RandomNumberGenerator<double> *, std::string);
+template void ShuffleFisherYates<int,float>
+  (std::vector<int>     &, RandomNumberGenerator<float> *, std::string);
+template void ShuffleFisherYates<float,float>
+  (std::vector<float>   &, RandomNumberGenerator<float> *, std::string);
+template void ShuffleFisherYates<float,float>
+  (std::vector<float>  &, RandomNumberGenerator<float> *, std::string);
+template void ShuffleFisherYates<unsigned,float>
+  (std::vector<unsigned>&, RandomNumberGenerator<float> *, std::string);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

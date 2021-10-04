@@ -30,9 +30,9 @@ public:
 
   //Perform gates
   void ApplyHadamard(int);
-  void ApplyRotationX(int, double);
-  void ApplyRotationY(int, double);
-  void ApplyRotationZ(int, double);
+  void ApplyRotationX(int, float);
+  void ApplyRotationY(int, float);
+  void ApplyRotationZ(int, float);
   void ApplyCPauliX(int, int);
   void ApplyControlled1QubitGate(int, int, iqs::TinyMatrix<Type, 2, 2, 32>);
 };
@@ -81,19 +81,19 @@ void QubitRegisterMetric<Type>::ApplyHadamard(int q){
 }
 
 template <class Type>
-void QubitRegisterMetric<Type>::ApplyRotationX(int q, double theta){
+void QubitRegisterMetric<Type>::ApplyRotationX(int q, float theta){
   QubitRegister<Type>::ApplyRotationX(q,theta);
   OneQubitIncrements(q); 
 }
 
 template <class Type>
-void QubitRegisterMetric<Type>::ApplyRotationY(int q, double theta){
+void QubitRegisterMetric<Type>::ApplyRotationY(int q, float theta){
   QubitRegister<Type>::ApplyRotationY(q,theta);
   OneQubitIncrements(q); 
 }
 
 template <class Type>
-void QubitRegisterMetric<Type>::ApplyRotationZ(int q, double theta){
+void QubitRegisterMetric<Type>::ApplyRotationZ(int q, float theta){
   QubitRegister<Type>::ApplyRotationZ(q,theta);
   OneQubitIncrements(q); 
 }

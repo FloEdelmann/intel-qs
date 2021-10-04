@@ -346,8 +346,8 @@ class QubitRegister
   BaseType MaxAbsDiff(QubitRegister &x, Type sfactor = Type(1.0, 0.));
   BaseType MaxL2NormDiff(QubitRegister &x);
   void dumpbin(std::string fn);
-  double Entropy();
-  std::vector<double> GoogleStats();
+  float Entropy();
+  std::vector<float> GoogleStats();
   void Normalize();
   BaseType ComputeNorm();
   Type ComputeOverlap( QubitRegister<Type> &psi );
@@ -355,17 +355,17 @@ class QubitRegister
   void Print(std::string x, std::vector<std::size_t> qbits = {});
   void ExportAmplitudes(std::string ofname);
 
-  double HP_Distrpair(unsigned position, TM2x2<Type> const&m,
+  float HP_Distrpair(unsigned position, TM2x2<Type> const&m,
                       // See Apply1QubitGate declaration below 
                       // for the following specialize v2 parameters
                       iqs::GateSpec1Q spec=iqs::GateSpec1Q::None,
                       BaseType angle=0);
-  double HP_Distrpair(unsigned control_position, unsigned target_position, TM2x2<Type> const&m,
+  float HP_Distrpair(unsigned control_position, unsigned target_position, TM2x2<Type> const&m,
                       // See ApplyControlled1QubitGate declaration below
                       // for the following specialize v2 parameters
                       iqs::GateSpec2Q spec=iqs::GateSpec2Q::None,
                       BaseType angle=0);
-  double HP_DistrSwap(unsigned low_position, unsigned high_position, TM2x2<Type> const&m);
+  float HP_DistrSwap(unsigned low_position, unsigned high_position, TM2x2<Type> const&m);
 
   // related to the internal random number generator.
   iqs::RandomNumberGenerator<BaseType> * GetRngPtr () {return rng_ptr_; }

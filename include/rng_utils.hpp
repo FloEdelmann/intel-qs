@@ -33,7 +33,7 @@ namespace iqs {
 /// The generation of numbers and the method to skip ahead are more efficient
 /// when MKL (and in particular VSL) is used.
 
-// Type = float, double
+// Type = float, float
 template <typename Type>
 class  RandomNumberGenerator
 {

@@ -110,7 +110,7 @@ int main(int argc, char **argv)
       }
   }
 
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(7777);
   iqs::QubitRegister<ComplexDP> psi_B(num_qubits, "base", 0 );
   psi_B.SetRngPtr(&rnd_generator);
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     psi_C.GetStatistics();
   }
 
-  double e = psi_C.MaxAbsDiff(psi_B);
+  float e = psi_C.MaxAbsDiff(psi_B);
   if (myrank == 0)
       printf("Max abs difference between the entries of |B> and |C>:\n e = %lf\n", e);
 

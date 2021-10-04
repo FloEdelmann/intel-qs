@@ -49,7 +49,7 @@ int main(int argc, char **argv)
           fprintf(stderr, "example to be launched with a single process\n");
       exit(1);
   }
-  double expectation;
+  float expectation;
 
   MPIout << "------------------\n"
          << "   Single qubit   \n"

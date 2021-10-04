@@ -101,7 +101,7 @@ void chimatrix_testsize()
 template <class T>
 void chimatrix_testassign()
 {
-  double init[2][2] = {{1., 2.}, {3., 4.}};
+  float init[2][2] = {{1., 2.}, {3., 4.}};
 
   iqs::ChiMatrix<T, 2> mat = init;
   for (unsigned i = 0; i < mat.numRows(); ++i)
@@ -193,10 +193,10 @@ TEST_F(ChiMatrixTest, Int)
 
 TEST_F(ChiMatrixTest, ComplexDP)
 {
-  chimatrix_testsize<std::complex<double>, 1>();
-  chimatrix_testsize<std::complex<double>, 2>();
-  chimatrix_testassign<std::complex<double>>();
-  chimatrix_testeigen<std::complex<double>>();
+  chimatrix_testsize<std::complex<float>, 1>();
+  chimatrix_testsize<std::complex<float>, 2>();
+  chimatrix_testassign<std::complex<float>>();
+  chimatrix_testeigen<std::complex<float>>();
 }
 
 //////////////////////////////////////////////////////////////////////////////

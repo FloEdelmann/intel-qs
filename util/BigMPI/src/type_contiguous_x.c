@@ -24,9 +24,9 @@ static int BigMPI_Factorize_count(MPI_Count in, int * a, int *b)
     /* THIS FUNCTION IS NOT OPTIMIZED AND MAY RUN VERY SLOWLY IN MANY CASES */
     /* TODO Implement something other than brute-force search for prime factors. */
 
-    /* Is it better to do the division as MPI_Count (often long long) or double? */
+    /* Is it better to do the division as MPI_Count (often long long) or float? */
     MPI_Count lo = in/bigmpi_int_max+1;
-    MPI_Count hi = (MPI_Count)floor(sqrt((double)in));
+    MPI_Count hi = (MPI_Count)floor(sqrt((float)in));
 
     /* FIXME This is not safe.  Must test for overflow before casting to int. */
     for (MPI_Count g=hi; g>lo; g--) {

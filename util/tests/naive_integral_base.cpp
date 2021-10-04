@@ -25,14 +25,14 @@
 
 int main(int argc, char **argv)
 {
-    double integral_start = 0.0,
+    float integral_start = 0.0,
            integral_end   = 1.0;
     unsigned long N = 100000; // number of steps.
 
     // Compute delta_x of the integral.
-    double delta_x = (integral_end - integral_start) / (double)N;
-    double sum = 0.0;
-    double x;
+    float delta_x = (integral_end - integral_start) / (float)N;
+    float sum = 0.0;
+    float x;
 
     // Compute the Riemann sum for the approximate integral.
     for(unsigned long i=0;i<N;i++) {

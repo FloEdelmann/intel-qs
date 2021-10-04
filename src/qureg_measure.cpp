@@ -170,7 +170,7 @@ typename QubitRegister<Type>::BaseType QubitRegister<Type>::GetProbability(unsig
 #ifdef INTELQS_HAS_MPI
 // MPI_COMM_WORLD has been changed to iqs::mpi::Environment::GetStateComm()
   MPI_Comm comm = iqs::mpi::Environment::GetStateComm();
-  MPI_Allreduce(&local_P, &global_P, 1, MPI_DOUBLE, MPI_SUM, comm);
+  MPI_Allreduce(&local_P, &global_P, 1, MPI_FLOAT, MPI_SUM, comm);
 #else
   global_P = local_P;
 #endif

@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 
   // The state can be initialized to a random state. To allow such initialization,
   // we need to declare a (pseudo) random number generator...
-  iqs::RandomNumberGenerator<double> rng;
+  iqs::RandomNumberGenerator<float> rng;
   // ... and associate it (via pointer) to the quantum state.
   psi.SetRngPtr(&rng);
   // Set the seed:
@@ -213,9 +213,9 @@ int main(int argc, char **argv)
   // To verify that G is unitary, we will compute the norm of psi before and after
   // the application of G. This is a necessary but not sufficient condition for the
   // unitarity of G.
-  double initial_norm, final_norm;
+  float initial_norm, final_norm;
   initial_norm = psi.ComputeNorm();
-  double accepted_error = 1e-15;
+  float accepted_error = 1e-15;
   if ( std::abs(initial_norm-1.) > accepted_error )
     if (myid==0)
         std::cout << "Even before the application of G, state psi had normalization "
@@ -255,9 +255,9 @@ int main(int argc, char **argv)
 
   // Compute the probability of observing qubit 1 in state |1>.
   int measured_qubit = 1;
-  double probability = psi.GetProbability(measured_qubit);
+  float probability = psi.GetProbability(measured_qubit);
   // The expectation value of <Z1> can be computed from the above probability
-  double expectation = -1*probability + 1*(1-probability);
+  float expectation = -1*probability + 1*(1-probability);
 
   if (myid==0)
       std::cout << "The probability that qubit " << measured_qubit
@@ -267,7 +267,7 @@ int main(int argc, char **argv)
                 << "the outcome at random and then collapsing the state accordingly:\n";
 
   // Draw random number in [0,1)
-  double r;
+  float r;
   r = 0.66;
 //  r = np.random.rand() //FIXME
   if (r < probability)

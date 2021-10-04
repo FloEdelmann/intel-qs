@@ -57,8 +57,8 @@ void qft(iqs::QubitRegister<Type> &psi)
       phaseshift(0, 0) = {1, 0};
       phaseshift(0, 1) = {0, 0};
       phaseshift(1, 0) = {0, 0};
-      phaseshift(1, 1) = Type(std::cos(M_PI / (double)(UL(1) << UL(k))),
-                              std::sin(M_PI / (double)(UL(1) << UL(k))) );
+      phaseshift(1, 1) = Type(std::cos(M_PI / (float)(UL(1) << UL(k))),
+                              std::sin(M_PI / (float)(UL(1) << UL(k))) );
 //      if (!my_rank) std::cout << "CP(" << j << "," << i << ")\n";
       psi.ApplyControlled1QubitGate(j, i, phaseshift);
     }
@@ -89,7 +89,7 @@ static void cfft(iqs::QubitRegister<Type> &x)
   // Create descriptor for 1D FFT
   MKL_LONG status =
       (sizeof(iqs::BaseType<Type>) == 8) ? 
-      DftiCreateDescriptorDM(comm, &desc, DFTI_DOUBLE, DFTI_COMPLEX, 1, x.GlobalSize()) :
+      DftiCreateDescriptorDM(comm, &desc, DFTI_FLOAT, DFTI_COMPLEX, 1, x.GlobalSize()) :
       DftiCreateDescriptorDM(comm, &desc, DFTI_SINGLE, DFTI_COMPLEX, 1, x.GlobalSize());
   assert(status==0);
 
@@ -112,12 +112,12 @@ static void cfft(iqs::QubitRegister<Type> &x)
   DFTI_DESCRIPTOR_HANDLE descriptor;
   MKL_LONG status =
       (sizeof(iqs::BaseType<Type>) == 8) ? 
-      DftiCreateDescriptor(&descriptor, DFTI_DOUBLE, DFTI_COMPLEX, 1, x.GlobalSize()) :
+      DftiCreateDescriptor(&descriptor, DFTI_FLOAT, DFTI_COMPLEX, 1, x.GlobalSize()) :
       DftiCreateDescriptor(&descriptor, DFTI_SINGLE, DFTI_COMPLEX, 1, x.GlobalSize());
   assert(status==0);
   status = DftiSetValue(descriptor, DFTI_PLACEMENT, DFTI_INPLACE);  
   assert(status==0);
-  status = DftiSetValue(descriptor, DFTI_BACKWARD_SCALE, 1.0 / std::sqrt((double)x.size()));
+  status = DftiSetValue(descriptor, DFTI_BACKWARD_SCALE, 1.0 / std::sqrt((float)x.size()));
   assert(status==0);
   status = DftiCommitDescriptor(descriptor);           // Finalize the descriptor
   assert(status==0);
@@ -146,11 +146,11 @@ static void cfft(iqs::QubitRegister<Type> &x)
     y[k] = {0, 0};
     for (int j = 0; j < N; j++)
     {
-      double arg = 2.0 * M_PI * double(j) * double(k) / double(N);
+      float arg = 2.0 * M_PI * float(j) * float(k) / float(N);
       Type e = Type(std::cos(arg), std::sin(arg));
       y[k] += x[j] * e;
     }
-    y[k] /= std::sqrt(double(N));
+    y[k] /= std::sqrt(float(N));
   }
 #if 0
 // Original code was:
@@ -215,18 +215,18 @@ int main(int argc, char **argv)
     if (myrank == 0) std::cout << "QFT  (single precision)\n";
     qft<Type>(psi2);
     psi2.GetStatistics();
-    double e1 = psi2.MaxAbsDiff(psi1);
-    double e2 = psi2.MaxL2NormDiff(psi1);
+    float e1 = psi2.MaxAbsDiff(psi1);
+    float e2 = psi2.MaxL2NormDiff(psi1);
     if (myrank == 0)
         printf("SP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", e1, e2);
   }
 
-  // Double precision.
+  // Float precision.
   {
     using Type = ComplexDP;
 
-    if (myrank == 0) std::cout << "\nstate initialization (double precision)\n";
-    iqs::RandomNumberGenerator<double> rng_dp;
+    if (myrank == 0) std::cout << "\nstate initialization (float precision)\n";
+    iqs::RandomNumberGenerator<float> rng_dp;
     rng_dp.SetSeedStreamPtrs(777);
     iqs::QubitRegister<Type> psi1(num_qubits, "base", 0);
     psi1.SetRngPtr(&rng_dp);
@@ -234,16 +234,16 @@ int main(int argc, char **argv)
     assert( std::abs(psi1.ComputeNorm()-1.)<1e-10);
     iqs::QubitRegister<Type> psi2(psi1);
 
-    if (myrank == 0) std::cout << "CFFT (double precision)\n";
+    if (myrank == 0) std::cout << "CFFT (float precision)\n";
     cfft<Type>(psi1);
     psi2.EnableStatistics();
     psi2.TurnOffSpecialize();
 
-    if (myrank == 0) std::cout << "QFT  (double precision)\n";
+    if (myrank == 0) std::cout << "QFT  (float precision)\n";
     qft<Type>(psi2);
     psi2.GetStatistics();
-    double e1 = psi2.MaxAbsDiff(psi1);
-    double e2 = psi2.MaxL2NormDiff(psi1);
+    float e1 = psi2.MaxAbsDiff(psi1);
+    float e2 = psi2.MaxL2NormDiff(psi1);
     if (myrank == 0)
         printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", e1, e2);
   }

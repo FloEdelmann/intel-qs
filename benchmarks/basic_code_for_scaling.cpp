@@ -112,8 +112,8 @@ int main(int argc, char **argv)
 if (false)  psi.TurnOnSpecialize();
   // Loop over the number of qubits and store the time elapsed in the computation.
   struct timeval time;
-  double start, end;
-  std::vector<double> computational_cost;
+  float start, end;
+  std::vector<float> computational_cost;
   computational_cost.reserve(num_qubits);
 if (true) psi.EnableStatistics();
   for(int qubit = 0; qubit < num_qubits; qubit++)
@@ -132,7 +132,7 @@ if (true) psi.EnableStatistics();
       iqs::mpi::StateBarrier();
       gettimeofday(&time, (struct timezone*)0);
       end =  time.tv_sec + time.tv_usec * 1.0e-6;
-      computational_cost.push_back( (end-start)/double(num_gates) );
+      computational_cost.push_back( (end-start)/float(num_gates) );
   }
 if (true) {psi.GetStatistics(); psi.DisableStatistics();}
 

@@ -99,7 +99,7 @@ void tinymatrix_testsize()
 template <class T>
 void tinymatrix_testassign()
 {
-  double init[2][2] = {{1., 2.}, {3., 4.}};
+  float init[2][2] = {{1., 2.}, {3., 4.}};
 
   iqs::TinyMatrix<T, 2, 2> mat = init;
   for (unsigned i = 0; i < mat.numRows(); ++i)
@@ -154,10 +154,10 @@ TEST_F(TinyMatrixTest, Int)
 
 TEST_F(TinyMatrixTest, ComplexDP)
 {
-  tinymatrix_testsize<std::complex<double>, 1, 1>();
-  tinymatrix_testsize<std::complex<double>, 1, 2>();
-  tinymatrix_testsize<std::complex<double>, 2, 2>();
-  tinymatrix_testassign<std::complex<double>>();
+  tinymatrix_testsize<std::complex<float>, 1, 1>();
+  tinymatrix_testsize<std::complex<float>, 1, 2>();
+  tinymatrix_testsize<std::complex<float>, 2, 2>();
+  tinymatrix_testassign<std::complex<float>>();
 }
 
 //////////////////////////////////////////////////////////////////////////////

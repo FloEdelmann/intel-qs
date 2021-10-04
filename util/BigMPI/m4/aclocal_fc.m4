@@ -452,7 +452,7 @@ case "$pac_cv_prog_f77_name_mangle" in
     "lower underscore")       confname=conf1_  ;;
     "upper stdcall")          confname=CONF1   ;;
     upper)                    confname=CONF1   ;;
-    "lower doubleunderscore") confname=conf1_  ;;
+    "lower floatunderscore") confname=conf1_  ;;
     lower)                    confname=conf1   ;;
     "mixed underscore")       confname=conf1_  ;;
     mixed)                    confname=conf1   ;;

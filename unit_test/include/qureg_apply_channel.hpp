@@ -30,8 +30,8 @@ class ApplyQuantumChannel : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 4;
-  double accepted_error_ = 1e-15;
-  double sqrt2_ = std::sqrt(2.);
+  float accepted_error_ = 1e-15;
+  float sqrt2_ = std::sqrt(2.);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ TEST_F(ApplyQuantumChannel, IdealHadamard)
   iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
   // The application of quantum channels requires associating a RNG to psi.
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   psi.SetRngPtr(&rnd_generator);
   // Apply Hadamard on qubit 2, twice.
@@ -70,7 +70,7 @@ TEST_F(ApplyQuantumChannel, IdealHadamard)
 //    rho' = (1-p) rho + p/3 ( X.rho.X + Y.rho.Y + Z.rho.Z )
 TEST_F(ApplyQuantumChannel, DepolarizingChannel)
 {
-  double p = 0.01;
+  float p = 0.01;
   CM4x4<ComplexDP> chi;
   for (int i=0; i<4; ++i)
       for (int j=0; j<4; ++j)
@@ -89,14 +89,14 @@ TEST_F(ApplyQuantumChannel, DepolarizingChannel)
   psi.ApplyHadamard(1);
   // The application of quantum channels requires associating a RNG to psi.
   std::size_t rng_seed = 7777;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   psi.SetRngPtr(&rnd_generator);
   // Keeping the qubits idle, apply the depolarizing channel 20 times per qubit. 
   // Take average over 100 realizations.
   int num_time_steps = 20;
   int num_ensemble_states = 100;
-  std::vector<double> overlap_squared (num_time_steps);
+  std::vector<float> overlap_squared (num_time_steps);
   for (int s=0; s<num_ensemble_states; ++s)
   {
       iqs::QubitRegister<ComplexDP> psi_s(psi);
@@ -115,7 +115,7 @@ TEST_F(ApplyQuantumChannel, DepolarizingChannel)
       for (int t=0; t<num_time_steps; t+=10)
       {
           std::cout << "t=" << t << ",\t|<psi(t)|psi(0)>|^2 = "
-                    << overlap_squared[t]/double(num_ensemble_states) << "\n";
+                    << overlap_squared[t]/float(num_ensemble_states) << "\n";
       }
   }
 }

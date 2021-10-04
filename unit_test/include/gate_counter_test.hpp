@@ -40,7 +40,7 @@ class GateCounterTest : public ::testing::Test
   const std::size_t num_qubits_ = 10;
   TM2x2<ComplexDP> G_;
   TM4x4<ComplexDP> D_;
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ TEST_F(GateCounterTest, OnlyOneQubitGates)
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
   // Initilize state randomly.
   std::size_t rng_seed = 977;
-  iqs::RandomNumberGenerator<double> rnd_generator;
+  iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   psi.SetRngPtr(&rnd_generator);
   psi.Initialize("rand",1);

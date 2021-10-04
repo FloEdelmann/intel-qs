@@ -69,7 +69,7 @@ int main(int argc, char **argv)
       psig.ApplyPauliX(3);
 		
 		
-      double PI_4 = M_PI/4.0;
+      float PI_4 = M_PI/4.0;
 	  
       psig.ApplyCPhaseRotation(0,3,PI_4);
       psig.ApplyCPauliX(0,1);

@@ -22,7 +22,7 @@ namespace iqs {
 /// @param target_position position of the target qubit in the current permutation
 /// @param m 2x2 matrix corresponding to the quantum gate
 template <class Type>
-double QubitRegister<Type>::HP_Distrpair(unsigned control_position, unsigned target_position,
+float QubitRegister<Type>::HP_Distrpair(unsigned control_position, unsigned target_position,
                                          TM2x2<Type> const&m, GateSpec2Q spec, BaseType angle)
 {
   assert(LocalSize() > 1);
@@ -81,7 +81,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned control_position, unsigned tar
       assert((lcl_size_half % lcl_chunk) == 0);
 #endif
 
-  double t, tnet = 0;
+  float t, tnet = 0;
   // Which chunk do we have to Send/Recv?
   // If chunk == lcl_size_half, then all chunks are needed, and if chunk=2^C it means
   // that M=C+1 and there is a special case hardcoded.
@@ -212,7 +212,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned control_position, unsigned tar
       }
   }
 
-  double netsize = 2.0 * sizeof(Type) * 2.0 * double(lcl_size_half), netbw = netsize / tnet;
+  float netsize = 2.0 * sizeof(Type) * 2.0 * float(lcl_size_half), netbw = netsize / tnet;
   if (timer) timer->record_cm(tnet, netbw);
 #endif
 

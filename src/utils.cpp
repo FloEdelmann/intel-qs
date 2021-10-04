@@ -7,11 +7,11 @@ namespace iqs {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-double time_in_seconds(void)
+float time_in_seconds(void)
 {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  return (double)tv.tv_sec + (double)tv.tv_usec / 1000000.0;
+  return (float)tv.tv_sec + (float)tv.tv_usec / 1000000.0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////

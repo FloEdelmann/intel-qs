@@ -16,7 +16,7 @@
 namespace iqs {
 
 template <class Type>
-double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m, GateSpec1Q spec, BaseType angle)
+float QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m, GateSpec1Q spec, BaseType angle)
 {
   assert(LocalSize() > 1);
 #ifndef INTELQS_HAS_MPI
@@ -111,7 +111,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
   else
       assert((lcl_size_half % lcl_chunk) == 0);
   
-  double t, tnet = 0;
+  float t, tnet = 0;
   for(std::size_t c = 0; c < lcl_size_half; c += lcl_chunk)
   {
     // if(!myrank) printf("c=%lu lcl_size_half=%lu lcl_chujnk=%lu\n", c, lcl_size_half, lcl_chunk);
@@ -159,7 +159,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
     }
   }
 
-  double netsize = 2.0 * sizeof(Type) * 2.0 * double(lcl_size_half), netbw = netsize / tnet;
+  float netsize = 2.0 * sizeof(Type) * 2.0 * float(lcl_size_half), netbw = netsize / tnet;
   // printf("[%3d] size=%10lld tnet = %.3lf s netsize = %10.0lf bytes netbw = %6.2lf GB/s\n",
   //      it, sizeof(Type)*lcl_size_half, tnet, netsize, netbw / 1e9);
 

@@ -34,7 +34,7 @@ class SingleQubitGatesTest : public ::testing::Test
 
   const std::size_t num_qubits_ = 10;
   TM2x2<ComplexDP> G_;
-  double accepted_error_ = 1e-15;
+  float accepted_error_ = 1e-15;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -46,32 +46,32 @@ TEST_F(SingleQubitGatesTest, PauliOperators)
   // bit on the right (contrary to usual decimal representation).
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
   // |psi> = |1010010001> = |"1+4+32+512">
-  ASSERT_DOUBLE_EQ( psi.ComputeNorm(), 1.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(0), 1.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(2), 1.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(num_qubits_-2), 0.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(num_qubits_-1), 1.);
+  ASSERT_FLOAT_EQ( psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(0), 1.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(2), 1.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(num_qubits_-2), 0.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(num_qubits_-1), 1.);
   psi.ApplyPauliX(5);
   psi.ApplyPauliX(6);
   // |psi> = |1010001001> = |"1+4+64+512">
-  ASSERT_DOUBLE_EQ(psi.GetProbability(5), 0.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(6), 1.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(5), 0.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(6), 1.);
 
   // |psi> = |0110001000> = |"2+4+64"> = |"70">
   psi.Initialize("base",2+4+64);
-  ASSERT_DOUBLE_EQ( psi.ComputeNorm(), 1.);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(2),1);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(num_qubits_-4),1);
+  ASSERT_FLOAT_EQ( psi.ComputeNorm(), 1.);
+  ASSERT_FLOAT_EQ(psi.GetProbability(2),1);
+  ASSERT_FLOAT_EQ(psi.GetProbability(num_qubits_-4),1);
   psi.ApplyPauliZ(1);
-  ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(70).real(), -1.);
+  ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(70).real(), -1.);
   psi.ApplyPauliZ(2);
-  ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(70).real(),  1.);
+  ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(70).real(),  1.);
   psi.ApplyPauliZ(3);
-  ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(70).real(),  1.);
+  ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(70).real(),  1.);
   psi.ApplyPauliX(4);
   // |psi> = |0110101000> = |"86">
-  ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(86).real(),  1.);
-  ASSERT_DOUBLE_EQ( psi.GetGlobalAmplitude(86).imag(),  0.);
+  ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(86).real(),  1.);
+  ASSERT_FLOAT_EQ( psi.GetGlobalAmplitude(86).imag(),  0.);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -81,26 +81,26 @@ TEST_F(SingleQubitGatesTest, Rotations)
   iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
   // |psi> = |1010010001> = |"1+4+32+512">
   // Check that Rx(t)=exp(-i t X/2)
-  double angle = M_PI;
+  float angle = M_PI;
   psi.ApplyRotationX(1, angle);
   psi.ApplyPauliX(1);
   // |psi> = -i|1010010001> = -i|"549">
   ASSERT_NEAR(psi.GetProbability(1), 0., accepted_error_);
-  ASSERT_DOUBLE_EQ(psi.GetGlobalAmplitude(549).real(), 0.);
-  ASSERT_DOUBLE_EQ(psi.GetGlobalAmplitude(549).imag(),-1.);
+  ASSERT_FLOAT_EQ(psi.GetGlobalAmplitude(549).real(), 0.);
+  ASSERT_FLOAT_EQ(psi.GetGlobalAmplitude(549).imag(),-1.);
 
   angle = M_PI/2.34;
   psi.ApplyRotationX(0, angle);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(0), std::pow(std::cos(angle/2.),2) );
+  ASSERT_FLOAT_EQ(psi.GetProbability(0), std::pow(std::cos(angle/2.),2) );
   //
   psi.ApplyRotationX(num_qubits_-2, angle);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(num_qubits_-2), std::pow(std::sin(angle/2.),2) );
+  ASSERT_FLOAT_EQ(psi.GetProbability(num_qubits_-2), std::pow(std::sin(angle/2.),2) );
 
   angle = M_PI*0.29;
   psi.ApplyHadamard(5);
   psi.ApplyRotationZ(5, angle);
   psi.ApplyHadamard(5);
-  ASSERT_DOUBLE_EQ(psi.GetProbability(5), std::pow(std::cos(angle/2.),2) );
+  ASSERT_FLOAT_EQ(psi.GetProbability(5), std::pow(std::cos(angle/2.),2) );
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -113,8 +113,8 @@ TEST_F(SingleQubitGatesTest, CustomGate)
   {
       psi.Apply1QubitGate(qubit, G_);
   }
-  ASSERT_DOUBLE_EQ( psi.GetProbability(0), psi.GetProbability(2) );
-  ASSERT_DOUBLE_EQ( psi.GetProbability(4), psi.GetProbability(6) );
+  ASSERT_FLOAT_EQ( psi.GetProbability(0), psi.GetProbability(2) );
+  ASSERT_FLOAT_EQ( psi.GetProbability(4), psi.GetProbability(6) );
   // The accepted error is sometimes exceeded when gcc is used.
   ASSERT_NEAR( psi.GetProbability(5), 1.-psi.GetProbability(8), accepted_error_*10 );
 }

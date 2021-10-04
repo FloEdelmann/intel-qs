@@ -16,17 +16,17 @@
 #include <vector>
 
 extern "C" {
-double ddot_(const int*, const double*, const int*, const double*, const int*);
+float ddot_(const int*, const float*, const int*, const float*, const int*);
 }
 
 int main()
 {
-  std::vector<double> values(2, 1.);
+  std::vector<float> values(2, 1.);
 
   int N = 2;
   int one = 1;
 
-//  double norm = ddot_(&N, &values[0], &one, &values[0], &one);
+//  float norm = ddot_(&N, &values[0], &one, &values[0], &one);
 //  std::cout << "Norm: " << norm << std::endl;
   return 0;
 }

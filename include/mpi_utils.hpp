@@ -37,10 +37,10 @@ static int MPI_Allreduce_x(float *sendbuf, float *recvbuf, int count,
   return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_FLOAT, op, comm);
 }
 
-static int MPI_Allreduce_x(double *sendbuf, double *recvbuf, int count,
+static int MPI_Allreduce_x(float *sendbuf, float *recvbuf, int count,
                            MPI_Op op, MPI_Comm comm)
 {
-  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_FLOAT, op, comm);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -60,8 +60,8 @@ int MPI_Sendrecv_x(ComplexDP *sendbuf, size_t sendcount, size_t dest, size_t sen
                    ComplexDP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                    MPI_Comm comm, MPI_Status *status)
 {
-  return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_DOUBLE_COMPLEX, dest, sendtag,
-                      (void *)recvbuf, recvcount, MPI_DOUBLE_COMPLEX, source, recvtag,
+  return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_FLOAT_COMPLEX, dest, sendtag,
+                      (void *)recvbuf, recvcount, MPI_FLOAT_COMPLEX, source, recvtag,
                       comm, status);
 }
 
@@ -74,7 +74,7 @@ static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
 
 static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
 {
-  return MPI_Bcast((void*)data, 1, MPI_DOUBLE_COMPLEX, root, comm);
+  return MPI_Bcast((void*)data, 1, MPI_FLOAT_COMPLEX, root, comm);
 }
 
 #else
@@ -89,10 +89,10 @@ static int MPI_Allreduce_x(float *sendbuf, float *recvbuf, int count,
   return MPIX_Allreduce_x((void*)sendbuf, (void *)recvbuf, count, MPI_FLOAT, op, comm);
 }
 
-static int MPI_Allreduce_x(double *sendbuf, double *recvbuf, int count,
+static int MPI_Allreduce_x(float *sendbuf, float *recvbuf, int count,
                            MPI_Op op, MPI_Comm comm)
 {
-  return MPIX_Allreduce_x((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
+  return MPIX_Allreduce_x((void*)sendbuf, (void *)recvbuf, count, MPI_FLOAT, op, comm);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +112,8 @@ int MPI_Sendrecv_x(ComplexDP *sendbuf, size_t sendcount, size_t dest, size_t sen
                    ComplexDP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                    MPI_Comm comm, MPI_Status *status)
 {
-  return MPIX_Sendrecv_x((void *)sendbuf, sendcount, MPI_DOUBLE_COMPLEX, dest, sendtag,
-                         (void *)recvbuf, recvcount, MPI_DOUBLE_COMPLEX, source, recvtag,
+  return MPIX_Sendrecv_x((void *)sendbuf, sendcount, MPI_FLOAT_COMPLEX, dest, sendtag,
+                         (void *)recvbuf, recvcount, MPI_FLOAT_COMPLEX, source, recvtag,
                          comm, status);
 }
 

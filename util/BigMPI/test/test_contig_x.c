@@ -21,8 +21,8 @@ static void print_typename(MPI_Datatype type)
     else if (type==MPI_LONG              ) name="MPI_LONG              ";
     else if (type==MPI_UNSIGNED_LONG     ) name="MPI_UNSIGNED_LONG     ";
     else if (type==MPI_FLOAT             ) name="MPI_FLOAT             ";
-    else if (type==MPI_DOUBLE            ) name="MPI_DOUBLE            ";
-    else if (type==MPI_LONG_DOUBLE       ) name="MPI_LONG_DOUBLE       ";
+    else if (type==MPI_FLOAT            ) name="MPI_FLOAT            ";
+    else if (type==MPI_LONG_FLOAT       ) name="MPI_LONG_FLOAT       ";
     else if (type==MPI_LONG_LONG_INT     ) name="MPI_LONG_LONG_INT     ";
     else if (type==MPI_LONG_LONG         ) name="MPI_LONG_LONG         ";
     else if (type==MPI_UNSIGNED_LONG_LONG) name="MPI_UNSIGNED_LONG_LONG";
