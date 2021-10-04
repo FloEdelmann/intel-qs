@@ -130,7 +130,7 @@ int main(int argc, char **argv)
   rng.UniformRandomNumbers( z_angles.data(), z_angles.size(), 0., M_PI, "pool");
   // Ideal (i.e. noiseless) state.
   // |psi> = |00000000>
-  iqs::QubitRegister<ComplexDP> psi(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi(num_qubits);
   psi.Initialize("base",0);
 
   // At this point we have 5 copies of the ideal state. One for each state in the pool.
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////////////////////////////////////////////////
 
   // State for slow decoherence.
-  iqs::QubitRegister<ComplexDP> psi_slow(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi_slow(num_qubits);
   // One can use the same random number generator for each state or a different one.
   // Here we use the same.
   psi_slow.SetRngPtr(&rng);
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
   psi_slow.SetNoiseTimescales(T_1_slow, T_2_slow);
 
   // State for fast decoherence.
-  iqs::QubitRegister<ComplexDP> psi_fast(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi_fast(num_qubits);
   // Here too we use the same random number generator.
   psi_fast.SetRngPtr(&rng);
   // T_1 and T_2 times for fast decoherence

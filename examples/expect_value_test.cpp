@@ -55,7 +55,7 @@ int main(int argc, char **argv)
          << "   Single qubit   \n"
          << "------------------\n\n";
 
-  iqs::QubitRegister<ComplexDP> psi(1,"base",1);
+  iqs::QubitRegister<ComplexSP> psi(1,"base",1);
   psi.EnableStatistics();  
   psi.ApplyHadamard(0);
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
          << "     4 qubits     \n"
          << "------------------\n\n";
 
-  iqs::QubitRegister<ComplexDP> phi(4,"base",0);
+  iqs::QubitRegister<ComplexSP> phi(4,"base",0);
   phi.ApplyPauliX(1);
   phi.ApplyHadamard(2);
   phi.ApplyPauliX(3);

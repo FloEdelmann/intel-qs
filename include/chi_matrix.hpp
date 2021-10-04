@@ -178,7 +178,7 @@ class ChiMatrix : public TinyMatrix<ValueType, M, M, align>
  
   // specialization
 //  template <> inline
-//  void ChiMatrix<ComplexDP, 4, 32>::EigensystemOfIdealHadamardChannel ();
+//  void ChiMatrix<ComplexSP, 4, 32>::EigensystemOfIdealHadamardChannel ();
   
 }	// end namespace iqs
 

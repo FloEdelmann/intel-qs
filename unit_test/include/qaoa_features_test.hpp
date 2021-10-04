@@ -51,12 +51,12 @@ TEST_F(QaoaFeaturestest, qaoa_maxcut)
                                 0, 0, 1, 0, 1, 0,
                                 0, 0, 0, 1, 0, 1,
                                 1, 0, 0, 0, 1, 0};
-  iqs::QubitRegister<ComplexDP> diag (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> diag (num_qubits_,"base",0);
   int max_cut_value;
   max_cut_value = iqs::qaoa::InitializeVectorAsMaxCutCostFunction(diag,adjacency);
 
   // Among other properties, only two bipartition has cut=0.
-  ComplexDP amplitude;
+  ComplexSP amplitude;
   amplitude = { 0, 0 };
   ASSERT_COMPLEX_NEAR(diag.GetGlobalAmplitude(0), amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR(diag.GetGlobalAmplitude(diag.GlobalSize()-1), amplitude,
@@ -66,7 +66,7 @@ TEST_F(QaoaFeaturestest, qaoa_maxcut)
       ASSERT_GT( std::abs(diag[j].real()-1.), accepted_error_);
 
   // Perform QAOA simulation (p=1).
-  iqs::QubitRegister<ComplexDP> psi  (num_qubits_,"++++",0);
+  iqs::QubitRegister<ComplexSP> psi  (num_qubits_,"++++",0);
   float gamma = 0.4;
   float beta  = 0.3;
   // Emulation of the layer based on the cost function: 
@@ -112,12 +112,12 @@ TEST_F(QaoaFeaturestest, qaoa_weighted_maxcut)
                                    0  , 0  , 1.4, 0  , 1  , 0  ,
                                    0  , 0  , 0  , 1  , 0  , 1  ,
                                    1.4, 0  , 0  , 0  , 1  , 0  };
-  iqs::QubitRegister<ComplexDP> diag (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> diag (num_qubits_,"base",0);
   float max_cut_value;
   max_cut_value = iqs::qaoa::InitializeVectorAsWeightedMaxCutCostFunction(diag,adjacency);
 
   // Among other properties, only two bipartition has cut=0.
-  ComplexDP amplitude;
+  ComplexSP amplitude;
   amplitude = { 0, 0 };
   ASSERT_COMPLEX_NEAR(diag.GetGlobalAmplitude(0), amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR(diag.GetGlobalAmplitude(diag.GlobalSize()-1), amplitude,
@@ -140,7 +140,7 @@ TEST_F(QaoaFeaturestest, qaoa_weighted_maxcut)
       ASSERT_GT( std::abs(diag[j].real()-1.), accepted_error_);
 
   // Perform QAOA simulation (p=1).
-  iqs::QubitRegister<ComplexDP> psi  (num_qubits_,"++++",0);
+  iqs::QubitRegister<ComplexSP> psi  (num_qubits_,"++++",0);
   float gamma = 0.4;
   float beta  = 0.3;
   // Emulation of the layer based on the cost function: 

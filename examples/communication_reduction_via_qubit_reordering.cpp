@@ -79,7 +79,7 @@ int main(int argc, char **argv)
   float duration_inverse_order;
 
   // We consider a simple circuit, with Hadamard, X, Y, Z acting on the last 10 qubits.
-  iqs::QubitRegister<ComplexDP> psi_trivial_order(num_qubits, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi_trivial_order(num_qubits, "base", 0);
   psi_trivial_order.ApplyPauliZ(num_qubits-1); // dummy operation to avoid the first MPI communication during timing
 
   std::vector<std::size_t> original_map = psi_trivial_order.qubit_permutation->map;
@@ -111,7 +111,7 @@ int main(int argc, char **argv)
   
 /////////////////////////////////////////////////////////////////////////////////////////
 
-  iqs::QubitRegister<ComplexDP> psi_inverse_order(num_qubits, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi_inverse_order(num_qubits, "base", 0);
   psi_inverse_order.PermuteQubits(new_map, "direct");
   psi_trivial_order.ApplyPauliZ(0); // dummy operation to avoid the first MPI communication during timing
   // Simulate circuit.

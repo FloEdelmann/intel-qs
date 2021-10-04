@@ -16,7 +16,7 @@
 
 #include "../include/qureg.hpp"
 
-using Type = ComplexDP;
+using Type = ComplexSP;
 using namespace std;
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -113,14 +113,14 @@ int main(int argc, char **argv)
   iqs::mpi::PoolPrint("---- State initialization |psi_1>.\n");
   iqs::RandomNumberGenerator<float> rnd_generator_1;
   rnd_generator_1.SetSeedStreamPtrs(20971);
-  iqs::QubitRegister<ComplexDP> psi1(num_qubits, "base", 0, 2097152);
+  iqs::QubitRegister<ComplexSP> psi1(num_qubits, "base", 0, 2097152);
   psi1.SetRngPtr(&rnd_generator_1);
   psi1.Initialize("rand",1);
 
   iqs::mpi::PoolPrint("---- State initialization |psi_2>.\n");
   iqs::RandomNumberGenerator<float> rnd_generator_2;
   rnd_generator_2.SetSeedStreamPtrs(20971);
-  iqs::QubitRegister<ComplexDP> psi2(num_qubits, "base", 0, 2097152);
+  iqs::QubitRegister<ComplexSP> psi2(num_qubits, "base", 0, 2097152);
   psi2.SetRngPtr(&rnd_generator_2);
   psi2.Initialize("rand",1);
 

@@ -107,7 +107,7 @@ void QubitRegister<Type>::ApplyChannel(const unsigned qubit1, const unsigned qub
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

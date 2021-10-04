@@ -143,8 +143,8 @@ int InitializeVectorAsMaxCutCostFunction(QubitRegister<Type> & diag,
   return max_cut;
 }
 
-template int InitializeVectorAsMaxCutCostFunction<ComplexDP>
-    (QubitRegister<ComplexDP> &, std::vector<int> & );
+template int InitializeVectorAsMaxCutCostFunction<ComplexSP>
+    (QubitRegister<ComplexSP> &, std::vector<int> & );
 template int InitializeVectorAsMaxCutCostFunction<ComplexSP>
     (QubitRegister<ComplexSP> &, std::vector<int> & );
 
@@ -238,8 +238,8 @@ InitializeVectorAsWeightedMaxCutCostFunction(QubitRegister<Type> & diag,
   return max_cut;
 }
 
-template float InitializeVectorAsWeightedMaxCutCostFunction<ComplexDP>
-    (QubitRegister<ComplexDP> &, std::vector<float> & );
+template float InitializeVectorAsWeightedMaxCutCostFunction<ComplexSP>
+    (QubitRegister<ComplexSP> &, std::vector<float> & );
 template float InitializeVectorAsWeightedMaxCutCostFunction<ComplexSP>
     (QubitRegister<ComplexSP> &, std::vector<float> & );
 
@@ -263,8 +263,8 @@ void ImplementQaoaLayerBasedOnCostFunction(QubitRegister<Type> & psi,
        psi[i] *= Type( std::cos(gamma* diag[i].real()) , -std::sin(gamma* diag[i].real()) );
 }
 
-template void ImplementQaoaLayerBasedOnCostFunction<ComplexDP>
-    (QubitRegister<ComplexDP> &, QubitRegister<ComplexDP> &, float );
+template void ImplementQaoaLayerBasedOnCostFunction<ComplexSP>
+    (QubitRegister<ComplexSP> &, QubitRegister<ComplexSP> &, float );
 template void ImplementQaoaLayerBasedOnCostFunction<ComplexSP>
     (QubitRegister<ComplexSP> &, QubitRegister<ComplexSP> &, float );
 
@@ -294,8 +294,8 @@ GetExpectationValueFromCostFunction(const QubitRegister<Type> & psi,
   return global_expectation;
 }
 
-template float GetExpectationValueFromCostFunction<ComplexDP>
-    (const QubitRegister<ComplexDP> &, const QubitRegister<ComplexDP> & );
+template float GetExpectationValueFromCostFunction<ComplexSP>
+    (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> & );
 template float GetExpectationValueFromCostFunction<ComplexSP>
     (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> & );
 
@@ -325,8 +325,8 @@ GetExpectationValueSquaredFromCostFunction(const QubitRegister<Type> & psi,
   return global_expectation;
 }
 
-template float GetExpectationValueSquaredFromCostFunction<ComplexDP>
-    (const QubitRegister<ComplexDP> &, const QubitRegister<ComplexDP> & );
+template float GetExpectationValueSquaredFromCostFunction<ComplexSP>
+    (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> & );
 template float  GetExpectationValueSquaredFromCostFunction<ComplexSP>
     (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> & );
 
@@ -392,8 +392,8 @@ GetHistogramFromCostFunction( const QubitRegister<Type> & psi,
   return global_hist;
 }
 
-template std::vector<float> GetHistogramFromCostFunction<ComplexDP>
-    (const QubitRegister<ComplexDP> &, const QubitRegister<ComplexDP> &, int );
+template std::vector<float> GetHistogramFromCostFunction<ComplexSP>
+    (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, int );
 template std::vector<float>  GetHistogramFromCostFunction<ComplexSP>
     (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, int );
 
@@ -461,8 +461,8 @@ GetHistogramFromCostFunctionWithWeightsRounded( const QubitRegister<Type> & psi,
   return global_hist;
 }
 
-template std::vector<float> GetHistogramFromCostFunctionWithWeightsRounded<ComplexDP>
-    (const QubitRegister<ComplexDP> &, const QubitRegister<ComplexDP> &, float );
+template std::vector<float> GetHistogramFromCostFunctionWithWeightsRounded<ComplexSP>
+    (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, float );
 template std::vector<float>  GetHistogramFromCostFunctionWithWeightsRounded<ComplexSP>
     (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, float );
 
@@ -528,8 +528,8 @@ GetHistogramFromCostFunctionWithWeightsBinned( const QubitRegister<Type> & psi,
   return global_hist;
 }
 
-template std::vector<float> GetHistogramFromCostFunctionWithWeightsBinned<ComplexDP>
-    (const QubitRegister<ComplexDP> &, const QubitRegister<ComplexDP> &, float, float);
+template std::vector<float> GetHistogramFromCostFunctionWithWeightsBinned<ComplexSP>
+    (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, float, float);
 template std::vector<float>  GetHistogramFromCostFunctionWithWeightsBinned<ComplexSP>
     (const QubitRegister<ComplexSP> &, const QubitRegister<ComplexSP> &, float, float);
 

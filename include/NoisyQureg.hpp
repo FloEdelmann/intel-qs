@@ -23,7 +23,7 @@ namespace iqs {
 /// according to the connectivity of the specific hardware.
 
 /////////////////////////////////////////////////////////////////////////////////////////
-template <class Type = ComplexDP>
+template <class Type = ComplexSP>
 class NoisyQureg : public QubitRegister<Type>
 {
   private :

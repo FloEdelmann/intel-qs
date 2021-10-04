@@ -422,8 +422,8 @@ template void Loop_SN<ComplexSP>(std::size_t gstart, std::size_t gend,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, float angle);
 
-template void Loop_SN<ComplexDP>(std::size_t gstart, std::size_t gend,
-                                 ComplexDP *state0, ComplexDP *state1,
+template void Loop_SN<ComplexSP>(std::size_t gstart, std::size_t gend,
+                                 ComplexSP *state0, ComplexSP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, float angle);
 
@@ -432,8 +432,8 @@ template void Loop_DN<ComplexSP>(std::size_t gstart, std::size_t gend, std::size
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, float angle);
 
-template void Loop_DN<ComplexDP>(std::size_t gstart, std::size_t gend, std::size_t pos,
-                                 ComplexDP *state0, ComplexDP *state1,
+template void Loop_DN<ComplexSP>(std::size_t gstart, std::size_t gend, std::size_t pos,
+                                 ComplexSP *state0, ComplexSP *state1,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, float angle);
 
@@ -444,7 +444,7 @@ template void Loop_TN<ComplexSP>(ComplexSP *state,
                                  std::size_t index_shift, GateSpec2Q spec, 
                                  Timer *timer, float angle);
 
-template void Loop_TN<ComplexDP>(ComplexDP *state,
+template void Loop_TN<ComplexSP>(ComplexSP *state,
                                  std::size_t c11, std::size_t c12, std::size_t c13,
                                  std::size_t c21, std::size_t c22, std::size_t c23,
                                  std::size_t c31, std::size_t c32, 

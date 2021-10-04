@@ -31,7 +31,7 @@ class StateInitializationTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 10;
-  TM2x2<ComplexDP> G_;
+  TM2x2<ComplexSP> G_;
   float accepted_error_ = 1e-15;
   bool do_print_info_ = false;
 };
@@ -43,7 +43,7 @@ TEST_F(StateInitializationTest, ComputationalBasisState)
 {
   // Recall that the qubits read from left to right, with the most significant
   // bit on the right (contrary to usual decimal representation).
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32+512);
   // |psi> = |1010010001> = |"1+4+32+512">
   ASSERT_FLOAT_EQ( psi.ComputeNorm(), 1.);
   ASSERT_EQ(psi.GetProbability(0),1);
@@ -81,7 +81,7 @@ TEST_F(StateInitializationTest, RandomState)
   iqs::RandomNumberGenerator<float> rnd_generator_1;
   rnd_generator_1.SetSeedStreamPtrs(rng_seed);
   // The "rand" style cannot be used directly in the creation of the state.
-  iqs::QubitRegister<ComplexDP> psi_1(num_qubits_, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi_1(num_qubits_, "base", 0);
   psi_1.SetRngPtr(&rnd_generator_1);
   // |psi_1> = |random>
   psi_1.Initialize("rand", 1);
@@ -89,7 +89,7 @@ TEST_F(StateInitializationTest, RandomState)
   ASSERT_FLOAT_EQ(psi_1.ComputeNorm(), 1);
 
   // Copy |psi_1> into |psi_2>
-  iqs::QubitRegister<ComplexDP> psi_2(psi_1);
+  iqs::QubitRegister<ComplexSP> psi_2(psi_1);
   // Check that the max abs difference amplitude by amplitude.
   ASSERT_FLOAT_EQ(psi_2.MaxAbsDiff(psi_1), 0 );
 
@@ -161,13 +161,13 @@ TEST_F(StateInitializationTest, RandomStateSameSeed)
   assert (num_states==1);
   //
   // |psi> = |0000>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   psi.SetRngPtr(&rng);
   psi.Initialize("rand",num_states);
   // |psi> = |rand>
 
   // Initilize the copy: |copy> = |psi>
-  iqs::QubitRegister<ComplexDP> psi_copy (psi);
+  iqs::QubitRegister<ComplexSP> psi_copy (psi);
   ASSERT_FLOAT_EQ(psi_copy.MaxAbsDiff(psi), 0 );
   ASSERT_FLOAT_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
   //
@@ -192,11 +192,11 @@ TEST_F(StateInitializationTest, RandomStateSameSeed)
 TEST_F(StateInitializationTest, SuperpositionOfAllComputationalStates)
 {
   // |psi> = |++++++++++>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"++++");
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"++++");
 
   ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1);
 
-  ComplexDP amplitude = {1/std::sqrt(psi.GlobalSize()),0};
+  ComplexSP amplitude = {1/std::sqrt(psi.GlobalSize()),0};
   ASSERT_COMPLEX_NEAR( psi.GetGlobalAmplitude(71),  amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR( psi.GetGlobalAmplitude(715),  amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR( psi.GetGlobalAmplitude(791),  amplitude, accepted_error_);
@@ -207,9 +207,9 @@ TEST_F(StateInitializationTest, SuperpositionOfAllComputationalStates)
 TEST_F(StateInitializationTest, ComputationalBasisStateWithQubitPermutation)
 {
   std::size_t index = 1+4+32+256+512; // global index using trivial qubit order
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
   // |psi> = |1010010011> = |"1+4+32+256+512">
-  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexDP(1, 0), accepted_error_);
+  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexSP(1, 0), accepted_error_);
 
   // Valid only with trivial permutation
   std::size_t myrank = iqs::mpi::Environment::GetStateRank();
@@ -217,33 +217,33 @@ TEST_F(StateInitializationTest, ComputationalBasisStateWithQubitPermutation)
   if (whereid == myrank)
   {
       std::size_t lclind = (index % psi.LocalSize());
-      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexDP(1, 0), accepted_error_);
+      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexSP(1, 0), accepted_error_);
   }
 
   // Define and apply qubit permutation
   //                                                 |--------|
   std::vector<std::size_t>  map = {0, 1, 2, 3, 4, 5, 9, 7, 8, 6};
   psi.PermuteQubits(map, "direct");
-  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexDP(1, 0), accepted_error_);
+  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexSP(1, 0), accepted_error_);
   std::size_t index_after_permutation = psi.qubit_permutation->program2data_(index);
   whereid = index_after_permutation/psi.LocalSize();
   if (whereid == myrank)
   {
       std::size_t lclind = (index_after_permutation % psi.LocalSize());
-      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexDP(1, 0), accepted_error_);
+      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexSP(1, 0), accepted_error_);
   }
 
   // Qubit permutation as above, reinitialize the state
   index = 1+64; // 2^0+2^6
   psi.Initialize ("base", index);
   //
-  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexDP(1, 0), accepted_error_);
+  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexSP(1, 0), accepted_error_);
   index_after_permutation = psi.qubit_permutation->program2data_(index);
   whereid = index_after_permutation/psi.LocalSize();
   if (whereid == myrank)
   {
       std::size_t lclind = (index_after_permutation % psi.LocalSize());
-      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexDP(1, 0), accepted_error_);
+      ASSERT_COMPLEX_NEAR(psi[lclind], ComplexSP(1, 0), accepted_error_);
   }
 }
 
@@ -264,7 +264,7 @@ TEST_F(StateInitializationTest, DeathTest)
   ::testing::FLAGS_gtest_death_test_style = "threadsafe"; 
 
   // |psi> = |0000000000> = |"0">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   // Index outside the global range.
   std::size_t index;
   index = UL(1L << UL(num_qubits_));

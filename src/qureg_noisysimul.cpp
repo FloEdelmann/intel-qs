@@ -88,7 +88,7 @@ void QubitRegister<Type>::ApplyNoiseGate(unsigned qubit, BaseType duration)
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

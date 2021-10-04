@@ -39,22 +39,22 @@ class ExpectationValuesTest : public ::testing::Test
 
 TEST_F(ExpectationValuesTest, YZBaseChange)
 {
-  ComplexDP amplitude_0, amplitude_1;
+  ComplexSP amplitude_0, amplitude_1;
   // In the implementation, the matrix G is used.
   // G is matrix from change of basis Y --> Z, such that Ginv.Z.G = Y 
-  iqs::TinyMatrix<ComplexDP, 2, 2, 32> G;
+  iqs::TinyMatrix<ComplexSP, 2, 2, 32> G;
   float f = 1. / std::sqrt(2.);
-  G(0, 0) = G(1, 0) = ComplexDP(f , 0.);
-  G(0, 1) = ComplexDP(0.,-f);
-  G(1, 1) = ComplexDP(0., f);
+  G(0, 0) = G(1, 0) = ComplexSP(f , 0.);
+  G(0, 1) = ComplexSP(0.,-f);
+  G(1, 1) = ComplexSP(0., f);
   // G^dagger = G^-1
-  iqs::TinyMatrix<ComplexDP, 2, 2, 32> Ginv;
-  Ginv(0, 0) = Ginv(0, 1) = ComplexDP(f , 0.);
-  Ginv(1, 0) = ComplexDP(0., f);
-  Ginv(1, 1) = ComplexDP(0.,-f);
+  iqs::TinyMatrix<ComplexSP, 2, 2, 32> Ginv;
+  Ginv(0, 0) = Ginv(0, 1) = ComplexSP(f , 0.);
+  Ginv(1, 0) = ComplexSP(0., f);
+  Ginv(1, 1) = ComplexSP(0.,-f);
 
   // Test from Y to Z basis (using matrix G).
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   psi.ApplyRotationX(0,-M_PI/2.);
   // |psi> = |+y>|00000>
   psi.Apply1QubitGate(0,G);
@@ -120,7 +120,7 @@ TEST_F(ExpectationValuesTest, YZBaseChange)
 
 TEST_F(ExpectationValuesTest, ExpectationOneQubit)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",10);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",10);
   // |psi> = |010100> = |"2+8">
   psi.ApplyHadamard(2);
   psi.ApplyHadamard(3);
@@ -153,7 +153,7 @@ TEST_F(ExpectationValuesTest, ExpectationOneQubit)
 
 TEST_F(ExpectationValuesTest, ExpectationTwoQubits)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",10);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",10);
   // |psi> = |010100> = |"2+8">
   psi.ApplyHadamard(2);
   psi.ApplyHadamard(3);
@@ -189,7 +189,7 @@ TEST_F(ExpectationValuesTest, ExpectationTwoQubits)
 
 TEST_F(ExpectationValuesTest, GeneralMethod)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",2+8);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",2+8);
   // |psi_0> = |010100> = |"2+8">
   ASSERT_EQ(psi.GetProbability(0),0);
   ASSERT_EQ(psi.GetProbability(1),1);

@@ -47,7 +47,7 @@ void QubitRegister<Type>::ApplyToffoli(unsigned const control_1,
 }
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

@@ -97,7 +97,7 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////////////////////////////////////////////////
 
   // Define a random one-qubit gate, without symmetries.
-  TM2x2<ComplexDP> G;
+  TM2x2<ComplexSP> G;
   G(0, 0) = {0.592056606032915, 0.459533060553574}; 
   G(0, 1) = {-0.314948020757856, -0.582328159830658};
   G(1, 0) = {0.658235557641767, 0.070882241549507}; 
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
   size_t tmp_spacesize = 0;
   if (num_qubits>30)
       tmp_spacesize = size_t(1L << 30);
-  iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0, tmp_spacesize);
+  iqs::QubitRegister<ComplexSP> psi(num_qubits, "base", 0, tmp_spacesize);
 if (false)  psi.TurnOnSpecialize();
   // Loop over the number of qubits and store the time elapsed in the computation.
   struct timeval time;

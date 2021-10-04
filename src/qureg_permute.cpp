@@ -231,7 +231,7 @@ void QubitRegister<Type>::PermuteByLocalGlobalExchangeOfQubitPairs(std::vector<s
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

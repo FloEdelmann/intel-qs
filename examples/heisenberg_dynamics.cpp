@@ -78,7 +78,7 @@ int main(int argc, char **argv)
   float expectval = 0.;
   
   
-  iqs::QubitRegister<ComplexDP> psi(num_qubits,"base",1);
+  iqs::QubitRegister<ComplexSP> psi(num_qubits,"base",1);
   // 1 means zeroth qubit is flipped. 0 means none are flipped.
   psi.EnableStatistics();
 

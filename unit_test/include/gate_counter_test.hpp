@@ -21,7 +21,7 @@ class GateCounterTest : public ::testing::Test
       GTEST_SKIP();
 
     // Hadamard gate defined via its matrix representation.
-    ComplexDP amplitude = {1/std::sqrt(2), 0};
+    ComplexSP amplitude = {1/std::sqrt(2), 0};
     G_(0, 0) =  amplitude; 
     G_(0, 1) =  amplitude;
     G_(1, 0) =  amplitude; 
@@ -38,8 +38,8 @@ class GateCounterTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 10;
-  TM2x2<ComplexDP> G_;
-  TM4x4<ComplexDP> D_;
+  TM2x2<ComplexSP> G_;
+  TM4x4<ComplexSP> D_;
   float accepted_error_ = 1e-15;
 };
 
@@ -48,7 +48,7 @@ class GateCounterTest : public ::testing::Test
 
 TEST_F(GateCounterTest, OnlyOneQubitGates)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   // Initilize state randomly.
   std::size_t rng_seed = 977;
   iqs::RandomNumberGenerator<float> rnd_generator;
@@ -83,7 +83,7 @@ TEST_F(GateCounterTest, ProvidedTwoQubitGates)
 {
   int expected_counter = 0;
   // |psi> = |1010010000> = |"1+4+32">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32);
   psi.EnableStatistics();
   for(int control = 0; control < num_qubits_; control++)
   {
@@ -138,7 +138,7 @@ TEST_F(GateCounterTest, CustomTwoQubitGates)
 
   int expected_counter = 0;
   // |psi> = |1010010000> = |"1+4+32">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32);
   psi.EnableStatistics();
   psi.Apply2QubitGate(7,1,D_);
   expected_counter +=1;
@@ -152,7 +152,7 @@ TEST_F(GateCounterTest, ToffoliGate)
   GTEST_SKIP(); // FIXME: to check if action error comes from memory limits
   // |psi> = |0000000000> = |"0">
   std::cout << "Checkpoint A\n"; // FIXME: to check origin of github action error
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   // TODO: this test creates problem to the "C++ build with CMake" action in github
   //       despite it runs fine locally. It is difficult to debug since github
   //       actions cannot be manually triggered yet.

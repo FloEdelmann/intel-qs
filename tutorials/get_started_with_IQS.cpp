@@ -70,7 +70,7 @@ int main(int argc, char **argv)
   // Allocate memory for the quantum register's state and initialize it to |0000>.
   // This can be achieved by using the codeword "base".
   int num_qubits = 4;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits);
   std::size_t index = 0;
   psi.Initialize("base", index);
 
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 
   // There are 2^4=16 amplitudes, corresponding to |0000>, |1000>, |0100>, |1100> ... |1111>
   std::size_t num_amplitudes = UL(1L << UL(num_qubits));
-  ComplexDP amplitude;
+  ComplexSP amplitude;
   std::stringstream buffer;
   buffer << "\nExplicit list of all amplitudes of |1000>:\n";
   for (index=0; index<num_amplitudes; ++index)
@@ -204,7 +204,7 @@ int main(int argc, char **argv)
   // Define an arbitrary single qubit gate.
   // The quantum gate G is given by a 2x2 unitary matrix, here using a custom made class
   // defined inside the IQS library.
-  TM2x2<ComplexDP> G;
+  TM2x2<ComplexSP> G;
   G(0,0) = { 0.592056606032915,   0.459533060553574};
   G(0,1) = {-0.314948020757856, - 0.582328159830658};
   G(1,0) = { 0.658235557641767, + 0.070882241549507};

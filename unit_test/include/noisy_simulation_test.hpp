@@ -65,13 +65,13 @@ TEST_F(NoisySimulationTest, OneStateAtATime)
   if (iqs::mpi::Environment::IsUsefulRank() == false)
       return;
 
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+8+16+32);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+8+16+32);
   // |psi> = |100111> = |"1+8+16+32">
   psi.ApplyHadamard(0);
   psi.ApplyHadamard(1);
   // |psi> = |-+0111>
 
-  iqs::QubitRegister<ComplexDP> noisy_psi (psi);
+  iqs::QubitRegister<ComplexSP> noisy_psi (psi);
   ASSERT_FLOAT_EQ( noisy_psi.ComputeOverlap(psi).real(), 1.);
   // Set the dissipation and decoherence times.
   noisy_psi.SetNoiseTimescales(T1_, T2_);
@@ -101,7 +101,7 @@ TEST_F(NoisySimulationTest, TwoStates)
 
   int my_state_id = iqs::mpi::Environment::GetStateId();
   std::size_t index = my_state_id;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
 
   // The pool has two states, |0> and |1>.
   int qubit = 0;
@@ -115,7 +115,7 @@ TEST_F(NoisySimulationTest, TwoStates)
 
   // Now initialize all states of the pool to |"0">.
   psi.Initialize("base",0);
-  iqs::QubitRegister<ComplexDP> noisy_psi (psi);
+  iqs::QubitRegister<ComplexSP> noisy_psi (psi);
   // Noise gates require random numbers.
   std::size_t rng_seed = 7777;
   iqs::RandomNumberGenerator<float> rnd_generator;
@@ -156,7 +156,7 @@ TEST_F(NoisySimulationTest, OneStatePerRank)
 
   if ( iqs::mpi::Environment::IsUsefulRank() )
   {
-      iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+      iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
       ASSERT_EQ( psi.GlobalSize(), psi.LocalSize() );
       std::size_t index = my_state_id % psi.GlobalSize();
       psi.Initialize("base",index);

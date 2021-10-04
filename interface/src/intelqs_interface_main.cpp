@@ -10,7 +10,7 @@
 using namespace std;
 
 // Global variables related to Psi-function .malloc/.free routines.
-using Type = ComplexDP;
+using Type = ComplexSP;
 iqs::QubitRegister<Type> *psi1 = nullptr;
 bool fPsiAllocated = false;
 
@@ -24,7 +24,7 @@ int main(int argc, char*argv[])
         return 0;
 
     int myid = env.GetStateRank();
-    using Type = ComplexDP;
+    using Type = ComplexSP;
 
     while(true) {
         getline(cin,line);

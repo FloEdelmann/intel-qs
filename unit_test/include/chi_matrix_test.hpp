@@ -191,7 +191,7 @@ TEST_F(ChiMatrixTest, Int)
 
 //////////////////////////////////////////////////////////////////////////////
 
-TEST_F(ChiMatrixTest, ComplexDP)
+TEST_F(ChiMatrixTest, ComplexSP)
 {
   chimatrix_testsize<std::complex<float>, 1>();
   chimatrix_testsize<std::complex<float>, 2>();

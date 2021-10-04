@@ -481,7 +481,7 @@ float QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_pos
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

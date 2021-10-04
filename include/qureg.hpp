@@ -124,7 +124,7 @@ namespace iqs {
 ///     ...          ...
 ///     N-1        imap(N-1)
 
-template <class Type = ComplexDP>
+template <class Type = ComplexSP>
 class QubitRegister
 {
   public:

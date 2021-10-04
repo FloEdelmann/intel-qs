@@ -279,7 +279,7 @@ namespace utest
 
     std::string name;
     iqs::Permutation p;
-    std::vector<ComplexDP> state;
+    std::vector<ComplexSP> state;
     bool do_print;
   
     // Creator of the state.
@@ -296,7 +296,7 @@ namespace utest
     {
         iqs::Permutation pold = p;
         assert(pnew.num_elements == pold.num_elements);
-        std::vector<ComplexDP> state_new(state.size(), 0);
+        std::vector<ComplexSP> state_new(state.size(), 0);
     
         // printf("map: %s imap: %s\n", pnew.GetMapStr().c_str(), pold.GetImapStr().c_str());
         std::vector<std::size_t> map(pnew.num_elements, 0);

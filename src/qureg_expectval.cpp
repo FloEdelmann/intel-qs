@@ -375,7 +375,7 @@ QubitRegister<Type>::ExpectationValueZZ(unsigned qubit, unsigned qubit2, BaseTyp
 }
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 

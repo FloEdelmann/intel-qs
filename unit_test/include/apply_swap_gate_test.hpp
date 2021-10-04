@@ -37,12 +37,12 @@ class ApplySwapGateTest : public ::testing::Test
 // Emulation of SWAP by update the permutation.
 TEST_F(ApplySwapGateTest, Emulation)
 {
-  ComplexDP amplitude_0 = { 0. , 0. };
-  ComplexDP amplitude_1 = { 1. , 0. };
+  ComplexSP amplitude_0 = { 0. , 0. };
+  ComplexSP amplitude_1 = { 1. , 0. };
 
   // Initial state |0010000000>
   std::size_t index = 4;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
   ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), amplitude_1, accepted_error_);
 
   ASSERT_EQ( (*psi.qubit_permutation)[1], 1);
@@ -73,7 +73,7 @@ TEST_F(ApplySwapGateTest, Explicit3QubitExample)
   bool print_state = false;
 
   unsigned num_qubits = 3;
-  iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi(num_qubits, "base", 0);
   // |psi> = {1,0,0,0,0,0,0,0}
   unsigned myrank = iqs::mpi::Environment::GetStateRank();
   std::size_t glb_index;
@@ -81,7 +81,7 @@ TEST_F(ApplySwapGateTest, Explicit3QubitExample)
   for (std::size_t j=0; j<psi.LocalSize(); ++j)
   {
       glb_index = j + lcl_start_index;
-      psi[j] = ComplexDP(glb_index, 0);
+      psi[j] = ComplexSP(glb_index, 0);
   }
   // |psi> = {0,1,2,3,4,5,6,7}
   if (print_state) psi.Print("state should have amplitudes from 0 to 7");
@@ -114,13 +114,13 @@ TEST_F(ApplySwapGateTest, ComparisonWithThreeCnots)
   iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   // The "rand" style cannot be used directly in the creation of the state.
-  iqs::QubitRegister<ComplexDP> psi_1(num_qubits_, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi_1(num_qubits_, "base", 0);
   psi_1.SetRngPtr(&rnd_generator);
   // |psi_1> = |random>
   psi_1.Initialize("rand", 1);
 
   // |psi_2> = |psi_1> = |random>
-  iqs::QubitRegister<ComplexDP> psi_2(psi_1);
+  iqs::QubitRegister<ComplexSP> psi_2(psi_1);
 
   // Compare two implementations of the SWAP gate.
   unsigned qubit1 = 2, qubit2 = num_qubits_-1;
@@ -169,13 +169,13 @@ TEST_F(ApplySwapGateTest, TestForDistributedImplementation)
   iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(rng_seed);
   // The "rand" style cannot be used directly in the creation of the state.
-  iqs::QubitRegister<ComplexDP> psi_1(num_qubits, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi_1(num_qubits, "base", 0);
   psi_1.SetRngPtr(&rnd_generator);
   // |psi_1> = |random>
   psi_1.Initialize("rand", 1);
 
   // |psi_2> = |psi_1> = |random>
-  iqs::QubitRegister<ComplexDP> psi_2(psi_1);
+  iqs::QubitRegister<ComplexSP> psi_2(psi_1);
   // Compare two implementations of the SWAP gate.
   unsigned qubit1 = 2, qubit2 = num_qubits-1;
   psi_1.ApplySwap(qubit1, qubit2);

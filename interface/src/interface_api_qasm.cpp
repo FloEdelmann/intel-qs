@@ -11,7 +11,7 @@
 
 using namespace std;
 
-using Type = ComplexDP;
+using Type = ComplexSP;
 extern iqs::QubitRegister<Type> *psi1;
 
 // Constant defining the rotational angle of a T-dagger gate. Basically, -(pi/4).
@@ -73,7 +73,7 @@ unsigned long H_handler(string args) {
 
 
 unsigned long MeasZ_handler(string args) {
-    using Type = ComplexDP;
+    using Type = ComplexSP;
     Type measurement = 0.0;
     
     cout << "MeasZ"<< " [" << args << "]" <<endl;

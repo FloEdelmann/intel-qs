@@ -37,13 +37,13 @@ class TwoQubitRegisterTest : public ::testing::Test
 TEST_F(TwoQubitRegisterTest, InitializeInComputationalBasis)
 {
   // |psi_0> = |00> = |q0=0> x |q1=0>
-  iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_0 (num_qubits_,"base",0);
   // |psi_1> = |10> = |q0=1> x |q1=0>
-  iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
+  iqs::QubitRegister<ComplexSP> psi_1 (num_qubits_,"base",1);
   // |psi_2> = |01> = |q0=0> x |q1=1>
-  iqs::QubitRegister<ComplexDP> psi_2 (num_qubits_,"base",2);
+  iqs::QubitRegister<ComplexSP> psi_2 (num_qubits_,"base",2);
   // |psi_3> = |11> = |q0=1> x |q1=1>
-  iqs::QubitRegister<ComplexDP> psi_3 (num_qubits_,"base",3);
+  iqs::QubitRegister<ComplexSP> psi_3 (num_qubits_,"base",3);
 
   // Test the norm.
   ASSERT_LE( std::abs(psi_0.ComputeNorm()-1) , accepted_error_ );
@@ -51,7 +51,7 @@ TEST_F(TwoQubitRegisterTest, InitializeInComputationalBasis)
   ASSERT_LE( std::abs(psi_2.ComputeNorm()-1) , accepted_error_ );
   ASSERT_LE( std::abs(psi_3.ComputeNorm()-1) , accepted_error_ );
 
-  ComplexDP amplitude;
+  ComplexSP amplitude;
   // Test the only non-zero entry.
   amplitude = psi_0.GetGlobalAmplitude(0);
   ASSERT_FLOAT_EQ(psi_0.GetGlobalAmplitude(0).real(), 1.);
@@ -75,9 +75,9 @@ TEST_F(TwoQubitRegisterTest, InitializeInComputationalBasis)
 TEST_F(TwoQubitRegisterTest, InitializeRandomly)
 {
   // |psi_0> = |00>
-  iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_0 (num_qubits_,"base",0);
   // |psi_1> = |10>
-  iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
+  iqs::QubitRegister<ComplexSP> psi_1 (num_qubits_,"base",1);
   // random number generator
   std::size_t rng_seed = 7777;
   iqs::RandomNumberGenerator<float> rnd_generator;
@@ -125,7 +125,7 @@ TEST_F(TwoQubitRegisterTest, InitializeRandomly)
 TEST_F(TwoQubitRegisterTest, InitializeRandomlyButSame)
 {
   // |psi> = |00>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   // random number generator
   std::size_t rng_seed = 7777;
   iqs::RandomNumberGenerator<float> rng;
@@ -138,7 +138,7 @@ TEST_F(TwoQubitRegisterTest, InitializeRandomlyButSame)
   // |psi> = |rand>
 
   // Initilize the copy: |copy> = |psi>
-  iqs::QubitRegister<ComplexDP> psi_copy (psi);
+  iqs::QubitRegister<ComplexSP> psi_copy (psi);
   ASSERT_FLOAT_EQ(psi_copy.MaxAbsDiff(psi), 0 );
   ASSERT_FLOAT_EQ(psi_copy.MaxL2NormDiff(psi), 0 );
   //
@@ -155,7 +155,7 @@ TEST_F(TwoQubitRegisterTest, InitializeRandomlyButSame)
 
 TEST_F(TwoQubitRegisterTest, Hadamard)
 {
-  iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_0 (num_qubits_,"base",0);
   psi_0.ApplyHadamard(0);
   // |psi_0> = |+0> = |q0=+> x |q1=0>
   ASSERT_NEAR( psi_0.GetProbability(0), 0.5, accepted_error_ );
@@ -166,25 +166,25 @@ TEST_F(TwoQubitRegisterTest, Hadamard)
   // |psi_0> = |10> = |q0=1> x |q1=0>
   ASSERT_NEAR( psi_0.GetProbability(0), 1. , accepted_error_ );
 
-  iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
+  iqs::QubitRegister<ComplexSP> psi_1 (num_qubits_,"base",1);
   psi_1.ApplyHadamard(0);
   // |psi_1> = |-0> = |q0=-> x |q1=0>
   ASSERT_NEAR( psi_1.GetProbability(0), 0.5, accepted_error_ );
 
-  iqs::QubitRegister<ComplexDP> psi_2 (num_qubits_,"base",2);
+  iqs::QubitRegister<ComplexSP> psi_2 (num_qubits_,"base",2);
   psi_2.ApplyHadamard(1);
   // |psi_2> = |0-> = |q0=0> x |q1=->
-  ComplexDP amplitude = ComplexDP(1./std::sqrt(2.), 0. );
+  ComplexSP amplitude = ComplexSP(1./std::sqrt(2.), 0. );
   ASSERT_EQ(psi_2.GetGlobalAmplitude(0), amplitude);
   ASSERT_FLOAT_EQ(psi_2.GetGlobalAmplitude(1).real(), 0.);
   ASSERT_EQ(psi_2.GetGlobalAmplitude(2),-amplitude);
   ASSERT_FLOAT_EQ(psi_2.GetGlobalAmplitude(3).imag(), 0.);
 
-  iqs::QubitRegister<ComplexDP> psi_3 (num_qubits_,"base",3);
+  iqs::QubitRegister<ComplexSP> psi_3 (num_qubits_,"base",3);
   psi_3.ApplyHadamard(0);
   psi_3.ApplyHadamard(1);
   // |psi_3> = |--> = |q0=-> x |q1=->
-  amplitude = ComplexDP(1./2., 0. );
+  amplitude = ComplexSP(1./2., 0. );
   ASSERT_COMPLEX_NEAR(psi_3.GetGlobalAmplitude(0),  amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR(psi_3.GetGlobalAmplitude(1), -amplitude, accepted_error_);
   ASSERT_COMPLEX_NEAR(psi_3.GetGlobalAmplitude(2), -amplitude, accepted_error_);

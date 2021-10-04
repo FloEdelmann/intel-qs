@@ -36,7 +36,7 @@ class MeasureTest : public ::testing::Test
 
 TEST_F(MeasureTest, GetProbability)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",10);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",10);
   psi.ApplyHadamard(2);
   psi.ApplyHadamard(3);
   // |psi> = |01+-> = H2.H3|"2+8">

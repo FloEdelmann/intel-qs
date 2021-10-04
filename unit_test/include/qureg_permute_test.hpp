@@ -45,7 +45,7 @@ TEST_F(QuregPermuteTest, InitialPermutation)
 {
   // Initial state |0010...0>
   std::size_t index = 4;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
   unsigned position;
   // Verify that the qubit permutation in psi is the identity.
   for (unsigned qubit=0; qubit<num_qubits_; ++qubit)
@@ -60,23 +60,23 @@ TEST_F(QuregPermuteTest, InitialPermutation)
 TEST_F(QuregPermuteTest, PermuteLocalQubits)
 {
   // Initial state |0000...0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", 0);
   psi[0]=0;
   // Set a few amplitudes:
-  psi.SetGlobalAmplitude(2, ComplexDP(2,0)); // 2^1
-  psi.SetGlobalAmplitude(8, ComplexDP(8,0)); // 2^3
-  psi.SetGlobalAmplitude(1024, ComplexDP(1024,0)); // 2^10
-  psi.SetGlobalAmplitude(4096, ComplexDP(4096,0)); // 2^12
+  psi.SetGlobalAmplitude(2, ComplexSP(2,0)); // 2^1
+  psi.SetGlobalAmplitude(8, ComplexSP(8,0)); // 2^3
+  psi.SetGlobalAmplitude(1024, ComplexSP(1024,0)); // 2^10
+  psi.SetGlobalAmplitude(4096, ComplexSP(4096,0)); // 2^12
 
   std::size_t index = (1UL << (num_qubits_-1)) + 512;
-  psi.SetGlobalAmplitude(index, ComplexDP(0,1));
+  psi.SetGlobalAmplitude(index, ComplexSP(0,1));
   index = (1UL << (num_qubits_-1)) + 1024;
-  psi.SetGlobalAmplitude(index, ComplexDP(0,2));
+  psi.SetGlobalAmplitude(index, ComplexSP(0,2));
 
   index = (1UL << (num_qubits_-2)) + 512;
-  psi.SetGlobalAmplitude(index, ComplexDP(0,3));
+  psi.SetGlobalAmplitude(index, ComplexSP(0,3));
   index = (1UL << (num_qubits_-2)) + 1024;
-  psi.SetGlobalAmplitude(index, ComplexDP(0,4));
+  psi.SetGlobalAmplitude(index, ComplexSP(0,4));
   //       |--|     |--------|            |-------|
   map_  = {1, 0, 2, 6, 4, 5, 3, 7, 8, 9, 12, 11, 10, 13, 14, 15, 16, 17, 18, 19};
   if (12 > M_)
@@ -125,35 +125,35 @@ TEST_F(QuregPermuteTest, PermuteLocalQubits)
 TEST_F(QuregPermuteTest, PermuteGlobalQubits)
 {
   // Initial state |0000...0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", 0);
   psi[0]=0;
   // Set a few amplitudes:
   std::vector<std::size_t> indices = {             2,              8,           1024,           4096};
-  std::vector<ComplexDP>   values  = {ComplexDP(1,0), ComplexDP(2,0), ComplexDP(3,0), ComplexDP(4,0)};
+  std::vector<ComplexSP>   values  = {ComplexSP(1,0), ComplexSP(2,0), ComplexSP(3,0), ComplexSP(4,0)};
 
   indices.push_back((1UL << (num_qubits_-1)) + 512);
-  values.push_back(ComplexDP(0,1));
+  values.push_back(ComplexSP(0,1));
   indices.push_back((1UL << (num_qubits_-1)) + 1024);
-  values.push_back(ComplexDP(0,2));
+  values.push_back(ComplexSP(0,2));
 
   indices.push_back((1UL << (num_qubits_-2)) + 512);
-  values.push_back(ComplexDP(0,3));
+  values.push_back(ComplexSP(0,3));
   indices.push_back((1UL << (num_qubits_-2)) + 1024);
-  values.push_back(ComplexDP(0,4));
+  values.push_back(ComplexSP(0,4));
   indices.push_back((1UL << (num_qubits_-2)) + 4096);
-  values.push_back(ComplexDP(0,5));
+  values.push_back(ComplexSP(0,5));
 
   indices.push_back((1UL << (num_qubits_-3)) + 0);
-  values.push_back(ComplexDP(0,6));
+  values.push_back(ComplexSP(0,6));
   indices.push_back((1UL << (num_qubits_-3)) + 4096);
-  values.push_back(ComplexDP(0,7));
+  values.push_back(ComplexSP(0,7));
 
   indices.push_back((1UL << (num_qubits_-4)) + 0);
-  values.push_back(ComplexDP(0,8));
+  values.push_back(ComplexSP(0,8));
   indices.push_back((1UL << (num_qubits_-4)) + 512);
-  values.push_back(ComplexDP(0,9));
+  values.push_back(ComplexSP(0,9));
   indices.push_back((1UL << (num_qubits_-4)) + 4096);
-  values.push_back(ComplexDP(0,10));
+  values.push_back(ComplexSP(0,10));
 
   ASSERT_EQ(indices.size(), values.size());
   for (unsigned i=0; i<indices.size(); ++i)
@@ -198,21 +198,21 @@ TEST_F(QuregPermuteTest, PermuteGlobalQubits)
 TEST_F(QuregPermuteTest, PermuteQubits)
 {
   // Initial state |0000...0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", 0);
   psi[0]=0;
   // Set a few amplitudes:                       2^1             2^3            2^10            2^12
   std::vector<std::size_t> indices = {             2,              8,           1024,           4096};
-  std::vector<ComplexDP>   values  = {ComplexDP(1,0), ComplexDP(2,0), ComplexDP(3,0), ComplexDP(4,0)};
+  std::vector<ComplexSP>   values  = {ComplexSP(1,0), ComplexSP(2,0), ComplexSP(3,0), ComplexSP(4,0)};
 
   indices.push_back( (1UL << (num_qubits_-1)) +  512);
-  values.push_back(ComplexDP(0,1));
+  values.push_back(ComplexSP(0,1));
   indices.push_back( (1UL << (num_qubits_-1)) + 1024);
-  values.push_back(ComplexDP(0,2));
+  values.push_back(ComplexSP(0,2));
 
   indices.push_back( (1UL << (num_qubits_-2)) +  512);
-  values.push_back(ComplexDP(0,3));
+  values.push_back(ComplexSP(0,3));
   indices.push_back( (1UL << (num_qubits_-2)) + 1024);
-  values.push_back(ComplexDP(0,4));
+  values.push_back(ComplexSP(0,4));
 
   ASSERT_EQ(indices.size(), values.size());
   for (unsigned i=0; i<indices.size(); ++i)

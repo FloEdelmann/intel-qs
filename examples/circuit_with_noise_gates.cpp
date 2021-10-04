@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   }
 
   // single-qubit operation that will be implemented (in a conditioned way)
-  TM2x2<ComplexDP> G;
+  TM2x2<ComplexSP> G;
   G(0, 0) = {0.592056606032915, 0.459533060553574}; 
   G(0, 1) = {-0.314948020757856, -0.582328159830658};
   G(1, 0) = {0.658235557641767, 0.070882241549507}; 
@@ -98,11 +98,11 @@ int main(int argc, char **argv)
 
 
   // ideal state
-  iqs::QubitRegister<ComplexDP> psi0(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi0(num_qubits);
   // slow decoherence
-  iqs::NoisyQureg<ComplexDP> psi1(num_qubits, RNG_seed, T_1_slow, T_2_slow);
+  iqs::NoisyQureg<ComplexSP> psi1(num_qubits, RNG_seed, T_1_slow, T_2_slow);
   // fast decoherence
-  iqs::NoisyQureg<ComplexDP> psi2(num_qubits, RNG_seed, T_1_fast, T_2_fast);
+  iqs::NoisyQureg<ComplexSP> psi2(num_qubits, RNG_seed, T_1_fast, T_2_fast);
   psi0.Initialize("base", 0);
 
 

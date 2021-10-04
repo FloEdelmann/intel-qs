@@ -223,7 +223,7 @@ int main(int argc, char **argv)
 
   // Float precision.
   {
-    using Type = ComplexDP;
+    using Type = ComplexSP;
 
     if (myrank == 0) std::cout << "\nstate initialization (float precision)\n";
     iqs::RandomNumberGenerator<float> rng_dp;

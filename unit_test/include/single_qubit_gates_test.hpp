@@ -33,7 +33,7 @@ class SingleQubitGatesTest : public ::testing::Test
   }
 
   const std::size_t num_qubits_ = 10;
-  TM2x2<ComplexDP> G_;
+  TM2x2<ComplexSP> G_;
   float accepted_error_ = 1e-15;
 };
 
@@ -44,7 +44,7 @@ TEST_F(SingleQubitGatesTest, PauliOperators)
 {
   // Recall that the qubits read from left to right, with the most significant
   // bit on the right (contrary to usual decimal representation).
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32+512);
   // |psi> = |1010010001> = |"1+4+32+512">
   ASSERT_FLOAT_EQ( psi.ComputeNorm(), 1.);
   ASSERT_FLOAT_EQ(psi.GetProbability(0), 1.);
@@ -78,7 +78,7 @@ TEST_F(SingleQubitGatesTest, PauliOperators)
 
 TEST_F(SingleQubitGatesTest, Rotations)
 {
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32+512);
   // |psi> = |1010010001> = |"1+4+32+512">
   // Check that Rx(t)=exp(-i t X/2)
   float angle = M_PI;
@@ -108,7 +108,7 @@ TEST_F(SingleQubitGatesTest, Rotations)
 TEST_F(SingleQubitGatesTest, CustomGate)
 {
   // |psi> = |1010010001> = |"1+4+32+512">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4+32+512);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4+32+512);
   for(int qubit = 0; qubit < num_qubits_; qubit++)
   {
       psi.Apply1QubitGate(qubit, G_);
@@ -133,7 +133,7 @@ TEST_F(SingleQubitGatesTest, DeathTest)
       GTEST_SKIP();
 
   // |psi> = |0000000000> = |"0">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
 
   // To switch off the warning message about DEATH test not being thread safe.
   ::testing::FLAGS_gtest_death_test_style = "threadsafe"; 

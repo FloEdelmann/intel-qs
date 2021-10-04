@@ -21,7 +21,7 @@
 // googletest
 #include "gtest/gtest.h"
 
-// Class that we want to test: QubitRegister<ComplexDP>
+// Class that we want to test: QubitRegister<ComplexSP>
 #include "../include/qureg.hpp"
 
 // To compare complex values in an approximated way.

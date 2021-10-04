@@ -152,7 +152,7 @@ TEST_F(TinyMatrixTest, Int)
 
 //////////////////////////////////////////////////////////////////////////////
 
-TEST_F(TinyMatrixTest, ComplexDP)
+TEST_F(TinyMatrixTest, ComplexSP)
 {
   tinymatrix_testsize<std::complex<float>, 1, 1>();
   tinymatrix_testsize<std::complex<float>, 1, 2>();

@@ -45,7 +45,7 @@ int main(int argc, char **argv)
       // The state is initialized as a computational basis state (using the keyword "base")
       // corresponding to the index 0. The index corresponds to a N-bit integer in decimal
       // representation. With N qubits there are 2^N indices, from 0 to 2^{N-1}.
-      iqs::QubitRegister<ComplexDP> psig(Ngrover, "base", 0);
+      iqs::QubitRegister<ComplexSP> psig(Ngrover, "base", 0);
 	  
       psig.Print("Initial State =");
 

@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     std::cout << "State comparison will not be performed" << std::endl;
 
   // Comparison variables
-  iqs::QubitRegister<ComplexDP>* psi0 = nullptr;
+  iqs::QubitRegister<ComplexSP>* psi0 = nullptr;
   const float tol = 1e-9;
 
   std::vector<std::array<int, 2>> pairs;
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
   for (int i = 0; i < 4; ++i)
   {
-      iqs::QubitRegister<ComplexDP> psi(nbits, "base", 0);
+      iqs::QubitRegister<ComplexSP> psi(nbits, "base", 0);
     if (i == 1)
     {
       // MPI use cases with more than two ranks need to be fixed
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     {
       if (i == 0)
       {
-        psi0 = new iqs::QubitRegister<ComplexDP>(psi);
+        psi0 = new iqs::QubitRegister<ComplexSP>(psi);
         continue;
       }
 

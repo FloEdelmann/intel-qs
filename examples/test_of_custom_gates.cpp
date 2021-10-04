@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     fprintf(stdout, "OMP number of threads = %d \n", nthreads);
   }
   
-  TM2x2<ComplexDP> G;
+  TM2x2<ComplexSP> G;
   G(0, 0) = {0.592056606032915, 0.459533060553574}; 
   G(0, 1) = {-0.314948020757856, -0.582328159830658};
   G(1, 0) = {0.658235557641767, 0.070882241549507}; 
@@ -72,8 +72,8 @@ int main(int argc, char **argv)
 // Initialize the qubit register in state |A>, then apply the custom one-qubit gate G
 // to each qubit sequentially.
 
-  iqs::QubitRegister<ComplexDP> psi_A(num_qubits, "base", 0);
-//  iqs::QubitRegister<ComplexDP> psi_A(num_qubits, "rand", -1);
+  iqs::QubitRegister<ComplexSP> psi_A(num_qubits, "base", 0);
+//  iqs::QubitRegister<ComplexSP> psi_A(num_qubits, "rand", -1);
 
   // with specialization
   psi_A.TurnOnSpecialize();
@@ -112,11 +112,11 @@ int main(int argc, char **argv)
 
   iqs::RandomNumberGenerator<float> rnd_generator;
   rnd_generator.SetSeedStreamPtrs(7777);
-  iqs::QubitRegister<ComplexDP> psi_B(num_qubits, "base", 0 );
+  iqs::QubitRegister<ComplexSP> psi_B(num_qubits, "base", 0 );
   psi_B.SetRngPtr(&rnd_generator);
   psi_B.Initialize("rand",1);
 
-  iqs::QubitRegister<ComplexDP> psi_C(psi_B);
+  iqs::QubitRegister<ComplexSP> psi_C(psi_B);
 
   {
     // no specialization

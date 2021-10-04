@@ -35,9 +35,9 @@ class UtilityMethodsTest : public ::testing::Test
 
 TEST_F(UtilityMethodsTest, DifferenceOfTwoStates)
 {
-  iqs::QubitRegister<ComplexDP> psi_a (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_a (num_qubits_,"base",0);
   std::size_t index = 4;
-  iqs::QubitRegister<ComplexDP> psi_b (num_qubits_,"base",index);
+  iqs::QubitRegister<ComplexSP> psi_b (num_qubits_,"base",index);
   // |a> = |0000>
   // |b> = |0010> = |"4">
 
@@ -102,7 +102,7 @@ TEST_F(UtilityMethodsTest, DifferenceOfTwoStates)
 TEST_F(UtilityMethodsTest, SmallUtilityFunctions)
 {
   // Method 'check_bit' of class QubitRegister should return a bool.
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
   std::size_t index = 5; // 5 = 0101 in 4-bit notation
   for (unsigned position = 0; position<num_qubits_; ++position)
       if (position%2==0)

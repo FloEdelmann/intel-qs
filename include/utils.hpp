@@ -22,7 +22,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 using ComplexSP = std::complex<float>;
-using ComplexDP = std::complex<float>;
+using ComplexSP = std::complex<float>;
 
 namespace iqs {
 

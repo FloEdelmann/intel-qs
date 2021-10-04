@@ -7,7 +7,7 @@ using namespace std;
 
 namespace iqs {
 
-template <class Type = ComplexDP>
+template <class Type = ComplexSP>
 class QubitRegisterMetric: public QubitRegister<Type> {
   int iTotalQubitGateCount=0;
   int iOneQubitGateCount=0;

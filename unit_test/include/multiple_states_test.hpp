@@ -82,11 +82,11 @@ TEST_F(MultipleStatesTest, OneStatePerRank)
 
   if ( iqs::mpi::Environment::IsUsefulRank() )
   {
-      iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+      iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
       ASSERT_EQ( psi.GlobalSize(), psi.LocalSize() );
       std::size_t index = my_state_id % psi.GlobalSize();
       psi.Initialize("base",index);
-      ComplexDP amplitude = psi.GetGlobalAmplitude(index);
+      ComplexSP amplitude = psi.GetGlobalAmplitude(index);
       ASSERT_EQ(amplitude.real(),1.);
       ASSERT_EQ(amplitude.imag(),0.);
 
@@ -167,13 +167,13 @@ std::cout << "state_id= " << my_state_id << " over "
   // Execute simple quantum computations.
   if ( iqs::mpi::Environment::IsUsefulRank() )
   {
-      iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",0);
+      iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",0);
       int my_state_id = iqs::mpi::Environment::GetStateId();
       std::size_t index = my_state_id % psi.GlobalSize();
       psi.Initialize("base",index);
       // At this point:  state_id=0 --> |0>
       //                 state_id=1 --> |1>
-      ComplexDP amplitude = psi.GetGlobalAmplitude(index);
+      ComplexSP amplitude = psi.GetGlobalAmplitude(index);
       ASSERT_EQ(amplitude.real(),1.);
       ASSERT_EQ(amplitude.imag(),0.);
 

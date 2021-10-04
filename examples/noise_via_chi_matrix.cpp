@@ -57,7 +57,7 @@ int main(int argc, char **argv)
   unsigned num_ensemble_states = num_pool_states*20;
 /// ---------------------------------------------------------- ///
   // Quantum channel corresponding to an ideal Hadamard gate:
-  CM4x4<ComplexDP> chi_hadamard;
+  CM4x4<ComplexSP> chi_hadamard;
   chi_hadamard(1, 1) = {0.5, 0};
   chi_hadamard(1, 3) = {0.5, 0};
   chi_hadamard(3, 1) = {0.5, 0};
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
   if (!my_rank) std::cout << "-- Run noiseless circuit\n";
 
   // State initialization.
-  iqs::QubitRegister<ComplexDP> psi0(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi0(num_qubits);
   psi0.Initialize("base",0);
 
   // Circuit formed by Hadamard gates:
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
   rng.SetSeedStreamPtrs( rng_seed );
 
   // State initialization.
-  iqs::QubitRegister<ComplexDP> psi1(num_qubits);
+  iqs::QubitRegister<ComplexSP> psi1(num_qubits);
   psi1.SetRngPtr(&rng);
 
   // Circuit formed by Hadamard gates:

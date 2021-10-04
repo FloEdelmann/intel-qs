@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 
   iqs::mpi::StateBarrier();
 
-  iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0);
+  iqs::QubitRegister<ComplexSP> psi(num_qubits, "base", 0);
 
   iqs::mpi::StateBarrier();
   if (!pool_rank) std::cout << "\nInitialization of the qubit register.\n";

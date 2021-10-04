@@ -39,9 +39,9 @@ class OneQubitRegisterTest : public ::testing::Test
 
 TEST_F(OneQubitRegisterTest, InitializeInComputationalBasis)
 {
-  ComplexDP amplitude;
+  ComplexSP amplitude;
 
-  iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_0 (num_qubits_,"base",0);
   // |psi_0> = |0>
   amplitude = psi_0.GetGlobalAmplitude(0);
   ASSERT_FLOAT_EQ(amplitude.real(), 1.);
@@ -50,7 +50,7 @@ TEST_F(OneQubitRegisterTest, InitializeInComputationalBasis)
   ASSERT_FLOAT_EQ(amplitude.real(), 0.);
   ASSERT_FLOAT_EQ(amplitude.imag(), 0.);
 
-  iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
+  iqs::QubitRegister<ComplexSP> psi_1 (num_qubits_,"base",1);
   // |psi_1> = |1>
   amplitude = psi_1.GetGlobalAmplitude(0);
   ASSERT_FLOAT_EQ(amplitude.real(), 0.);
@@ -74,13 +74,13 @@ TEST_F(OneQubitRegisterTest, InitializeRandomly)
 
 TEST_F(OneQubitRegisterTest, GetCorrectProbability)
 {
-  iqs::QubitRegister<ComplexDP> psi_0 (num_qubits_,"base",0);
+  iqs::QubitRegister<ComplexSP> psi_0 (num_qubits_,"base",0);
   ASSERT_FLOAT_EQ(psi_0.GetProbability(0), 0.);
   psi_0.ApplyHadamard(0);
   // |psi_0> = |+>
   ASSERT_LE( std::abs(psi_0.GetProbability(0)-0.5) , accepted_error_ );
 
-  iqs::QubitRegister<ComplexDP> psi_1 (num_qubits_,"base",1);
+  iqs::QubitRegister<ComplexSP> psi_1 (num_qubits_,"base",1);
   ASSERT_FLOAT_EQ(psi_1.GetProbability(0), 1.);
   psi_1.ApplyPauliX(0);
   // |psi_1> = |0>

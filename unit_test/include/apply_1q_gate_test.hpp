@@ -47,9 +47,9 @@ class Apply1QGateTest : public ::testing::Test
 // Hadamard gate
 TEST_F(Apply1QGateTest, Hadamard)
 {
-  ComplexDP amplitude_0, amplitude_1;
+  ComplexSP amplitude_0, amplitude_1;
   // Initial state |000>|0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",j0_);
   psi.ApplyHadamard(qubit_);
   ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { 1./sqrt2_, 0 };
@@ -92,9 +92,9 @@ TEST_F(Apply1QGateTest, Hadamard)
 TEST_F(Apply1QGateTest, RotationX)
 {
   float angle = 0.83;
-  ComplexDP amplitude_0, amplitude_1;
+  ComplexSP amplitude_0, amplitude_1;
   // Initial state |000>|0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationX(qubit_,angle);
   ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = { std::cos(angle/2.), 0                 };
@@ -135,9 +135,9 @@ TEST_F(Apply1QGateTest, RotationX)
 TEST_F(Apply1QGateTest, RotationY)
 {
   float angle = 0.75;
-  ComplexDP amplitude_0, amplitude_1;
+  ComplexSP amplitude_0, amplitude_1;
   // Initial state |000>|0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationY(qubit_,angle);
   ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  std::cos(angle/2.), 0.};
@@ -160,9 +160,9 @@ TEST_F(Apply1QGateTest, RotationY)
 TEST_F(Apply1QGateTest, RotationZ)
 {
   float angle = 0.35;
-  ComplexDP amplitude_0, amplitude_1;
+  ComplexSP amplitude_0, amplitude_1;
   // Initial state |000>|0>
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",j0_);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",j0_);
   psi.ApplyRotationZ(qubit_,angle);
   ASSERT_FLOAT_EQ(psi.ComputeNorm(), 1.);
   amplitude_0 = {  std::cos(angle/2.), -std::sin(angle/2.) };
@@ -184,13 +184,13 @@ TEST_F(Apply1QGateTest, RotationZ)
 TEST_F(Apply1QGateTest, CustomGate)
 {
 
-  TM2x2<ComplexDP> G;
+  TM2x2<ComplexSP> G;
   G(0, 0) = {0.592056606032915, 0.459533060553574}; 
   G(0, 1) = {-0.314948020757856, -0.582328159830658};
   G(1, 0) = {0.658235557641767, 0.070882241549507}; 
   G(1, 1) = {0.649564427121402, 0.373855203932477};
   // |psi> = |1010> = |"1+4">
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_,"base",1+4);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_,"base",1+4);
   for(int qubit = 0; qubit < num_qubits_; qubit++)
   {
       psi.Apply1QubitGate(qubit, G);

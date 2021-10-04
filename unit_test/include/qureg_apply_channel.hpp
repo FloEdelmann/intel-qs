@@ -39,17 +39,17 @@ class ApplyQuantumChannel : public ::testing::Test
 // Hadamard gate
 TEST_F(ApplyQuantumChannel, IdealHadamard)
 {
-  CM4x4<ComplexDP> chi ;
-  chi(0,0) = chi(0,1) = chi(0,2) = chi(0,3) = ComplexDP(0,0);
-  chi(1,0) = chi(2,2) = ComplexDP(0,0);
-  chi(1,1) = chi(1,3) = ComplexDP(0.5, 0);
-  chi(2,0) = chi(2,1) = chi(2,2) = chi(2,3) = ComplexDP(0,0);
-  chi(3,0) = chi(3,2) = ComplexDP(0,0);
-  chi(3,1) = chi(3,3) = ComplexDP(0.5, 0);
+  CM4x4<ComplexSP> chi ;
+  chi(0,0) = chi(0,1) = chi(0,2) = chi(0,3) = ComplexSP(0,0);
+  chi(1,0) = chi(2,2) = ComplexSP(0,0);
+  chi(1,1) = chi(1,3) = ComplexSP(0.5, 0);
+  chi(2,0) = chi(2,1) = chi(2,2) = chi(2,3) = ComplexSP(0,0);
+  chi(3,0) = chi(3,2) = ComplexSP(0,0);
+  chi(3,1) = chi(3,3) = ComplexSP(0.5, 0);
   chi.EigensystemOfIdealHadamardChannel();
   // Initial state |0100>
   std::size_t index = 4;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
   // The application of quantum channels requires associating a RNG to psi.
   std::size_t rng_seed = 7777;
   iqs::RandomNumberGenerator<float> rnd_generator;
@@ -60,7 +60,7 @@ TEST_F(ApplyQuantumChannel, IdealHadamard)
   psi.ApplyHadamard(qubit);
   // There is no need of averages since there is a unique non-zero eigenstate of chi.
   psi.ApplyChannel(qubit, chi);
-  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexDP(1,0), accepted_error_);
+  ASSERT_COMPLEX_NEAR(psi.GetGlobalAmplitude(index), ComplexSP(1,0), accepted_error_);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -71,21 +71,21 @@ TEST_F(ApplyQuantumChannel, IdealHadamard)
 TEST_F(ApplyQuantumChannel, DepolarizingChannel)
 {
   float p = 0.01;
-  CM4x4<ComplexDP> chi;
+  CM4x4<ComplexSP> chi;
   for (int i=0; i<4; ++i)
       for (int j=0; j<4; ++j)
       {
           if (i!=j)
-              chi(i, j) = ComplexDP(0,0);
+              chi(i, j) = ComplexSP(0,0);
           else if (i==0)
-              chi(i, j) = ComplexDP(1-p,0);
+              chi(i, j) = ComplexSP(1-p,0);
           else
-              chi(i, j) = ComplexDP(p/3,0);
+              chi(i, j) = ComplexSP(p/3,0);
       }
   chi.SolveEigenSystem();
   // Initial state |00+1>
   std::size_t index = 1;
-  iqs::QubitRegister<ComplexDP> psi (num_qubits_, "base", index);
+  iqs::QubitRegister<ComplexSP> psi (num_qubits_, "base", index);
   psi.ApplyHadamard(1);
   // The application of quantum channels requires associating a RNG to psi.
   std::size_t rng_seed = 7777;
@@ -99,7 +99,7 @@ TEST_F(ApplyQuantumChannel, DepolarizingChannel)
   std::vector<float> overlap_squared (num_time_steps);
   for (int s=0; s<num_ensemble_states; ++s)
   {
-      iqs::QubitRegister<ComplexDP> psi_s(psi);
+      iqs::QubitRegister<ComplexSP> psi_s(psi);
       overlap_squared[0] += std::norm( psi_s.ComputeOverlap(psi) );
       for (int t=1; t<num_time_steps; ++t)
       {

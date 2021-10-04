@@ -56,8 +56,8 @@ int MPI_Sendrecv_x(ComplexSP *sendbuf, size_t sendcount, size_t dest, size_t sen
 }
 
 static
-int MPI_Sendrecv_x(ComplexDP *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
-                   ComplexDP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
+int MPI_Sendrecv_x(ComplexSP *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
+                   ComplexSP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                    MPI_Comm comm, MPI_Status *status)
 {
   return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_FLOAT_COMPLEX, dest, sendtag,
@@ -72,7 +72,7 @@ static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
   return MPI_Bcast((void*)data, 1, MPI_COMPLEX, root, comm);
 }
 
-static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
+static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
 {
   return MPI_Bcast((void*)data, 1, MPI_FLOAT_COMPLEX, root, comm);
 }
@@ -108,8 +108,8 @@ static
 }
 
 static
-int MPI_Sendrecv_x(ComplexDP *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
-                   ComplexDP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
+int MPI_Sendrecv_x(ComplexSP *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
+                   ComplexSP *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                    MPI_Comm comm, MPI_Status *status)
 {
   return MPIX_Sendrecv_x((void *)sendbuf, sendcount, MPI_FLOAT_COMPLEX, dest, sendtag,
@@ -127,7 +127,7 @@ static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
 
 //
 
-static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
+static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
 {
  // Not sure of how it is defined with BigMPI.
  assert(0);

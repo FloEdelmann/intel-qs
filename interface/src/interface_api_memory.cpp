@@ -7,7 +7,7 @@ using namespace std;
 
 
 // Global variables related to Psi-function .malloc/.free routines.
-using Type = ComplexDP;
+using Type = ComplexSP;
 extern iqs::QubitRegister<Type> *psi1;
 extern bool fPsiAllocated;
 
