@@ -234,9 +234,6 @@ namespace iqs {
   template class ChiMatrix<ComplexSP,  4, 32>;
   template class ChiMatrix<ComplexSP, 16, 32>;
   template class ChiMatrix<ComplexSP,  2 , 8>;
-
-  template class ChiMatrix<ComplexSP,  4, 32>;
-  template class ChiMatrix<ComplexSP, 16, 32>;
 }	// end namespace iqs
 
 /////////////////////////////////////////////////////////////////////////////////////////

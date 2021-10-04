@@ -227,6 +227,5 @@ void QubitRegister<Type>::ApplyDiag(unsigned qubit_1, unsigned qubit_2,  TM4x4<T
 }
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs

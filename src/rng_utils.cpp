@@ -146,23 +146,6 @@ void RandomNumberGenerator<float>::UniformRandomNumbers
   return;
 }
 
-template <>
-void RandomNumberGenerator<float>::UniformRandomNumbers
-( float *value, std::size_t size , float a, float b, std::string shared )
-{
-  std::mt19937 * generator;
-  generator = this->SelectGeneratorAndUpdateCounter(size, shared);
-
-  float * temp_ptr = value;
-  // If [a,b) is not [0,1), translate and scale the random numbers.
-  for (std::size_t i=0; i<size; ++i)
-  {
-      *temp_ptr = a + (b-a) * u_distribution(*generator);
-      ++temp_ptr;
-  }
-  return;
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////
 // Generate a random integer in [a,b).
 
@@ -191,23 +174,6 @@ void RandomNumberGenerator<Type>::RandomIntegersInRange
     
 /////////////////////////////////////////////////////////////////////////////////////////
 // Generate normal-distributed numbers (mean=0, std.dev.=1).
-
-template <>
-void RandomNumberGenerator<float>::GaussianRandomNumbers
-( float *value, std::size_t size , std::string shared )
-{
-  std::mt19937 * generator;
-  // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
-  generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
-
-  float * temp_ptr = value;
-  for (std::size_t i=0; i<size; ++i)
-  {
-       *temp_ptr = n_distribution(*generator);
-       ++temp_ptr;
-  }
-  return;
-}
 
 template <>
 void RandomNumberGenerator<float>::GaussianRandomNumbers
@@ -396,7 +362,6 @@ void RandomNumberGenerator<float>::GaussianRandomNumbers
 /////////////////////////////////////////////////////////////////////////////////////////
 
 template class RandomNumberGenerator<float>;
-template class RandomNumberGenerator<float>;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -426,8 +391,6 @@ template void ShuffleFisherYates<int,float>
   (std::vector<int>     &, RandomNumberGenerator<float> *, std::string);
 template void ShuffleFisherYates<float,float>
   (std::vector<float>   &, RandomNumberGenerator<float> *, std::string);
-template void ShuffleFisherYates<float,float>
-  (std::vector<float>  &, RandomNumberGenerator<float> *, std::string);
 template void ShuffleFisherYates<unsigned,float>
   (std::vector<unsigned>&, RandomNumberGenerator<float> *, std::string);
 

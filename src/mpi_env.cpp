@@ -58,7 +58,6 @@ Type Environment::IncoherentSumOverAllStatesOfPool(Type local_value)
 { return local_value; }
 //
 template float  Environment::IncoherentSumOverAllStatesOfPool<float>  (float  );
-template float Environment::IncoherentSumOverAllStatesOfPool<float> (float );
 
 void StateBarrier() {}
 void PoolBarrier() {}

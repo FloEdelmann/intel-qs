@@ -464,7 +464,6 @@ QubitRegister<Type>::~QubitRegister()
 }
 
 template class QubitRegister<ComplexSP>;
-template class QubitRegister<ComplexSP>;
 
 } // end namespace iqs
 
