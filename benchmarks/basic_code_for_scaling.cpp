@@ -32,6 +32,11 @@
 // Include the IQS class.
 #include "../include/qureg.hpp"
 
+enum gate_precision_t {
+  PRECISION_DOUBLE,
+  PRECISION_FLOAT,
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char **argv)
@@ -46,6 +51,7 @@ int main(int argc, char **argv)
   // Default parameters:
   int num_qubits = 20;
   int num_gates = 1;
+  gate_precision_t gate_precision = PRECISION_DOUBLE;
   // Recall that the executable will be located in:
   //   <repository>/benchmarks/bin/
   // but also that the script is launched from:
@@ -78,12 +84,26 @@ int main(int argc, char **argv)
           ++i;
           assert(i<argc);
           out_filename_root = argv[i];
+      } else if (argv[i] == std::string ("-gp")) {	// gate precision.
+          ++i;
+          assert(i<argc);
+          if (argv[i] == std::string ("double")) {
+            gate_precision = PRECISION_DOUBLE;
+          } else if (argv[i] == std::string ("float")) {
+            gate_precision = PRECISION_FLOAT;
+          } else {
+            std::cout << "Gate precision (-gp) has to be one of the following:\n"
+                      << "double\n"
+                      << "float\n\n";
+            return 0;
+          }
       } else {
           std::cout << "Wrong arguments. They should be:\n"
                     << "-nq [number of qubits]\n"
                     << "-ng [number of gates]\n"
                     << "-od [output directory]\n"
                     << "-of [output file]\n"
+                    << "-gp [gate precision]\n"
                     << "-nt [number of threads per rank]\n\n";
           return 0;
       }
@@ -98,11 +118,18 @@ int main(int argc, char **argv)
 /////////////////////////////////////////////////////////////////////////////////////////
 
   // Define a random one-qubit gate, without symmetries.
-  TM2x2<ComplexDP> G;
-  G(0, 0) = {0.592056606032915, 0.459533060553574}; 
-  G(0, 1) = {-0.314948020757856, -0.582328159830658};
-  G(1, 0) = {0.658235557641767, 0.070882241549507}; 
-  G(1, 1) = {0.649564427121402, 0.373855203932477};
+  TM2x2<ComplexDP> GateComplexDouble;
+  GateComplexDouble(0, 0) = {0.592056606032915, 0.459533060553574}; 
+  GateComplexDouble(0, 1) = {-0.314948020757856, -0.582328159830658};
+  GateComplexDouble(1, 0) = {0.658235557641767, 0.070882241549507}; 
+  GateComplexDouble(1, 1) = {0.649564427121402, 0.373855203932477};
+
+  // Define it again with single precision
+  TM2x2<ComplexSP> GateComplexFloat;
+  GateComplexFloat(0, 0) = {0.592056606032915, 0.459533060553574}; 
+  GateComplexFloat(0, 1) = {-0.314948020757856, -0.582328159830658};
+  GateComplexFloat(1, 0) = {0.658235557641767, 0.070882241549507}; 
+  GateComplexFloat(1, 1) = {0.649564427121402, 0.373855203932477};
 
   // Initialize the qubit register and turn on specialization.
   // Since this code may use very large number of qubits, we limit it to 2^30.
@@ -125,9 +152,14 @@ if (true) psi.EnableStatistics();
       start =  time.tv_sec + time.tv_usec * 1.0e-6;
 
       // Actual quantum gate execution.
-      for (int g=0; g<num_gates; ++g)
-          psi.Apply1QubitGate(qubit, G);
-//          psi.ApplyRotationZ(qubit, M_PI/3.);
+      for (int g=0; g<num_gates; ++g) {
+        if (gate_precision == PRECISION_DOUBLE) {
+          psi.Apply1QubitGate(qubit, GateComplexDouble);
+        } else if (gate_precision == PRECISION_FLOAT) {
+          psi.Apply1QubitGate(qubit, GateComplexFloat);
+        }
+        // psi.ApplyRotationZ(qubit, M_PI/3.);
+      }
 
       // MPI barrier and end the timer.
       iqs::mpi::StateBarrier();
