@@ -88,6 +88,7 @@ int main(int argc, char **argv)
           return 0;
       }
   }
+  std::cout << "\n\nOpenMP num threads: " << omp_get_num_threads() << "\n\n";
   assert(num_qubits>0);
 #ifdef _OPENMP
 #pragma omp parallel
