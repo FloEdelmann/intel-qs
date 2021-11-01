@@ -117,58 +117,95 @@ int main(int argc, char **argv)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-  // Define a random one-qubit gate, without symmetries.
-  TM2x2<ComplexDP> GateComplexDouble;
-  GateComplexDouble(0, 0) = {0.592056606032915, 0.459533060553574}; 
-  GateComplexDouble(0, 1) = {-0.314948020757856, -0.582328159830658};
-  GateComplexDouble(1, 0) = {0.658235557641767, 0.070882241549507}; 
-  GateComplexDouble(1, 1) = {0.649564427121402, 0.373855203932477};
-
-  // Define it again with single precision
-  TM2x2<ComplexSP> GateComplexFloat;
-  GateComplexFloat(0, 0) = {0.592056606032915, 0.459533060553574}; 
-  GateComplexFloat(0, 1) = {-0.314948020757856, -0.582328159830658};
-  GateComplexFloat(1, 0) = {0.658235557641767, 0.070882241549507}; 
-  GateComplexFloat(1, 1) = {0.649564427121402, 0.373855203932477};
-
-  // Initialize the qubit register and turn on specialization.
-  // Since this code may use very large number of qubits, we limit it to 2^30.
-  size_t tmp_spacesize = 0;
-  if (num_qubits>30)
-      tmp_spacesize = size_t(1L << 30);
-  iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0, tmp_spacesize);
-if (false)  psi.TurnOnSpecialize();
-  // Loop over the number of qubits and store the time elapsed in the computation.
-  struct timeval time;
-  double start, end;
   std::vector<double> computational_cost;
   computational_cost.reserve(num_qubits);
+
+/////////////////////////////////////////////////////////////////////////////////////////
+  if (gate_precision == PRECISION_DOUBLE) {
+
+    // Define a random one-qubit gate, without symmetries, in double precision
+    TM2x2<ComplexDP> GateComplexDouble;
+    GateComplexDouble(0, 0) = {0.592056606032915, 0.459533060553574};
+    GateComplexDouble(0, 1) = {-0.314948020757856, -0.582328159830658};
+    GateComplexDouble(1, 0) = {0.658235557641767, 0.070882241549507};
+    GateComplexDouble(1, 1) = {0.649564427121402, 0.373855203932477};
+
+    // Initialize the qubit register and turn on specialization.
+    // Since this code may use very large number of qubits, we limit it to 2^30.
+    size_t tmp_spacesize = 0;
+    if (num_qubits>30)
+        tmp_spacesize = size_t(1L << 30);
+    iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0, tmp_spacesize);
+if (false)  psi.TurnOnSpecialize();
+    // Loop over the number of qubits and store the time elapsed in the computation.
+    struct timeval time;
+    double start, end;
 if (true) psi.EnableStatistics();
-  for(int qubit = 0; qubit < num_qubits; qubit++)
-  {
-      // MPI barrier and start the timer.
-      iqs::mpi::StateBarrier();
-      gettimeofday(&time, (struct timezone*)0);
-      start =  time.tv_sec + time.tv_usec * 1.0e-6;
+    for(int qubit = 0; qubit < num_qubits; qubit++)
+    {
+        // MPI barrier and start the timer.
+        iqs::mpi::StateBarrier();
+        gettimeofday(&time, (struct timezone*)0);
+        start =  time.tv_sec + time.tv_usec * 1.0e-6;
 
-      // Actual quantum gate execution.
-      for (int g=0; g<num_gates; ++g) {
-        if (gate_precision == PRECISION_DOUBLE) {
+        // Actual quantum gate execution.
+        for (int g=0; g<num_gates; ++g) {
           psi.Apply1QubitGate(qubit, GateComplexDouble);
-        } else if (gate_precision == PRECISION_FLOAT) {
-          psi.Apply1QubitGate(qubit, GateComplexFloat);
+          // psi.ApplyRotationZ(qubit, M_PI/3.);
         }
-        // psi.ApplyRotationZ(qubit, M_PI/3.);
-      }
 
-      // MPI barrier and end the timer.
-      iqs::mpi::StateBarrier();
-      gettimeofday(&time, (struct timezone*)0);
-      end =  time.tv_sec + time.tv_usec * 1.0e-6;
-      computational_cost.push_back( (end-start)/double(num_gates) );
-  }
+        // MPI barrier and end the timer.
+        iqs::mpi::StateBarrier();
+        gettimeofday(&time, (struct timezone*)0);
+        end =  time.tv_sec + time.tv_usec * 1.0e-6;
+        computational_cost.push_back( (end-start)/double(num_gates) );
+    }
 if (true) {psi.GetStatistics(); psi.DisableStatistics();}
 
+  }
+/////////////////////////////////////////////////////////////////////////////////////////
+  else if (gate_precision == PRECISION_FLOAT) {
+
+    // Define the same random one-quit gate, withithout symmetries, in single precision
+    TM2x2<ComplexSP> GateComplexFloat;
+    GateComplexFloat(0, 0) = {0.592056606032915, 0.459533060553574};
+    GateComplexFloat(0, 1) = {-0.314948020757856, -0.582328159830658};
+    GateComplexFloat(1, 0) = {0.658235557641767, 0.070882241549507};
+    GateComplexFloat(1, 1) = {0.649564427121402, 0.373855203932477};
+
+    // Initialize the qubit register and turn on specialization.
+    // Since this code may use very large number of qubits, we limit it to 2^30.
+    size_t tmp_spacesize = 0;
+    if (num_qubits>30)
+        tmp_spacesize = size_t(1L << 30);
+    iqs::QubitRegister<ComplexDP> psi(num_qubits, "base", 0, tmp_spacesize);
+if (false)  psi.TurnOnSpecialize();
+  // Loop over the number of qubits and store the time elapsed in the computation.
+    struct timeval time;
+    double start, end;
+if (true) psi.EnableStatistics();
+    for(int qubit = 0; qubit < num_qubits; qubit++)
+    {
+        // MPI barrier and start the timer.
+        iqs::mpi::StateBarrier();
+        gettimeofday(&time, (struct timezone*)0);
+        start =  time.tv_sec + time.tv_usec * 1.0e-6;
+
+        // Actual quantum gate execution.
+        for (int g=0; g<num_gates; ++g) {
+          psi.Apply1QubitGate(qubit, GateComplexFloat);
+          // psi.ApplyRotationZ(qubit, M_PI/3.);
+        }
+
+        // MPI barrier and end the timer.
+        iqs::mpi::StateBarrier();
+        gettimeofday(&time, (struct timezone*)0);
+        end =  time.tv_sec + time.tv_usec * 1.0e-6;
+        computational_cost.push_back( (end-start)/double(num_gates) );
+    }
+if (true) {psi.GetStatistics(); psi.DisableStatistics();}
+
+  }
 /////////////////////////////////////////////////////////////////////////////////////////
 
   if (my_rank==0)
