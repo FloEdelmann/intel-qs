@@ -222,6 +222,7 @@ if (true) {psi.GetStatistics(); psi.DisableStatistics();}
     std::string filename = out_directory + out_filename_root
                            + "_q" + std::to_string(num_qubits)
                            + "_n" + std::to_string(num_ranks)
+                           + "_p" + std::to_string(gate_precision)
                            + ".txt";
     ofstream fout;
     fout.open (filename, ios::out | ios::trunc);
@@ -237,6 +238,7 @@ if (true) {psi.GetStatistics(); psi.DisableStatistics();}
     // Save computational cost of applying the gate to qubit 0:
     filename = out_directory + out_filename_root
                + "_first_q" + std::to_string(num_qubits)
+               + "_p" + std::to_string(gate_precision)
                + ".txt";
     fout.open (filename, ios::out | ios::app);
     if (!fout.is_open()) assert(0);
@@ -246,6 +248,7 @@ if (true) {psi.GetStatistics(); psi.DisableStatistics();}
     // Save computational cost of applying the gate to the last qubit:
     filename = out_directory + out_filename_root
                + "_last_q" + std::to_string(num_qubits)
+               + "_p" + std::to_string(gate_precision)
                + ".txt";
     fout.open (filename, ios::out | ios::app);
     if (!fout.is_open()) assert(0);

@@ -56,9 +56,9 @@ if [ ! -d $out_directory ]; then
 	mkdir $out_directory
 else
 	# Eliminate the summary files if they exist.
-	filename=$out_directory$out_filename_root"_first_q"$num_qubits".txt"
+	filename=$out_directory$out_filename_root"_first_q"$num_qubits"_p0.txt"
         echo "% Time cost (in sec) for 1-qubit gate on first qubit vs num_ranks" > $filename 
-	filename=$out_directory$out_filename_root"_last_q"$num_qubits".txt"
+	filename=$out_directory$out_filename_root"_last_q"$num_qubits"_p0.txt"
         echo "% Time cost (in sec) for 1-qubit gate on last qubit vs num_ranks" > $filename 
 fi
 
@@ -79,7 +79,7 @@ done
 echo -e "\n -- Graph of gate-time per qubit at highest number of ranks -- \n"
 
 num_ranks=${set_rank_values[-1]}
-data_filename=$out_directory$out_filename_root"_q"$num_qubits"_n"$num_ranks".txt"
+data_filename=$out_directory$out_filename_root"_q"$num_qubits"_n"$num_ranks"_p0.txt"
 plot_filename=${out_directory}one_qubit_gates.png
 
 gnuplot_instructions="set xlabel \"qubits\" font \",10\";"\
@@ -98,8 +98,8 @@ display $plot_filename &
 
 echo -e "\n -- Graph of gate-time per qubit at highest number of ranks -- \n"
 
-data_filename_1=$out_directory$out_filename_root"_first_q"$num_qubits".txt"
-data_filename_2=$out_directory$out_filename_root"_last_q"$num_qubits".txt"
+data_filename_1=$out_directory$out_filename_root"_first_q"$num_qubits"_p0.txt"
+data_filename_2=$out_directory$out_filename_root"_last_q"$num_qubits"_p0.txt"
 plot_filename=${out_directory}strong_scaling.png
 
 gnuplot_instructions="set xlabel \"num ranks\" font \",10\";"\

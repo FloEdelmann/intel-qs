@@ -49,9 +49,9 @@ if [ ! -d $out_directory ]; then
 	mkdir $out_directory
 else
 	# Eliminate the summary files if they exist.
-	filename=$out_directory$out_filename_root"_first_q"$num_qubits".txt"
+	filename=$out_directory$out_filename_root"_first_q"$num_qubits"_p0.txt"
         echo "% Time cost (in sec) for 1-qubit gate on first qubit vs num_ranks" > $filename 
-	filename=$out_directory$out_filename_root"_last_q"$num_qubits".txt"
+	filename=$out_directory$out_filename_root"_last_q"$num_qubits"_p0.txt"
         echo "% Time cost (in sec) for 1-qubit gate on last qubit vs num_ranks" > $filename 
 fi
 
@@ -81,7 +81,7 @@ do
 		num_ranks_per_node=$num_ranks
 	fi
 	mpiexec.hydra -n $num_ranks -ppn $num_ranks_per_node -genv I_MPI_DEBUG 4 -genv OMP_NUM_THREADS $num_threads_per_rank -genv KMP_AFFINITY granularity=fine $exec_file $exec_args
-	filename=$out_directory$out_filename_root"_q"$num_qubits"_n"$num_ranks".txt"
+	filename=$out_directory$out_filename_root"_q"$num_qubits"_n"$num_ranks"_p0.txt"
 	file_list+=($filename)
 	numq_list+=($num_qubits)
 done
