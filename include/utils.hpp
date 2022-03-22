@@ -2,6 +2,7 @@
 #define IQS_UTILS_HPP
 
 #include <complex>
+#include <universal/number/posit/posit.hpp>
 
 // Helpful defines, if not already provided.
 #define DO_PRAGMA(x) _Pragma(#x)
@@ -23,6 +24,7 @@
 
 using ComplexSP = std::complex<float>;
 using ComplexDP = std::complex<double>;
+// using ComplexPosit = sw::universal::posit<24, 1>;
 
 namespace iqs {
 

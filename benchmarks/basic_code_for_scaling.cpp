@@ -35,6 +35,7 @@
 enum gate_precision_t {
   PRECISION_DOUBLE,
   PRECISION_FLOAT,
+  // PRECISION_POSIT,
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +92,8 @@ int main(int argc, char **argv)
             gate_precision = PRECISION_DOUBLE;
           } else if (argv[i] == std::string ("float")) {
             gate_precision = PRECISION_FLOAT;
+          // } else if (argv[i] == std::string ("posit")) {
+          //   gate_precision = PRECISION_POSIT;
           } else {
             std::cout << "Gate precision (-gp) has to be one of the following:\n"
                       << "double\n"
