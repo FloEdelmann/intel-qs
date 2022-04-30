@@ -86,6 +86,8 @@ std::size_t HammingWeight(std::size_t x)
 }
 
 
+#pragma omp declare reduction(+ : IqsPosit : omp_out += omp_in) initializer(omp_priv = 0)
+
 /// @brief Compute expectation value of a Pauli string for multiple qubits over the full-register state.
 /// @param qubits vector of the involved qubit indices
 /// @param observables vector of the involved pauli operators {1,2,3} -> {X,Y,Z}

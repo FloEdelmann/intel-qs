@@ -32,6 +32,12 @@ bool QubitRegister<Type>::operator==(const QubitRegister &rhs)
   return true;
 }
 
+void max_posit(IqsPosit *out, IqsPosit *in)
+{
+  *out = sw::universal::max(*out, *in);
+}
+
+#pragma omp declare reduction(max : IqsPosit : max_posit(&omp_out, &omp_in)) initializer(omp_priv = 0)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief Return the L_infinity distance between two states, psi and x.
@@ -120,6 +126,8 @@ void QubitRegister<Type>::SetGlobalAmplitude(std::size_t global_index, Type valu
   state[global_index] = value;
 #endif
 }
+
+#pragma omp declare reduction(+ : IqsPosit : omp_out += omp_in) initializer(omp_priv = 0)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief Return the maximum L2 distance between the local parts of two states.
