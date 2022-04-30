@@ -263,6 +263,7 @@ bool QubitRegister<Type>::GetClassicalValue(unsigned qubit, BaseType tolerance) 
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexPosit>;
 
 } // end namespace iqs
 

@@ -482,6 +482,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexPosit>;
 
 } // end namespace iqs
 

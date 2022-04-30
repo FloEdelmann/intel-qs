@@ -392,6 +392,13 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
              std::size_t indsht0, std::size_t indsht1,
              TM2x2<ComplexDP> const&m, 
              bool specialize, Timer *timer);
+template 
+__attribute__((noinline))
+void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
+             ComplexPosit *state0, ComplexPosit *state1,
+             std::size_t indsht0, std::size_t indsht1,
+             TM2x2<ComplexPosit> const&m, 
+             bool specialize, Timer *timer);
 
 
 template <class Type>
@@ -497,6 +504,12 @@ void Loop_TN(ComplexDP *state, std::size_t c11, std::size_t c12,
              std::size_t c13, std::size_t c21, std::size_t c22, 
              std::size_t c23, std::size_t c31, std::size_t c32, 
              std::size_t ind_shift, TM2x2<ComplexDP> const&m, bool specialize, Timer *timer);
+template
+__attribute__((noinline))
+void Loop_TN(ComplexPosit *state, std::size_t c11, std::size_t c12,
+             std::size_t c13, std::size_t c21, std::size_t c22, 
+             std::size_t c23, std::size_t c31, std::size_t c32, 
+             std::size_t ind_shift, TM2x2<ComplexPosit> const&m, bool specialize, Timer *timer);
 
 template <typename Type>
 void ScaleState(std::size_t start, std::size_t end, Type *state, 
@@ -522,5 +535,7 @@ template void ScaleState<ComplexSP>(std::size_t start, std::size_t end,
                                     ComplexSP *state, const ComplexSP &s, Timer *timer);
 template void ScaleState<ComplexDP>(std::size_t start, std::size_t end, 
                                     ComplexDP *state, const ComplexDP &s, Timer *timer);
+template void ScaleState<ComplexPosit>(std::size_t start, std::size_t end, 
+                                    ComplexPosit *state, const ComplexPosit &s, Timer *timer);
 
 } // close namespace iqs

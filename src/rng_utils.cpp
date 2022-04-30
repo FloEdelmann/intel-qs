@@ -397,6 +397,7 @@ void RandomNumberGenerator<double>::GaussianRandomNumbers
 
 template class RandomNumberGenerator<float>;
 template class RandomNumberGenerator<double>;
+template class RandomNumberGenerator<IqsPosit>;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

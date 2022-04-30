@@ -472,5 +472,6 @@ void QubitRegister<Type>::ApplyT(unsigned const qubit)
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexPosit>;
 
 } // end namespace iqs

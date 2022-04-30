@@ -44,6 +44,10 @@ class  RandomNumberGenerator
     std::size_t _num_generated_or_skipped_state_numbers=0;
     std::size_t _num_generated_or_skipped_pool_numbers =0;
 
+    using FloatType =
+        typename std::conditional<std::is_floating_point<Type>::value, Type,
+                                  float>::type;
+
 #ifdef USE_MKL
     // vsl streams for random numbers
     VSLStreamStatePtr  _pool_stream;
@@ -54,10 +58,10 @@ class  RandomNumberGenerator
    std::mt19937  _pool_generator;
    std::mt19937 _state_generator;
    std::mt19937 _local_generator;
-   std::uniform_real_distribution<Type> u_distribution
-       = std::uniform_real_distribution<Type>(0.0,1.0);	// uniform in [0,1[
-   std::normal_distribution<Type> n_distribution
-       = std::normal_distribution<Type>(0.0,1.0);	// mean=0, std.dev.=1
+   std::uniform_real_distribution<FloatType> u_distribution
+       = std::uniform_real_distribution<FloatType>(0.0,1.0);	// uniform in [0,1[
+   std::normal_distribution<FloatType> n_distribution
+       = std::normal_distribution<FloatType>(0.0,1.0);	// mean=0, std.dev.=1
 #endif
 
   public:

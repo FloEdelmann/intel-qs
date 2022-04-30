@@ -74,5 +74,6 @@ void QubitRegister<Type>::Apply2QubitGate(unsigned const qubit_high, unsigned co
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
+template class QubitRegister<ComplexPosit>;
 
 } // end namespace iqs
