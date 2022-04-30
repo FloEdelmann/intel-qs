@@ -1,4 +1,5 @@
 #include "../include/spec_kernels.hpp"
+#include <universal/math/math>
 
 namespace iqs {
 
@@ -171,11 +172,11 @@ void Loop_SN(std::size_t gstart, std::size_t gend,
 
   // Declare constants
   const auto theta = static_cast<decltype(state0[0].real())>(angle);
-  const decltype(theta) isqrt2 = 1 / std::sqrt(2);
-  const decltype(theta) cos_2 = std::cos(theta / 2);
-  const decltype(theta) sin_2 = std::sin(theta / 2);
+  const decltype(theta) isqrt2 = 1 / sw::universal::sqrt(2.0);
+  const decltype(theta) cos_2 = sw::universal::cos(theta / 2);
+  const decltype(theta) sin_2 = sw::universal::sin(theta / 2);
   const decltype(theta) msin_2 = -sin_2;
-  const Type texp = Type(std::cos(M_PI / 4), std::sin(M_PI / 4)); 
+  const Type texp = Type(sw::universal::cos(M_PI / 4), sw::universal::sin(M_PI / 4)); 
 
   constexpr size_t group = 0;
 
@@ -263,11 +264,11 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
 
   // Declare constants
   const auto theta = static_cast<decltype(state0[0].real())>(angle);
-  const decltype(theta) isqrt2 = 1 / std::sqrt(2);
-  const decltype(theta) cos_2 = std::cos(theta / 2);
-  const decltype(theta) sin_2 = std::sin(theta / 2);
+  const decltype(theta) isqrt2 = 1 / sw::universal::sqrt(2.0);
+  const decltype(theta) cos_2 = sw::universal::cos(theta / 2);
+  const decltype(theta) sin_2 = sw::universal::sin(theta / 2);
   const decltype(theta) msin_2 = -sin_2;
-  const Type texp = Type(std::cos(M_PI / 4), std::sin(M_PI / 4)); 
+  const Type texp = Type(sw::universal::cos(M_PI / 4), sw::universal::sin(M_PI / 4)); 
 
   size_t nthreads = 1;
 #ifdef _OPENMP
@@ -354,11 +355,11 @@ void Loop_TN(Type *state,
 
    // Declare constants
   const auto theta = static_cast<decltype(state[0].real())>(angle);
-  const decltype(theta) isqrt2 = 1 / std::sqrt(2);
-  const decltype(theta) cos_2 = std::cos(theta / 2);
-  const decltype(theta) sin_2 = std::sin(theta / 2);
+  const decltype(theta) isqrt2 = 1 / sw::universal::sqrt(2.0);
+  const decltype(theta) cos_2 = sw::universal::cos(theta / 2);
+  const decltype(theta) sin_2 = sw::universal::sin(theta / 2);
   const decltype(theta) msin_2 = -sin_2;
-  const Type pexp = Type(std::cos(theta), std::sin(theta));
+  const Type pexp = Type(sw::universal::cos(theta), sw::universal::sin(theta));
 
   switch(spec) {
 

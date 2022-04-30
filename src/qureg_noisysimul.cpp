@@ -1,4 +1,5 @@
 #include "../include/qureg.hpp"
+#include <universal/math/math>
 
 /// \addtogroup qureg
 ///  @{
@@ -37,16 +38,16 @@ void QubitRegister<Type>::ApplyNoiseGate(unsigned qubit, BaseType duration)
   if (duration==0) return;
 
   BaseType p_X , p_Y , p_Z ;
-  p_X = (1. - std::exp(-duration/T_1_) )/4.;
-  p_Y = (1. - std::exp(-duration/T_1_) )/4.;
-  p_Z = (1. - std::exp(-duration/T_2_) )/2. + (1. - std::exp(-duration/T_1_) )/4.;
+  p_X = (1. - sw::universal::exp(-duration/T_1_) )/4.;
+  p_Y = (1. - sw::universal::exp(-duration/T_1_) )/4.;
+  p_Z = (1. - sw::universal::exp(-duration/T_2_) )/2. + (1. - sw::universal::exp(-duration/T_1_) )/4.;
   assert( p_X>0 && p_Y>0 && p_Z>0 );
 
   // Computation of the standard deviations for the noise gate parameters
   BaseType s_X , s_Y , s_Z ;
-  s_X = std::sqrt( -std::log(1.-p_X) );
-  s_Y = std::sqrt( -std::log(1.-p_Y) );
-  s_Z = std::sqrt( -std::log(1.-p_Z) );
+  s_X = sw::universal::sqrt( -sw::universal::log(1.-p_X) );
+  s_Y = sw::universal::sqrt( -sw::universal::log(1.-p_Y) );
+  s_Z = sw::universal::sqrt( -sw::universal::log(1.-p_Z) );
 
   // Generate angle and direction of Pauli rotation for Pauli-twirl noise channel.
   // Each random number is shared between the ranks of the same quantum state.
@@ -70,15 +71,15 @@ void QubitRegister<Type>::ApplyNoiseGate(unsigned qubit, BaseType duration)
   //               | A*C    A'*B' |
 
   Type A , B , C ;
-  A = { std::cos(v_Z) , -std::sin(v_Z) };
-  B = { std::cos(v_X)*std::cos(v_Y) , -std::sin(v_X)*std::sin(v_Y) };
-  C = { std::cos(v_X)*std::sin(v_Y) , -std::sin(v_X)*std::cos(v_Y) };
+  A = { sw::universal::cos(v_Z) , -sw::universal::sin(v_Z) };
+  B = { sw::universal::cos(v_X)*sw::universal::cos(v_Y) , -sw::universal::sin(v_X)*sw::universal::sin(v_Y) };
+  C = { sw::universal::cos(v_X)*sw::universal::sin(v_Y) , -sw::universal::sin(v_X)*sw::universal::cos(v_Y) };
 
   iqs::TinyMatrix<Type, 2, 2, 32> U_noise;
   U_noise(0, 0) = A*B;
-  U_noise(0, 1) = -std::conj(A)*std::conj(C);
+  U_noise(0, 1) = -sw::universal::conj(A)*sw::universal::conj(C);
   U_noise(1, 0) = A*C;
-  U_noise(1, 1) =  std::conj(A)*std::conj(B);
+  U_noise(1, 1) =  sw::universal::conj(A)*sw::universal::conj(B);
 
   // Apply the noise gate
   QubitRegister<Type>::Apply1QubitGate(qubit,U_noise);

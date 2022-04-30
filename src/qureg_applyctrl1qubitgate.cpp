@@ -4,6 +4,7 @@
 #include "../include/qureg.hpp"
 #include "../include/highperfkernels.hpp"
 #include "../include/spec_kernels.hpp"
+#include <universal/math/math>
 
 using iqs::ConvertSpec2to1;
 
@@ -300,7 +301,7 @@ bool QubitRegister<Type>::ApplyControlled1QubitGate_helper(unsigned control_qubi
                     auto spec1q = ConvertSpec2to1(spec);
                     if (specialize2 && spec1q != GateSpec1Q::None)
                         Loop_DN(sind, eind, T, state, state,
-                                0, 1UL<<T, spec1q, timer, angle);
+                                0, 1UL<<T, spec1q, timer, double(angle));
                     else
                         Loop_DN(sind, eind, T, state, state,
                                 0, 1UL<<T, m, specialize, timer);
@@ -314,7 +315,7 @@ bool QubitRegister<Type>::ApplyControlled1QubitGate_helper(unsigned control_qubi
                     Loop_TN(state, 
                             sind,  eind,          1UL<<(C+1UL),
                             1UL<<C, 1UL<<(C+1UL), 1UL<<(T+1UL),
-                            0L,     1UL<<T,       1UL<<T, spec, timer, angle);
+                            0L,     1UL<<T,       1UL<<T, spec, timer, double(angle));
                 }
                 else
                 {
@@ -333,7 +334,7 @@ bool QubitRegister<Type>::ApplyControlled1QubitGate_helper(unsigned control_qubi
               Loop_TN(state, 
                 sind,     eind,         1UL<<(T+1UL),
                 0L,       1UL<<T,       1UL<<(C+1UL),
-                1UL<<C,   1UL<<(C+1UL), 1UL<<T, spec, timer, angle
+                1UL<<C,   1UL<<(C+1UL), 1UL<<T, spec, timer, double(angle)
               );
             }
             else
@@ -459,8 +460,8 @@ template <class Type>
 void QubitRegister<Type>::ApplyCRotationX(unsigned const control, unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> rx;
-  rx(0, 1) = rx(1, 0) = Type(0, -std::sin(theta / 2.));
-  rx(0, 0) = rx(1, 1) = Type(std::cos(theta / 2.), 0);
+  rx(0, 1) = rx(1, 0) = Type(0, -sw::universal::sin(theta / 2.));
+  rx(0, 0) = rx(1, 1) = Type(sw::universal::cos(theta / 2.), 0);
   ApplyControlled1QubitGate(control, qubit, rx, GateSpec2Q::CRotationX, theta);
 }
 
@@ -479,9 +480,9 @@ template <class Type>
 void QubitRegister<Type>::ApplyCRotationY(unsigned const control, unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> ry;
-  ry(0, 1) = Type(-std::sin(theta / 2.), 0.);
-  ry(1, 0) = Type( std::sin(theta / 2.), 0.);
-  ry(0, 0) = ry(1, 1) = Type(std::cos(theta / 2.), 0);
+  ry(0, 1) = Type(-sw::universal::sin(theta / 2.), 0.);
+  ry(1, 0) = Type( sw::universal::sin(theta / 2.), 0.);
+  ry(0, 0) = ry(1, 1) = Type(sw::universal::cos(theta / 2.), 0);
   ApplyControlled1QubitGate(control, qubit, ry, GateSpec2Q::CRotationY, theta);
 }
 
@@ -500,8 +501,8 @@ template <class Type>
 void QubitRegister<Type>::ApplyCRotationZ(unsigned const control, unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> rz;
-  rz(0, 0) = Type(std::cos(theta / 2.), -std::sin(theta / 2.));
-  rz(1, 1) = Type(std::cos(theta / 2.), std::sin(theta / 2.));
+  rz(0, 0) = Type(sw::universal::cos(theta / 2.), -sw::universal::sin(theta / 2.));
+  rz(1, 1) = Type(sw::universal::cos(theta / 2.), sw::universal::sin(theta / 2.));
   rz(0, 1) = rz(1, 0) = Type(0., 0.);
   ApplyControlled1QubitGate(control, qubit, rz, GateSpec2Q::CRotationZ, theta);
 }
@@ -595,7 +596,7 @@ template <class Type>
 void QubitRegister<Type>::ApplyCHadamard(unsigned const control, unsigned const qubit)
 {
   TM2x2<Type> h;
-  BaseType f = 1. / std::sqrt(2.);
+  BaseType f = 1. / sw::universal::sqrt(BaseType(2));
   h(0, 0) = h(0, 1) = h(1, 0) = Type(f, 0.);
   h(1, 1) = Type(-f, 0.);
   ApplyControlled1QubitGate(control, qubit, h, GateSpec2Q::CHadamard);
@@ -613,7 +614,7 @@ void QubitRegister<Type>::ApplyCPhaseRotation(unsigned const control, unsigned c
   iqs::TinyMatrix<Type, 2, 2, 32> phase_gate;
   phase_gate(0, 1) = phase_gate(1, 0) = Type(0, 0);
   phase_gate(0, 0) = Type(1,0);
-  phase_gate(1, 1) = Type(std::cos(theta), std::sin(theta));
+  phase_gate(1, 1) = Type(sw::universal::cos(theta), sw::universal::sin(theta));
   ApplyControlled1QubitGate(control, qubit, phase_gate, GateSpec2Q::CPhase, theta);
 }
 

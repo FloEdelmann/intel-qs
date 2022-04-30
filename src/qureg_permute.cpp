@@ -87,7 +87,7 @@ void QubitRegister<Type>::PermuteLocalQubits(std::vector<std::size_t> new_map, s
       return;
  
   // Initialize the utility vector: state_old = state;
-  std::vector<Type> state_old(LocalSize(), 0);
+  std::vector<Type> state_old(LocalSize(), Type(0));
 #pragma omp parallel for
   for (std::size_t i = 0; i < LocalSize(); i++)
       state_old[i] = state[i];

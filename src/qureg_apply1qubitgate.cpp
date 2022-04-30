@@ -1,9 +1,11 @@
 /// @file qureg_apply1qubitgate.cpp
 /// @brief Define the @c QubitRegister methods corresponding to the application of single-qubit gates.
 
+#include "../include/utils.hpp"
 #include "../include/qureg.hpp"
 #include "../include/highperfkernels.hpp"
 #include "../include/spec_kernels.hpp"
+#include <universal/math/math>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // General comment.
@@ -205,7 +207,7 @@ bool QubitRegister<Type>::Apply1QubitGate_helper(unsigned qubit_,  TM2x2<Type> c
       if (!specialize2 || (spec == GateSpec1Q::None))
 	      Loop_DN(sind, eind, UL(P), state, state, 0UL, (1UL << P), m, specialize, timer);
       else
-	      Loop_DN(sind, eind, UL(P), state, state, 0UL, (1UL << P), spec, timer, angle);
+	      Loop_DN(sind, eind, UL(P), state, state, 0UL, (1UL << P), spec, timer, double(angle));
   }
   else
   {
@@ -278,8 +280,8 @@ template <class Type>
 void QubitRegister<Type>::ApplyRotationX(unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> rx;
-  rx(0, 1) = rx(1, 0) = Type(0, -std::sin(theta / 2.));
-  rx(0, 0) = rx(1, 1) = std::cos(theta / 2.);
+  rx(0, 1) = rx(1, 0) = Type(0, -sw::universal::sin(theta / 2.));
+  rx(0, 0) = rx(1, 1) = sw::universal::cos(theta / 2.);
   Apply1QubitGate(qubit, rx, GateSpec1Q::RotationX, theta);
 }
 
@@ -297,9 +299,9 @@ template <class Type>
 void QubitRegister<Type>::ApplyRotationY(unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> ry;
-  ry(0, 1) = Type(-std::sin(theta / 2.), 0.);
-  ry(1, 0) = Type( std::sin(theta / 2.), 0.);
-  ry(0, 0) = ry(1, 1) = std::cos(theta / 2.);
+  ry(0, 1) = Type(-sw::universal::sin(theta / 2.), 0.);
+  ry(1, 0) = Type( sw::universal::sin(theta / 2.), 0.);
+  ry(0, 0) = ry(1, 1) = sw::universal::cos(theta / 2.);
   Apply1QubitGate(qubit, ry, GateSpec1Q::RotationY, theta);
 }
 
@@ -317,8 +319,8 @@ template <class Type>
 void QubitRegister<Type>::ApplyRotationZ(unsigned const qubit, BaseType theta)
 {
   iqs::TinyMatrix<Type, 2, 2, 32> rz;
-  rz(0, 0) = Type(std::cos(theta / 2.), -std::sin(theta / 2.));
-  rz(1, 1) = Type(std::cos(theta / 2.), std::sin(theta / 2.));
+  rz(0, 0) = Type(sw::universal::cos(theta / 2.), -sw::universal::sin(theta / 2.));
+  rz(1, 1) = Type(sw::universal::cos(theta / 2.), sw::universal::sin(theta / 2.));
   rz(0, 1) = rz(1, 0) = Type(0., 0.);
   Apply1QubitGate(qubit, rz, GateSpec1Q::RotationZ, theta);
 }

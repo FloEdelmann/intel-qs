@@ -2,6 +2,7 @@
 
 #include "../include/qureg.hpp"
 #include <fstream>
+#include <universal/math/math>
 /// \addtogroup qureg
 /// @{
 
@@ -197,7 +198,7 @@ typename QubitRegister<Type>::BaseType QubitRegister<Type>::ComputeNorm()
   global_normsq = local_normsq;
 #endif
 
-  return std::sqrt(global_normsq);
+  return sw::universal::sqrt(global_normsq);
 }
 
 
@@ -226,7 +227,7 @@ Type QubitRegister<Type>::ComputeOverlap( QubitRegister<Type> &psi)
 #endif
   for(std::size_t i = 0; i < lcl; i++)
   {
-     local_over = std::conj(psi.state[i]) * state[i] ; 
+     local_over = sw::universal::conj(psi.state[i]) * state[i] ; 
      local_over_re +=  std::real( local_over );
      local_over_im +=  std::imag( local_over );
   }

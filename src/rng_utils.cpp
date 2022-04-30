@@ -1,6 +1,8 @@
 #include <iostream>
 
+#include "../include/utils.hpp"
 #include "../include/rng_utils.hpp"
+#include <universal/math/math>
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -182,7 +184,7 @@ void RandomNumberGenerator<Type>::RandomIntegersInRange
       // Note that there are problems with double-->int conversion:
       // - the range of double (output of floor) is larger;
       // - but not all integers are exactly representable within the double range.
-      *temp_ptr = (int)std::floor(rand);
+      *temp_ptr = (int)sw::universal::floor(rand);
       ++temp_ptr;
   }
 
