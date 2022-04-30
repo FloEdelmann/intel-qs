@@ -319,7 +319,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
               {
                   // 2. src sends s1 to dst into dT
                   //    dst sends d2 to src into dT
-                  t = sec();
+                  t = time_in_seconds();
           
                   // When L+1=M we can avoid a cycle of communication.
                   // In this special case, irank exchanges the second half (L=1, H=0) and jrank the first half (L=0, H=1).
@@ -327,7 +327,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
                   iqs::mpi::MPI_Sendrecv_x(&(state[start_ind]), lcl_chunk, jtask, tag1,
                                                 &(tmp_state[0])    , lcl_chunk, jtask, tag2,
                                                 comm, &status);
-                  tnet += sec() - t;
+                  tnet += time_in_seconds() - t;
         
                   // 3. src and dst compute
                   if (L == M-1) {
@@ -340,20 +340,20 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
         
                   // 4. src sends sT to dst into d2
                   //    dst sends dT to src into s1
-                  t = sec();
+                  t = time_in_seconds();
                   if (L != M-1)
                   {
                       iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0])    , lcl_chunk, jtask, tag3,
                                                     &(state[start_ind]), lcl_chunk, jtask, tag4,
                                                     comm, &status);
                   }
-                  tnet += sec() - t;
+                  tnet += time_in_seconds() - t;
               }
               else  // this is jtask
               {
                   // 2. src sends s1 to dst into dT
                   //    dst sends d2 to src into sT
-                  t = sec();
+                  t = time_in_seconds();
         
                   // When L+1=M we can avoid a cycle of communication.
                   // In this special case, irank exchanges the second half (L=1, H=0) and jrank the first half (L=0, H=1).
@@ -361,7 +361,7 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
                   iqs::mpi::MPI_Sendrecv_x(&(state[start_ind]), lcl_size_half, itask, tag2,
                                                 &(tmp_state[0])    , lcl_size_half, itask, tag1,
                                                 comm, &status);
-                  tnet += sec() - t;
+                  tnet += time_in_seconds() - t;
         
                   // 3. src and dst compute
                   if (L == M-1) {
@@ -374,14 +374,14 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
         
                   // 4. src sends sT to dst into d2
                   //    dst sends dT to src into s1
-                  t = sec();
+                  t = time_in_seconds();
                   if (L != M-1)
                   {
                       iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0])    , lcl_size_half, itask, tag4,
                                                     &(state[start_ind]), lcl_size_half, itask, tag3,
                                                     comm, &status);
                   }
-                  tnet += sec() - t;
+                  tnet += time_in_seconds() - t;
               }
           }
       }
@@ -430,11 +430,11 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
           {
               // 2. src sends s1 to dst into dT
               //    dst sends d2 to src into sT
-              t = sec();
+              t = time_in_seconds();
               iqs::mpi::MPI_Sendrecv_x(&(state[c])    , lcl_chunk, jtask, tag1,
                                             &(tmp_state[0]), lcl_chunk, jtask, tag2,
                                             comm, &status);
-              tnet += sec() - t;
+              tnet += time_in_seconds() - t;
     
               // 3. src and dst compute
               Loop_SN(0UL, lcl_chunk, &(state[c]), tmp_state, lcl_size_half, 0UL, m, specialize, timer);
@@ -442,32 +442,32 @@ double QubitRegister<Type>::HP_DistrSwap(unsigned low_position, unsigned high_po
 
               // 4. src sends sT to dst into d2
               //    dst sends dT to src into s1
-              t = sec();
+              t = time_in_seconds();
               iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0]), lcl_chunk, jtask, tag3,
                                             &(state[c])    , lcl_chunk, jtask, tag4,
                                             comm, &status);
-              tnet += sec() - t;
+              tnet += time_in_seconds() - t;
           }
           else  // this is jtask
           {
               // 2. src sends s1 to dst into dT
               //    dst sends d2 to src into sT
-              t = sec();
+              t = time_in_seconds();
               iqs::mpi::MPI_Sendrecv_x(&(state[c+lcl_size_half]), lcl_size_half, itask, tag2,
                                             &(tmp_state[0])          , lcl_size_half, itask, tag1,
                                             comm, &status);
-              tnet += sec() - t;
+              tnet += time_in_seconds() - t;
     
               // 3. src and dst compute
                Loop_SN(0UL, lcl_chunk, &(state[c]), tmp_state, 0UL, 0UL, m, specialize, timer);
 
               // 4. src sends sT to dst into d2
               //    dst sends dT to src into s1
-              t = sec();
+              t = time_in_seconds();
               iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0])          , lcl_size_half, itask, tag4,
                                             &(state[lcl_size_half+c]), lcl_size_half, itask, tag3,
                                             comm, &status);
-              tnet += sec() - t;
+              tnet += time_in_seconds() - t;
           }
         }
   }

@@ -255,7 +255,7 @@ double QubitRegister<Type>::Entropy()
 
   if(timer) timer->Start("ENT", 0);
 
-  double ttot = 0., ttmp1 = sec();
+  double ttot = 0., ttmp1 = time_in_seconds();
 #if defined(__ICC) || defined(__INTEL_COMPILER)
 #pragma omp parallel for reduction(+ : local_Hp)
 #else
@@ -278,7 +278,7 @@ double QubitRegister<Type>::Entropy()
   global_Hp = local_Hp;
 #endif
   
-  ttot = sec() - ttmp1;
+  ttot = time_in_seconds() - ttmp1;
  
   if (timer)
   {
@@ -307,7 +307,7 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
 
   if(timer) timer->Start("ENT", 0);
 
-  double ttot = 0., ttmp1 = sec();
+  double ttot = 0., ttmp1 = time_in_seconds();
 
 #if defined(__ICC) || defined(__INTEL_COMPILER)
 #pragma omp parallel for reduction(+ : entropy, avgselfinfo, m2, m3, m4, m5, m6, m7, m8, m9, m10)
@@ -382,7 +382,7 @@ std::vector<double> QubitRegister<Type>::GoogleStats()
       stats.push_back(global_m[i]);
   }
 
-  ttot = sec() - ttmp1;
+  ttot = time_in_seconds() - ttmp1;
 
   if (timer)
   {
@@ -617,11 +617,11 @@ void QubitRegister<Type>::dumpbin(std::string fn)
   assert(size < INT_MAX);
   MPI_Offset offset = size * UL(myrank * sizeof(Type));
 
-  double t0 = sec();
+  double t0 = time_in_seconds();
   iqs::mpi::StateBarrier();
   MPI_File_write_at(fh, offset, (void *)(&(state[0])), size, MPI_DOUBLE_COMPLEX, &status);
   iqs::mpi::StateBarrier();
-  double t1 = sec();
+  double t1 = time_in_seconds();
   MPI_File_close(&fh);
   if (myrank == 0)
   {

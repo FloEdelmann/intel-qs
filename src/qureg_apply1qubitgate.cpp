@@ -119,11 +119,11 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
     {
         // 2. src sends s1 to dst into dT
         //    dst sends d2 to src into dT
-        t = sec();
+        t = time_in_seconds();
         iqs::mpi::MPI_Sendrecv_x(&(state[c])    , lcl_chunk, jtask, tag1,
                                       &(tmp_state[0]), lcl_chunk, jtask, tag2,
                                       comm, &status);
-        tnet += sec() - t;
+        tnet += time_in_seconds() - t;
 
         // 3. src and dst compute
         if (specialize2 && spec != GateSpec1Q::None)
@@ -131,31 +131,31 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
         else
           Loop_SN(0L, lcl_chunk, &(state[c]), tmp_state, lcl_size_half, 0L, m, specialize, timer);
 
-        t = sec();
+        t = time_in_seconds();
         iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0]), lcl_chunk, jtask, tag3,
                                       &(state[c])    , lcl_chunk, jtask, tag4,
                                       comm, &status);
-        tnet += sec() - t;
+        tnet += time_in_seconds() - t;
     }
     else  // this is jtask
     {
         // 2. src sends s1 to dst into dT
         //    dst sends d2 to src into dT
-        t = sec();
+        t = time_in_seconds();
         iqs::mpi::MPI_Sendrecv_x(&(state[lcl_size_half + c]), lcl_chunk, itask, tag2,
                                       &(tmp_state[0])            , lcl_chunk, itask, tag1,
                                       comm, &status);
-        tnet += sec() - t;
+        tnet += time_in_seconds() - t;
         if (specialize2 && spec != GateSpec1Q::None)
           Loop_SN(0L, lcl_chunk, tmp_state, &(state[c]), 0L, 0L, spec, timer, angle);
         else
           Loop_SN(0L, lcl_chunk, tmp_state, &(state[c]), 0L, 0L, m, specialize, timer);
 
-        t = sec();
+        t = time_in_seconds();
         iqs::mpi::MPI_Sendrecv_x(&(tmp_state[0])            , lcl_chunk, itask, tag4,
                                       &(state[lcl_size_half + c]), lcl_chunk, itask, tag3,
                                       comm, &status);
-        tnet += sec() - t;
+        tnet += time_in_seconds() - t;
     }
   }
 

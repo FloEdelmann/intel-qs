@@ -203,7 +203,7 @@ void Loop_SN(std::size_t start, std::size_t end, Type *state0, Type *state1,
   std::string label;
   double frac_of_state_accessed;
   double ttot = 0., tnov = 0., ttmp1, ttmp2;
-  ttmp1 = sec();
+  ttmp1 = time_in_seconds();
 
   if(specialize == false)
   {
@@ -226,7 +226,7 @@ void Loop_SN(std::size_t start, std::size_t end, Type *state0, Type *state1,
 
   if (timer)
   {
-      ttot = sec() - ttmp1;
+      ttot = time_in_seconds() - ttmp1;
       double datab = ((state0 == state1) ? 2.0 : 4.0) * 
                      frac_of_state_accessed * sizeof(state0[0]) * double(end - start);
       // printf("datab=%lf len=%lu time=%lf bw=%lf\n", datab, end-start, ttot, datab / ttot / 1e9);
@@ -254,7 +254,7 @@ void Loop_SN(std::size_t start, std::size_t end, ComplexDP *state0, ComplexDP *s
 { \
   /*label = std::string(xstr(t00)) + " " + std::string(xstr(t01)) + \
           " " + std::string(xstr(t10)) + " " + std::string(xstr(t11)); */\
-  ttmp2 = sec();\
+  ttmp2 = time_in_seconds();\
   if ((gend - gstart) / (UL(1) << (pos + UL(1))) >= nthreads) { \
     if (pos == 0) { \
       _Pragma("omp parallel for") \
@@ -280,7 +280,7 @@ void Loop_SN(std::size_t start, std::size_t end, ComplexDP *state0, ComplexDP *s
       } \
     } \
   } \
-  tnov = sec() - ttmp2; \
+  tnov = time_in_seconds() - ttmp2; \
 }
 
 
@@ -311,7 +311,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
   std::string label;
   double frac_of_state_accessed;
   double ttot = 0., tnov = 0., ttmp1, ttmp2;
-  ttmp1 = sec();
+  ttmp1 = time_in_seconds();
 
   size_t nthreads = 1;
 #ifdef _OPENMP
@@ -366,7 +366,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
 
   if(timer)
   {
-      ttot = sec() - ttmp1;     
+      ttot = time_in_seconds() - ttmp1;     
       double datab = 2.0 * frac_of_state_accessed * sizeof(state0[0]) * double(gend - gstart);
       double flops = double(1L << 19) * 38.0;
       double gflops = flops / ttot / 1e9;
@@ -409,7 +409,7 @@ void Loop_TN(Type *state,
              std::size_t c31, std::size_t c32, 
              std::size_t ind_shift, TM2x2<Type> const&m, bool specialize, Timer *timer)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  double ttmp1 = time_in_seconds(), ttot = 0.;
   Type m00 = m[0][0],
        m01 = m[0][1],
        m10 = m[1][0],
@@ -481,7 +481,7 @@ void Loop_TN(Type *state,
 
   if (timer)
   {
-    ttot = sec() - ttmp1;
+    ttot = time_in_seconds() - ttmp1;
     double datab =
       4.0 * sizeof(state[0]) * double((c12 - c11) / c13) * double((c22 - c21) / c23) * double(c32 - c31);
     double flops = double(1L << 19) * 38.0;
@@ -515,13 +515,13 @@ template <typename Type>
 void ScaleState(std::size_t start, std::size_t end, Type *state, 
                 const Type &s, Timer *timer)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  double ttmp1 = time_in_seconds(), ttot = 0.;
   if (s != Type(1., 0.)) {
 #pragma omp parallel for    
     for (std::size_t i = start;  i < end; i++) state[i] *= s;
   }
   if (timer) {
-    ttot = sec() - ttmp1;
+    ttot = time_in_seconds() - ttmp1;
     double datab = 2.0 * sizeof(state[0]) * double(end - start);
     double flops = double(1L << 19) * 38.0;
     double gflops = flops / ttot / 1e9;

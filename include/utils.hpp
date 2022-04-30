@@ -16,7 +16,6 @@
 #endif
 
 #define UL(x) ((std::size_t)(x))
-#define sec() time_in_seconds()
 #define xstr(s) __str__(s)
 #define __str__(s) #s
 

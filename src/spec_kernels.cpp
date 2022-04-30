@@ -167,7 +167,7 @@ void Loop_SN(std::size_t gstart, std::size_t gend,
   __assume_aligned(state1, 256);
 #endif
   double ttot = 0., tnov = 0., ttmp1, ttmp2;
-  ttmp1 = sec();
+  ttmp1 = time_in_seconds();
 
   // Declare constants
   const auto theta = static_cast<decltype(state0[0].real())>(angle);
@@ -234,7 +234,7 @@ void Loop_SN(std::size_t gstart, std::size_t gend,
 
   if (timer)
   {
-    ttot = sec() - ttmp1;
+    ttot = time_in_seconds() - ttmp1;
     double datab = ((state0 == state1) ? 2.0 : 4.0) *
         sizeof(state0[0]) * double(gend - gstart);
     
@@ -253,7 +253,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
              std::size_t indsht0, std::size_t indsht1,
              GateSpec1Q spec, Timer *timer, double angle)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  double ttmp1 = time_in_seconds(), ttot = 0.;
   assert((UL(state0) % 256) == 0);
   assert((UL(state1) % 256) == 0);
 #if defined(__ICC) || defined(__INTEL_COMPILER)
@@ -325,7 +325,7 @@ void Loop_DN(std::size_t gstart, std::size_t gend, std::size_t pos,
 
  if(timer)
   {
-      ttot = sec() - ttmp1;     
+      ttot = time_in_seconds() - ttmp1;     
       double datab = 2.0 * sizeof(state0[0]) * double(gend - gstart);
       timer->record_dn(ttot, datab / ttot);
   }
@@ -340,7 +340,7 @@ void Loop_TN(Type *state,
              std::size_t index_shift, GateSpec2Q spec,
              Timer *timer, double angle)
 {
-  double ttmp1 = sec(), ttot = 0.;
+  double ttmp1 = time_in_seconds(), ttot = 0.;
   assert((UL(state) % 256) == 0);
 #if defined(__ICC) || defined(__INTEL_COMPILER)
   __assume_aligned(state, 256);
@@ -409,7 +409,7 @@ void Loop_TN(Type *state,
 
   if (timer)
   {
-    ttot = sec() - ttmp1;
+    ttot = time_in_seconds() - ttmp1;
     double datab =
       4.0 * sizeof(state[0]) * double((c12 - c11) / c13) * double((c22 - c21) / c23) * double(c32 - c31);
     timer->record_tn(ttot, datab / ttot);
