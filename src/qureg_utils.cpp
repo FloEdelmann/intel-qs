@@ -632,7 +632,7 @@ void QubitRegister<Type>::dumpbin(std::string fn)
 
   double t0 = time_in_seconds();
   iqs::mpi::StateBarrier();
-  MPI_File_write_at(fh, offset, (void *)(&(state[0])), size, MPI_DOUBLE_COMPLEX, &status);
+  MPI_File_write_at(fh, offset, (void *)(&(state[0])), size, MPI_CXX_DOUBLE_COMPLEX, &status);
   iqs::mpi::StateBarrier();
   double t1 = time_in_seconds();
   MPI_File_close(&fh);
