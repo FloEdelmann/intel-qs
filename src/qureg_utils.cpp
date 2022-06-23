@@ -32,12 +32,14 @@ bool QubitRegister<Type>::operator==(const QubitRegister &rhs)
   return true;
 }
 
-void max_posit(IqsPosit *out, IqsPosit *in)
-{
+template <class Type>
+void max_posit(Type *out, Type *in) {
   *out = sw::universal::max(*out, *in);
 }
 
-#pragma omp declare reduction(max : IqsPosit : max_posit(&omp_out, &omp_in)) initializer(omp_priv = 0)
+#pragma omp declare reduction(max : IqsPosit24es0 : max_posit(&omp_out, &omp_in)) initializer(omp_priv = 0)
+#pragma omp declare reduction(max : IqsPosit24es1 : max_posit(&omp_out, &omp_in)) initializer(omp_priv = 0)
+#pragma omp declare reduction(max : IqsPosit24es2 : max_posit(&omp_out, &omp_in)) initializer(omp_priv = 0)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief Return the L_infinity distance between two states, psi and x.
@@ -127,7 +129,9 @@ void QubitRegister<Type>::SetGlobalAmplitude(std::size_t global_index, Type valu
 #endif
 }
 
-#pragma omp declare reduction(+ : IqsPosit : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es0 : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es1 : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es2 : omp_out += omp_in) initializer(omp_priv = 0)
 
 /////////////////////////////////////////////////////////////////////////////////////////
 /// @brief Return the maximum L2 distance between the local parts of two states.
@@ -705,7 +709,9 @@ void QubitRegister<Type>::ResetStatistics()
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
-template class QubitRegister<ComplexPosit>;
+template class QubitRegister<ComplexPosit24es0>;
+template class QubitRegister<ComplexPosit24es1>;
+template class QubitRegister<ComplexPosit24es2>;
 
 } // end namespace iqs
 

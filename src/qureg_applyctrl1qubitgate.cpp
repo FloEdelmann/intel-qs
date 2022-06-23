@@ -622,6 +622,8 @@ void QubitRegister<Type>::ApplyCPhaseRotation(unsigned const control, unsigned c
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
-template class QubitRegister<ComplexPosit>;
+template class QubitRegister<ComplexPosit24es0>;
+template class QubitRegister<ComplexPosit24es1>;
+template class QubitRegister<ComplexPosit24es2>;
 
 } // end namespace iqs

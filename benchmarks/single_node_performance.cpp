@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
   for (unsigned control_qubit = 0; control_qubit < num_qubits; control_qubit++) {
     for (unsigned target_qubit = 0; target_qubit < num_qubits; target_qubit++) {
-      iqs::QubitRegister<ComplexPosit> qubit_register(num_qubits, "base", 0);
+      iqs::QubitRegister<ComplexPosit24es1> qubit_register(num_qubits, "base", 0);
 
       // MPI barrier and start the timer.
       iqs::mpi::StateBarrier();

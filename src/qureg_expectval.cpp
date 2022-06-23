@@ -86,7 +86,9 @@ std::size_t HammingWeight(std::size_t x)
 }
 
 
-#pragma omp declare reduction(+ : IqsPosit : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es0 : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es1 : omp_out += omp_in) initializer(omp_priv = 0)
+#pragma omp declare reduction(+ : IqsPosit24es2 : omp_out += omp_in) initializer(omp_priv = 0)
 
 /// @brief Compute expectation value of a Pauli string for multiple qubits over the full-register state.
 /// @param qubits vector of the involved qubit indices
@@ -378,7 +380,9 @@ QubitRegister<Type>::ExpectationValueZZ(unsigned qubit, unsigned qubit2, BaseTyp
 
 template class QubitRegister<ComplexSP>;
 template class QubitRegister<ComplexDP>;
-template class QubitRegister<ComplexPosit>;
+template class QubitRegister<ComplexPosit24es0>;
+template class QubitRegister<ComplexPosit24es1>;
+template class QubitRegister<ComplexPosit24es2>;
 
 } // end namespace iqs
 

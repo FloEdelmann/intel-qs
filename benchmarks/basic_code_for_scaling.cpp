@@ -213,7 +213,7 @@ if (true) {psi.GetStatistics(); psi.DisableStatistics();}
   else if (gate_precision == PRECISION_POSIT) {
 
     // Define the same random one-quit gate, without symmetries, in single precision
-    TM2x2<ComplexPosit> GateComplexPosit;
+    TM2x2<ComplexPosit24es1> GateComplexPosit;
     GateComplexPosit(0, 0) = {0.592056606032915, 0.459533060553574};
     GateComplexPosit(0, 1) = {-0.314948020757856, -0.582328159830658};
     GateComplexPosit(1, 0) = {0.658235557641767, 0.070882241549507};
@@ -224,7 +224,7 @@ if (true) {psi.GetStatistics(); psi.DisableStatistics();}
     size_t tmp_spacesize = 0;
     if (num_qubits>30)
         tmp_spacesize = size_t(1L << 30);
-    iqs::QubitRegister<ComplexPosit> psi(num_qubits, "base", 0, tmp_spacesize);
+    iqs::QubitRegister<ComplexPosit24es1> psi(num_qubits, "base", 0, tmp_spacesize);
 if (false)  psi.TurnOnSpecialize();
   // Loop over the number of qubits and store the time elapsed in the computation.
     struct timeval time;

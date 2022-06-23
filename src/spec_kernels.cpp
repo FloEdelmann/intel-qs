@@ -428,8 +428,18 @@ template void Loop_SN<ComplexDP>(std::size_t gstart, std::size_t gend,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, double angle);
 
-template void Loop_SN<ComplexPosit>(std::size_t gstart, std::size_t gend,
-                                 ComplexPosit *state0, ComplexPosit *state1,
+template void Loop_SN<ComplexPosit24es0>(std::size_t gstart, std::size_t gend,
+                                 ComplexPosit24es0 *state0, ComplexPosit24es0 *state1,
+                                 std::size_t indsht0, std::size_t indsht1,
+                                 GateSpec1Q spec, Timer *timer, double angle);
+
+template void Loop_SN<ComplexPosit24es1>(std::size_t gstart, std::size_t gend,
+                                 ComplexPosit24es1 *state0, ComplexPosit24es1 *state1,
+                                 std::size_t indsht0, std::size_t indsht1,
+                                 GateSpec1Q spec, Timer *timer, double angle);
+
+template void Loop_SN<ComplexPosit24es2>(std::size_t gstart, std::size_t gend,
+                                 ComplexPosit24es2 *state0, ComplexPosit24es2 *state1,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, double angle);
 
@@ -443,8 +453,18 @@ template void Loop_DN<ComplexDP>(std::size_t gstart, std::size_t gend, std::size
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, double angle);
 
-template void Loop_DN<ComplexPosit>(std::size_t gstart, std::size_t gend, std::size_t pos,
-                                 ComplexPosit *state0, ComplexPosit *state1,
+template void Loop_DN<ComplexPosit24es0>(std::size_t gstart, std::size_t gend, std::size_t pos,
+                                 ComplexPosit24es0 *state0, ComplexPosit24es0 *state1,
+                                 std::size_t indsht0, std::size_t indsht1,
+                                 GateSpec1Q spec, Timer *timer, double angle);
+
+template void Loop_DN<ComplexPosit24es1>(std::size_t gstart, std::size_t gend, std::size_t pos,
+                                 ComplexPosit24es1 *state0, ComplexPosit24es1 *state1,
+                                 std::size_t indsht0, std::size_t indsht1,
+                                 GateSpec1Q spec, Timer *timer, double angle);
+
+template void Loop_DN<ComplexPosit24es2>(std::size_t gstart, std::size_t gend, std::size_t pos,
+                                 ComplexPosit24es2 *state0, ComplexPosit24es2 *state1,
                                  std::size_t indsht0, std::size_t indsht1,
                                  GateSpec1Q spec, Timer *timer, double angle);
 
@@ -462,7 +482,21 @@ template void Loop_TN<ComplexDP>(ComplexDP *state,
                                  std::size_t index_shift, GateSpec2Q spec, 
                                  Timer *timer, double angle);
 
-template void Loop_TN<ComplexPosit>(ComplexPosit *state,
+template void Loop_TN<ComplexPosit24es0>(ComplexPosit24es0 *state,
+                                 std::size_t c11, std::size_t c12, std::size_t c13,
+                                 std::size_t c21, std::size_t c22, std::size_t c23,
+                                 std::size_t c31, std::size_t c32, 
+                                 std::size_t index_shift, GateSpec2Q spec, 
+                                 Timer *timer, double angle);
+
+template void Loop_TN<ComplexPosit24es1>(ComplexPosit24es1 *state,
+                                 std::size_t c11, std::size_t c12, std::size_t c13,
+                                 std::size_t c21, std::size_t c22, std::size_t c23,
+                                 std::size_t c31, std::size_t c32, 
+                                 std::size_t index_shift, GateSpec2Q spec, 
+                                 Timer *timer, double angle);
+
+template void Loop_TN<ComplexPosit24es2>(ComplexPosit24es2 *state,
                                  std::size_t c11, std::size_t c12, std::size_t c13,
                                  std::size_t c21, std::size_t c22, std::size_t c23,
                                  std::size_t c31, std::size_t c32, 

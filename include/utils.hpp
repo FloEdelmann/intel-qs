@@ -21,11 +21,15 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-using IqsPosit = sw::universal::posit<24, 1>;
+using IqsPosit24es0 = sw::universal::posit<24, 0>;
+using IqsPosit24es1 = sw::universal::posit<24, 1>;
+using IqsPosit24es2 = sw::universal::posit<24, 2>;
 
 using ComplexSP = std::complex<float>;
 using ComplexDP = std::complex<double>;
-using ComplexPosit = std::complex<IqsPosit>;
+using ComplexPosit24es0 = std::complex<IqsPosit24es0>;
+using ComplexPosit24es1 = std::complex<IqsPosit24es1>;
+using ComplexPosit24es2 = std::complex<IqsPosit24es2>;
 
 namespace iqs {
 
