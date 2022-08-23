@@ -5,6 +5,7 @@
 #include <string>
 #include <sys/time.h>
 #include <vector>
+#include <papi.h>
 
 // Include the IQS class.
 #include "../include/qureg.hpp"
@@ -14,6 +15,7 @@ void benchmark(const std::string type_name, const int num_qubits, const int num_
   // Loop over the number of qubits and store the time elapsed in the computation.
   struct timeval time;
   double start, end;
+  int papi_retval;
 
   for (unsigned control_qubit = 0; control_qubit < num_qubits; control_qubit++) {
     for (unsigned target_qubit = 0; target_qubit < num_qubits; target_qubit++) {
@@ -23,12 +25,21 @@ void benchmark(const std::string type_name, const int num_qubits, const int num_
       iqs::mpi::StateBarrier();
       gettimeofday(&time, (struct timezone*)0);
       start = time.tv_sec + time.tv_usec * 1.0e-6;
+      papi_retval = PAPI_hl_region_begin("computation");
+      if (papi_retval != PAPI_OK) {
+        std::cout << "PAPI start call was failed";
+      }
 
       for (int iteration = 0; iteration < num_repetitions; iteration++) {
         if (control_qubit != target_qubit) {
           // qubit_register.ApplyCPauliX(control_qubit, target_qubit);
           qubit_register.ApplyCRotationY(control_qubit, target_qubit, 0.5);
         }
+      }
+
+      papi_retval = PAPI_hl_region_end("computation");
+      if (papi_retval != PAPI_OK) {
+        std::cout << "PAPI end call was failed";
       }
 
       // MPI barrier and end the timer.
