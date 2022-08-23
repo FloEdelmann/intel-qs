@@ -8,3 +8,4 @@ docs/source/doxyoutput
 docs/source/api
 build/
 **/bin/
+node_modules/
