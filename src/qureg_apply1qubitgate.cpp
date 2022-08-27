@@ -129,7 +129,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
 
         // 3. src and dst compute
         if (specialize2 && spec != GateSpec1Q::None)
-          Loop_SN(0L, lcl_chunk, &(state[c]), tmp_state, lcl_size_half, 0L, spec, timer, angle);
+          Loop_SN(0L, lcl_chunk, &(state[c]), tmp_state, lcl_size_half, 0L, spec, timer, double(angle));
         else
           Loop_SN(0L, lcl_chunk, &(state[c]), tmp_state, lcl_size_half, 0L, m, specialize, timer);
 
@@ -149,7 +149,7 @@ double QubitRegister<Type>::HP_Distrpair(unsigned position, TM2x2<Type> const&m,
                                       comm, &status);
         tnet += time_in_seconds() - t;
         if (specialize2 && spec != GateSpec1Q::None)
-          Loop_SN(0L, lcl_chunk, tmp_state, &(state[c]), 0L, 0L, spec, timer, angle);
+          Loop_SN(0L, lcl_chunk, tmp_state, &(state[c]), 0L, 0L, spec, timer, double(angle));
         else
           Loop_SN(0L, lcl_chunk, tmp_state, &(state[c]), 0L, 0L, m, specialize, timer);
 
