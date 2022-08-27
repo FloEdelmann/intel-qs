@@ -248,6 +248,21 @@ __attribute__((noinline))
 void Loop_SN(std::size_t start, std::size_t end, ComplexDP *state0, ComplexDP *state1,
              std::size_t indsht0, std::size_t indsht1, TM2x2<ComplexDP> const&m, 
              bool specialize, Timer *timer);
+template 
+__attribute__((noinline))
+void Loop_SN(std::size_t start, std::size_t end, ComplexPosit24es0 *state0, ComplexPosit24es0 *state1,
+             std::size_t indsht0, std::size_t indsht1, TM2x2<ComplexPosit24es0> const&m, 
+             bool specialize, Timer *timer);
+template 
+__attribute__((noinline))
+void Loop_SN(std::size_t start, std::size_t end, ComplexPosit24es1 *state0, ComplexPosit24es1 *state1,
+             std::size_t indsht0, std::size_t indsht1, TM2x2<ComplexPosit24es1> const&m, 
+             bool specialize, Timer *timer);
+template 
+__attribute__((noinline))
+void Loop_SN(std::size_t start, std::size_t end, ComplexPosit24es2 *state0, ComplexPosit24es2 *state1,
+             std::size_t indsht0, std::size_t indsht1, TM2x2<ComplexPosit24es2> const&m, 
+             bool specialize, Timer *timer);
 
 
 #define _Loop_DN_(KeyLoop, t00, t01, t10, t11) \
