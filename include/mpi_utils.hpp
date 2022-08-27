@@ -43,6 +43,24 @@ static int MPI_Allreduce_x(double *sendbuf, double *recvbuf, int count,
   return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
 }
 
+static int MPI_Allreduce_x(IqsPosit24es0 *sendbuf, IqsPosit24es0 *recvbuf, int count,
+                           MPI_Op op, MPI_Comm comm)
+{
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
+}
+
+static int MPI_Allreduce_x(IqsPosit24es1 *sendbuf, IqsPosit24es1 *recvbuf, int count,
+                           MPI_Op op, MPI_Comm comm)
+{
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
+}
+
+static int MPI_Allreduce_x(IqsPosit24es2 *sendbuf, IqsPosit24es2 *recvbuf, int count,
+                           MPI_Op op, MPI_Comm comm)
+{
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, MPI_DOUBLE, op, comm);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 static
@@ -65,6 +83,36 @@ int MPI_Sendrecv_x(ComplexDP *sendbuf, size_t sendcount, size_t dest, size_t sen
                       comm, status);
 }
 
+static
+int MPI_Sendrecv_x(ComplexPosit24es0 *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
+                   ComplexPosit24es0 *recvbuf, size_t recvcount, size_t source, size_t recvtag,
+                   MPI_Comm comm, MPI_Status *status)
+{
+  return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_CXX_DOUBLE_COMPLEX, dest, sendtag,
+                      (void *)recvbuf, recvcount, MPI_CXX_DOUBLE_COMPLEX, source, recvtag,
+                      comm, status);
+}
+
+static
+int MPI_Sendrecv_x(ComplexPosit24es1 *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
+                   ComplexPosit24es1 *recvbuf, size_t recvcount, size_t source, size_t recvtag,
+                   MPI_Comm comm, MPI_Status *status)
+{
+  return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_CXX_DOUBLE_COMPLEX, dest, sendtag,
+                      (void *)recvbuf, recvcount, MPI_CXX_DOUBLE_COMPLEX, source, recvtag,
+                      comm, status);
+}
+
+static
+int MPI_Sendrecv_x(ComplexPosit24es2 *sendbuf, size_t sendcount, size_t dest, size_t sendtag,
+                   ComplexPosit24es2 *recvbuf, size_t recvcount, size_t source, size_t recvtag,
+                   MPI_Comm comm, MPI_Status *status)
+{
+  return MPI_Sendrecv((void *)sendbuf, sendcount, MPI_CXX_DOUBLE_COMPLEX, dest, sendtag,
+                      (void *)recvbuf, recvcount, MPI_CXX_DOUBLE_COMPLEX, source, recvtag,
+                      comm, status);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
@@ -73,6 +121,21 @@ static int MPI_Bcast_x(ComplexSP *data, int root, MPI_Comm comm)
 }
 
 static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
+{
+  return MPI_Bcast((void*)data, 1, MPI_CXX_DOUBLE_COMPLEX, root, comm);
+}
+
+static int MPI_Bcast_x(ComplexPosit24es0 *data, int root, MPI_Comm comm)
+{
+  return MPI_Bcast((void*)data, 1, MPI_CXX_DOUBLE_COMPLEX, root, comm);
+}
+
+static int MPI_Bcast_x(ComplexPosit24es1 *data, int root, MPI_Comm comm)
+{
+  return MPI_Bcast((void*)data, 1, MPI_CXX_DOUBLE_COMPLEX, root, comm);
+}
+
+static int MPI_Bcast_x(ComplexPosit24es2 *data, int root, MPI_Comm comm)
 {
   return MPI_Bcast((void*)data, 1, MPI_CXX_DOUBLE_COMPLEX, root, comm);
 }
