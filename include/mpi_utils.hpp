@@ -23,6 +23,8 @@ namespace iqs {
 
 namespace mpi {
 
+using Bitblock24 = sw::universal::internal::bitblock<24>;
+
 static MPI_Datatype mpi_datatype_handle_complex_posit24;
 const size_t bytes_per_complex_posit24 = 2 * 3;
 
@@ -35,8 +37,8 @@ void posit_buffer_to_byte_buffer(ComplexPosit24<es> *posit_buffer, std::vector<u
   const size_t nbytes = 3;
 
   for (size_t i = 0; i < posit_count; i++) {
-    sw::universal::internal::bitblock<24> real_bits = posit_buffer[i].real().get();
-    sw::universal::internal::bitblock<24> imag_bits = posit_buffer[i].imag().get();
+    Bitblock24 real_bits = posit_buffer[i].real().get();
+    Bitblock24 imag_bits = posit_buffer[i].imag().get();
 
     std::memcpy(&byte_buffer[(2*i) * nbytes], &real_bits, nbytes);
     std::memcpy(&byte_buffer[(2*i + 1) * nbytes], &imag_bits, nbytes);
@@ -48,8 +50,8 @@ void byte_buffer_to_posit_buffer(std::vector<uint8_t> *byte_buffer, ComplexPosit
   const size_t nbytes = 3;
 
   for (size_t i = 0; i < byte_count; i += 2 * nbytes) {
-    sw::universal::internal::bitblock<24> real_bits;
-    sw::universal::internal::bitblock<24> imag_bits;
+    Bitblock24 real_bits;
+    Bitblock24 imag_bits;
     
     std::memcpy(&byte_buffer[i], &real_bits, nbytes);
     std::memcpy(&byte_buffer[i + nbytes], &imag_bits, nbytes);
