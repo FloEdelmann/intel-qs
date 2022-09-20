@@ -25,7 +25,12 @@ namespace mpi {
 
 using Bitblock24 = sw::universal::internal::bitblock<24>;
 
+static MPI_Datatype mpi_datatype_handle_posit24_es0;
+static MPI_Datatype mpi_datatype_handle_posit24_es1;
+static MPI_Datatype mpi_datatype_handle_posit24_es2;
 static MPI_Datatype mpi_datatype_handle_complex_posit24;
+static MPI_Op mpi_op_handle_sum_posit24;
+static MPI_Op mpi_op_handle_max_posit24;
 
 static const size_t bytes_per_posit24 = 3;
 static const size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
@@ -61,6 +66,68 @@ void byte_buffer_to_posit_buffer(std::vector<uint8_t> *byte_buffer, ComplexPosit
   }
 }
 
+template <size_t es>
+static void sum_posit24_bitblock(Bitblock24 *in, Bitblock24 *in_out) {
+  IqsPosit24<es> in_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in);
+  IqsPosit24<es> in_out_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in_out);
+
+  IqsPosit24<es> sum = in_posit + in_out_posit;
+  Bitblock24 sum_bits = sum.get();
+
+  std::memcpy(in_out, &sum_bits, bytes_per_posit24);
+}
+
+static void mpi_sum_posit24(void *in, void *in_out, int *len, MPI_Datatype *datatype) {
+  if (*len != 1) {
+    throw std::runtime_error("mpi_sum_posit24: len > 1 not implemented.");
+  }
+  
+  if (*datatype == mpi_datatype_handle_posit24_es0) {
+    sum_posit24_bitblock<0>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else if (*datatype == mpi_datatype_handle_posit24_es1) {
+    sum_posit24_bitblock<1>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else if (*datatype == mpi_datatype_handle_posit24_es2) {
+    sum_posit24_bitblock<2>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else {
+    std::cout << "Error: MPI datatype not supported: " << *datatype << std::endl;
+    throw std::runtime_error("Invalid datatype for posit24 addition.");
+  }
+}
+
+template <size_t es>
+static void max_posit24_bitblock(Bitblock24 *in, Bitblock24 *in_out) {
+  IqsPosit24<es> in_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in);
+  IqsPosit24<es> in_out_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in_out);
+
+  IqsPosit24<es> max = in_posit > in_out_posit ? in_posit : in_out_posit;
+  Bitblock24 max_bits = max.get();
+
+  std::memcpy(in_out, &max_bits, bytes_per_posit24);
+}
+
+static void mpi_max_posit24(void *in, void *in_out, int *len, MPI_Datatype *datatype) {
+  if (*len != 1) {
+    throw std::runtime_error("mpi_max_posit24: len > 1 not implemented.");
+  }
+
+  if (*datatype == mpi_datatype_handle_posit24_es0) {
+    max_posit24_bitblock<0>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else if (*datatype == mpi_datatype_handle_posit24_es1) {
+    max_posit24_bitblock<1>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else if (*datatype == mpi_datatype_handle_posit24_es2) {
+    max_posit24_bitblock<2>((Bitblock24*)in, (Bitblock24*)in_out);
+  }
+  else {
+    std::cout << "Error: MPI datatype not supported: " << *datatype << std::endl;
+    throw std::runtime_error("Invalid datatype for posit24 max.");
+  }
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // Definitions without BigMPI
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -81,19 +148,34 @@ template <size_t es>
 static int MPI_Allreduce_x(IqsPosit24<es> *sendbuf, IqsPosit24<es> *recvbuf, int count, MPI_Op op, MPI_Comm comm)
 {
   MPI_Op posit_op;
+  MPI_Datatype posit_datatype;
 
   if (op == MPI_SUM) {
-    posit_op = MPI_SUM;
+    posit_op = mpi_op_handle_sum_posit24;
   }
   else if (op == MPI_MAX) {
-    posit_op = MPI_MAX;
+    posit_op = mpi_op_handle_max_posit24;
   }
   else {
     std::cout << "MPI_Allreduce_x: Unsupported operation for posits: " << op << std::endl;
     throw std::runtime_error("MPI_Allreduce_x: Unsupported MPI_Op");
   }
 
-  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, mpi_datatype_handle_complex_posit24, op, comm);
+  if (es == 0) {
+    posit_datatype = mpi_datatype_handle_posit24_es0;
+  }
+  else if (es == 1) {
+    posit_datatype = mpi_datatype_handle_posit24_es1;
+  }
+  else if (es == 2) {
+    posit_datatype = mpi_datatype_handle_posit24_es2;
+  }
+  else {
+    std::cout << "MPI_Allreduce_x: Unsupported es for posits: " << es << std::endl;
+    throw std::runtime_error("MPI_Allreduce_x: Unsupported es");
+  }
+
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, posit_datatype, op, comm);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
