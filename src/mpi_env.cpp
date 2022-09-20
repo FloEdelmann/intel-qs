@@ -143,7 +143,11 @@ MPI_Comm Environment::state_communicator = MPI_COMM_WORLD;
 /////////////////////////////////////////////////////////////////////////////////////////
 void Environment::CommonInit(int flag)
 {
-  if (flag) {
+  if (!flag) {
+    QHIPSTER_MPI_CHECK_RESULT(MPI_Type_contiguous,(2*3, MPI_BYTE, &mpi_datatype_handle_complex_posit24))
+    QHIPSTER_MPI_CHECK_RESULT(MPI_Type_commit,(&mpi_datatype_handle_complex_posit24))
+  }
+  else {
 #if 0
 #if defined(MVAPICH2_VERSION) 
     char * mv2_string; 
