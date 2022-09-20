@@ -24,6 +24,7 @@ namespace iqs {
 namespace mpi {
 
 static MPI_Datatype mpi_datatype_handle_complex_posit24;
+const size_t bytes_per_complex_posit24 = 2 * 3;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -122,7 +123,6 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
                           ComplexPosit24<es> *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                           MPI_Comm comm, MPI_Status *status)
 {
-  const size_t bytes_per_complex_posit24 = 2 * 3;
   size_t byte_sendcount = sendcount * bytes_per_complex_posit24;
   size_t byte_recvcount = recvcount / bytes_per_complex_posit24;
   std::vector<uint8_t> byte_sendbuf(byte_sendcount);
@@ -130,9 +130,9 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
 
   posit_buffer_to_byte_buffer<es>(sendbuf, &byte_sendbuf, sendcount);
 
-  auto ret_val = MPI_Sendrecv((void *)&byte_sendbuf, byte_sendcount, mpi_datatype_handle_complex_posit24, dest, sendtag,
-                              (void *)&byte_recvbuf, byte_recvcount, mpi_datatype_handle_complex_posit24, source, recvtag,
-                              comm, status);
+  int ret_val = MPI_Sendrecv((void *)&byte_sendbuf, byte_sendcount, mpi_datatype_handle_complex_posit24, dest, sendtag,
+                             (void *)&byte_recvbuf, byte_recvcount, mpi_datatype_handle_complex_posit24, source, recvtag,
+                             comm, status);
   
   byte_buffer_to_posit_buffer<es>(&byte_recvbuf, recvbuf, recvcount);
 
@@ -154,7 +154,15 @@ static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
 template<size_t es>
 static int MPI_Bcast_x(ComplexPosit24<es> *data, int root, MPI_Comm comm)
 {
-  return MPI_Bcast((void*)data, 1, mpi_datatype_handle_complex_posit24, root, comm);
+  std::vector<uint8_t> byte_sendbuf(bytes_per_complex_posit24);
+
+  posit_buffer_to_byte_buffer<es>(data, &byte_sendbuf, 1);
+
+  int ret_val = MPI_Bcast((void*)&byte_sendbuf, 1, mpi_datatype_handle_complex_posit24, root, comm);
+  
+  byte_buffer_to_posit_buffer<es>(&byte_sendbuf, data, 1);
+
+  return ret_val;
 }
 
 #else
