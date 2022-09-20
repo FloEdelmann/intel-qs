@@ -26,7 +26,9 @@ namespace mpi {
 using Bitblock24 = sw::universal::internal::bitblock<24>;
 
 static MPI_Datatype mpi_datatype_handle_complex_posit24;
-const size_t bytes_per_complex_posit24 = 2 * 3;
+
+static const size_t bytes_per_posit24 = 3;
+static const size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,32 +36,28 @@ const size_t bytes_per_complex_posit24 = 2 * 3;
 
 template <size_t es>
 void posit_buffer_to_byte_buffer(ComplexPosit24<es> *posit_buffer, std::vector<uint8_t> *byte_buffer, size_t posit_count) {
-  const size_t nbytes = 3;
-
   for (size_t i = 0; i < posit_count; i++) {
     Bitblock24 real_bits = posit_buffer[i].real().get();
     Bitblock24 imag_bits = posit_buffer[i].imag().get();
 
-    std::memcpy(&byte_buffer[(2*i) * nbytes], &real_bits, nbytes);
-    std::memcpy(&byte_buffer[(2*i + 1) * nbytes], &imag_bits, nbytes);
+    std::memcpy(&byte_buffer[(2*i) * bytes_per_posit24], &real_bits, bytes_per_posit24);
+    std::memcpy(&byte_buffer[(2*i + 1) * bytes_per_posit24], &imag_bits, bytes_per_posit24);
   }
 }
 
 template <size_t es>
 void byte_buffer_to_posit_buffer(std::vector<uint8_t> *byte_buffer, ComplexPosit24<es> *posit_buffer, size_t byte_count) {
-  const size_t nbytes = 3;
-
-  for (size_t i = 0; i < byte_count; i += 2 * nbytes) {
+  for (size_t i = 0; i < byte_count; i += 2 * bytes_per_posit24) {
     Bitblock24 real_bits;
     Bitblock24 imag_bits;
     
-    std::memcpy(&byte_buffer[i], &real_bits, nbytes);
-    std::memcpy(&byte_buffer[i + nbytes], &imag_bits, nbytes);
+    std::memcpy(&byte_buffer[i], &real_bits, bytes_per_posit24);
+    std::memcpy(&byte_buffer[i + bytes_per_posit24], &imag_bits, bytes_per_posit24);
 
     IqsPosit24<es> real = IqsPosit24<es>().setBitblock(real_bits);
     IqsPosit24<es> imag = IqsPosit24<es>().setBitblock(imag_bits);
 
-    posit_buffer[i / (2 * nbytes)] = ComplexPosit24<es>(real, imag);
+    posit_buffer[i / bytes_per_complex_posit24] = ComplexPosit24<es>(real, imag);
   }
 }
 
