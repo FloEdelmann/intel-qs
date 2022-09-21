@@ -2445,6 +2445,8 @@ function(_ep_add_download_command name)
     set(module)
     set(tag ${git_remote_name})
     configure_file(
+      # You might(!) want to change this to "${CMAKE_ROOT}/Modules/ExternalProjects/RepositoryInfo.txt" for CMake versions >= 3.23
+      # This file should not be in here at all...
       "${CMAKE_ROOT}/Modules/RepositoryInfo.txt.in"
       "${stamp_dir}/${name}-gitinfo.txt"
       @ONLY

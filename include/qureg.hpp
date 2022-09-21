@@ -346,8 +346,6 @@ class QubitRegister
   BaseType MaxAbsDiff(QubitRegister &x, Type sfactor = Type(1.0, 0.));
   BaseType MaxL2NormDiff(QubitRegister &x);
   void dumpbin(std::string fn);
-  double Entropy();
-  std::vector<double> GoogleStats();
   void Normalize();
   BaseType ComputeNorm();
   Type ComputeOverlap( QubitRegister<Type> &psi );
