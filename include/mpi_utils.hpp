@@ -25,15 +25,15 @@ namespace mpi {
 
 using Bitblock24 = sw::universal::internal::bitblock<24>;
 
-static MPI_Datatype mpi_datatype_handle_posit24_es0;
-static MPI_Datatype mpi_datatype_handle_posit24_es1;
-static MPI_Datatype mpi_datatype_handle_posit24_es2;
-static MPI_Datatype mpi_datatype_handle_complex_posit24;
-static MPI_Op mpi_op_handle_sum_posit24;
-static MPI_Op mpi_op_handle_max_posit24;
+extern MPI_Datatype mpi_datatype_handle_posit24_es0;
+extern MPI_Datatype mpi_datatype_handle_posit24_es1;
+extern MPI_Datatype mpi_datatype_handle_posit24_es2;
+extern MPI_Datatype mpi_datatype_handle_complex_posit24;
+extern MPI_Op mpi_op_handle_sum_posit24;
+extern MPI_Op mpi_op_handle_max_posit24;
 
-static const size_t bytes_per_posit24 = 3;
-static const size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
+constexpr size_t bytes_per_posit24 = 3;
+constexpr size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -175,7 +175,7 @@ static int MPI_Allreduce_x(IqsPosit24<es> *sendbuf, IqsPosit24<es> *recvbuf, int
     throw std::runtime_error("MPI_Allreduce_x: Unsupported es");
   }
 
-  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, posit_datatype, op, comm);
+  return MPI_Allreduce((void*)sendbuf, (void *)recvbuf, count, posit_datatype, posit_op, comm);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
