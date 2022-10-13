@@ -135,6 +135,13 @@ Environment* Environment::shared_instance = nullptr;
 
 #ifdef INTELQS_HAS_MPI
 
+MPI_Datatype mpi_datatype_handle_posit24_es0;
+MPI_Datatype mpi_datatype_handle_posit24_es1;
+MPI_Datatype mpi_datatype_handle_posit24_es2;
+MPI_Datatype mpi_datatype_handle_complex_posit24;
+MPI_Op mpi_op_handle_sum_posit24;
+MPI_Op mpi_op_handle_max_posit24;
+
 // pool_communicator and state_communicator are static variables that need to be defined.
 MPI_Comm Environment::pool_communicator = MPI_COMM_WORLD;
 MPI_Comm Environment::state_communicator = MPI_COMM_WORLD;
