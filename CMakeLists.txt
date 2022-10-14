@@ -34,7 +34,7 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 # Set some compiler options related to C++.
 ################################################################################
 
-set(CMAKE_CXX_STANDARD 14)
+# set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -302,6 +302,8 @@ endif()
 # INFO: when below flag is defined, checks of the form "assert(condition)" are skipped.
 #target_compile_definitions(intel_qs NDEBUG)
 
+
+target_compile_features(iqs PUBLIC cxx_std_14)
 ################################################################################
 # Build the suite of unit-tests for IQS.
 # Approach suggested in:
