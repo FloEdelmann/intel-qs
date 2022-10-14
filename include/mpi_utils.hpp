@@ -40,25 +40,28 @@ constexpr size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
 #ifndef BIGMPI
 
 template <size_t es>
-void posit_buffer_to_byte_buffer(ComplexPosit24<es> *posit_buffer, std::vector<uint8_t> *byte_buffer, size_t posit_count) {
+void posit_buffer_to_byte_buffer(const ComplexPosit24<es>* posit_buffer, std::vector<uint8_t> &byte_buffer, const size_t posit_count) {
+  auto * const outbuf = byte_buffer.data();
+  assert(byte_buffer.size() >= posit_count * bytes_per_posit24 * 2);
   for (size_t i = 0; i < posit_count; i++) {
     Bitblock24 real_bits = posit_buffer[i].real().get();
     Bitblock24 imag_bits = posit_buffer[i].imag().get();
 
-    std::memcpy(&byte_buffer[(2*i) * bytes_per_posit24], &real_bits, bytes_per_posit24);
-    std::memcpy(&byte_buffer[(2*i + 1) * bytes_per_posit24], &imag_bits, bytes_per_posit24);
+    std::memcpy(outbuf + (2*i) * bytes_per_posit24, &real_bits, bytes_per_posit24);
+    std::memcpy(outbuf + (2*i + 1) * bytes_per_posit24, &imag_bits, bytes_per_posit24);
   }
 }
 
 template <size_t es>
-void byte_buffer_to_posit_buffer(std::vector<uint8_t> *byte_buffer, ComplexPosit24<es> *posit_buffer, size_t byte_count) {
+void byte_buffer_to_posit_buffer(const std::vector<uint8_t> &byte_buffer, ComplexPosit24<es> *posit_buffer, size_t byte_count) {
+  const auto inbuf = byte_buffer.data();
   for (size_t i = 0; i < byte_count; i += 2 * bytes_per_posit24) {
     Bitblock24 real_bits;
     Bitblock24 imag_bits;
-    
-    std::memcpy(&byte_buffer[i], &real_bits, bytes_per_posit24);
-    std::memcpy(&byte_buffer[i + bytes_per_posit24], &imag_bits, bytes_per_posit24);
 
+    std::memcpy(&real_bits, inbuf + i, bytes_per_posit24);
+    std::memcpy(&imag_bits, inbuf + i + bytes_per_posit24, bytes_per_posit24);
+    
     IqsPosit24<es> real = IqsPosit24<es>().setBitblock(real_bits);
     IqsPosit24<es> imag = IqsPosit24<es>().setBitblock(imag_bits);
 
@@ -210,13 +213,13 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
   std::vector<uint8_t> byte_sendbuf(byte_sendcount);
   std::vector<uint8_t> byte_recvbuf(byte_recvcount);
 
-  posit_buffer_to_byte_buffer<es>(sendbuf, &byte_sendbuf, sendcount);
+  posit_buffer_to_byte_buffer<es>(sendbuf, byte_sendbuf, sendcount);
 
-  int ret_val = MPI_Sendrecv((void *)&byte_sendbuf, byte_sendcount, mpi_datatype_handle_complex_posit24, dest, sendtag,
-                             (void *)&byte_recvbuf, byte_recvcount, mpi_datatype_handle_complex_posit24, source, recvtag,
+  int ret_val = MPI_Sendrecv(byte_sendbuf.data(), byte_sendcount, mpi_datatype_handle_complex_posit24, dest, sendtag,
+                             byte_recvbuf.data(), byte_recvcount, mpi_datatype_handle_complex_posit24, source, recvtag,
                              comm, status);
   
-  byte_buffer_to_posit_buffer<es>(&byte_recvbuf, recvbuf, recvcount);
+  byte_buffer_to_posit_buffer<es>(byte_sendbuf, recvbuf, recvcount);
 
   return ret_val;
 }
@@ -238,11 +241,11 @@ static int MPI_Bcast_x(ComplexPosit24<es> *data, int root, MPI_Comm comm)
 {
   std::vector<uint8_t> byte_sendbuf(bytes_per_complex_posit24);
 
-  posit_buffer_to_byte_buffer<es>(data, &byte_sendbuf, 1);
+  posit_buffer_to_byte_buffer<es>(data, byte_sendbuf, 1);
 
-  int ret_val = MPI_Bcast((void*)&byte_sendbuf, 1, mpi_datatype_handle_complex_posit24, root, comm);
+  int ret_val = MPI_Bcast(byte_sendbuf.data(), 1, mpi_datatype_handle_complex_posit24, root, comm);
   
-  byte_buffer_to_posit_buffer<es>(&byte_sendbuf, data, 1);
+  byte_buffer_to_posit_buffer<es>(byte_sendbuf, data, 1);
 
   return ret_val;
 }
