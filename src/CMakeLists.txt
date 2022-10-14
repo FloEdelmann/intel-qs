@@ -57,6 +57,7 @@ add_dependencies(iqs deps-eigen)
 
 find_package(universal REQUIRED)
 target_include_directories(iqs PUBLIC ${universal_INCLUDE_DIRS})
+target_compile_features(iqs PUBLIC cxx_std_17)
 
 find_package(PAPI REQUIRED)
 target_include_directories(iqs PUBLIC ${PAPI_INCLUDE_DIRS})
