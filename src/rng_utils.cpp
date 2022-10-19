@@ -165,6 +165,57 @@ void RandomNumberGenerator<double>::UniformRandomNumbers
   return;
 }
 
+template <>
+void RandomNumberGenerator<IqsPosit24es0>::UniformRandomNumbers
+( IqsPosit24es0 *value, std::size_t size , IqsPosit24es0 a, IqsPosit24es0 b, std::string shared )
+{
+  std::mt19937 * generator;
+  generator = this->SelectGeneratorAndUpdateCounter(size, shared);
+
+  IqsPosit24es0 * temp_ptr = value;
+  // If [a,b) is not [0,1), translate and scale the random numbers.
+  for (std::size_t i=0; i<size; ++i)
+  {
+      *temp_ptr = a + (b-a) * u_distribution(*generator);
+      ++temp_ptr;
+  }
+  return;
+}
+
+template <>
+void RandomNumberGenerator<IqsPosit24es1>::UniformRandomNumbers
+( IqsPosit24es1 *value, std::size_t size , IqsPosit24es1 a, IqsPosit24es1 b, std::string shared )
+{
+  std::mt19937 * generator;
+  generator = this->SelectGeneratorAndUpdateCounter(size, shared);
+
+  IqsPosit24es1 * temp_ptr = value;
+  // If [a,b) is not [0,1), translate and scale the random numbers.
+  for (std::size_t i=0; i<size; ++i)
+  {
+      *temp_ptr = a + (b-a) * u_distribution(*generator);
+      ++temp_ptr;
+  }
+  return;
+}
+
+template <>
+void RandomNumberGenerator<IqsPosit24es2>::UniformRandomNumbers
+( IqsPosit24es2 *value, std::size_t size , IqsPosit24es2 a, IqsPosit24es2 b, std::string shared )
+{
+  std::mt19937 * generator;
+  generator = this->SelectGeneratorAndUpdateCounter(size, shared);
+
+  IqsPosit24es2 * temp_ptr = value;
+  // If [a,b) is not [0,1), translate and scale the random numbers.
+  for (std::size_t i=0; i<size; ++i)
+  {
+      *temp_ptr = a + (b-a) * u_distribution(*generator);
+      ++temp_ptr;
+  }
+  return;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // Generate a random integer in [a,b).
 
@@ -220,6 +271,57 @@ void RandomNumberGenerator<double>::GaussianRandomNumbers
   generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
 
   double * temp_ptr = value;
+  for (std::size_t i=0; i<size; ++i)
+  {
+       *temp_ptr = n_distribution(*generator);
+       ++temp_ptr;
+  }
+  return;
+}
+
+template <>
+void RandomNumberGenerator<IqsPosit24es0>::GaussianRandomNumbers
+( IqsPosit24es0 *value, std::size_t size , std::string shared )
+{
+  std::mt19937 * generator;
+  // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
+  generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
+
+  IqsPosit24es0 * temp_ptr = value;
+  for (std::size_t i=0; i<size; ++i)
+  {
+       *temp_ptr = n_distribution(*generator);
+       ++temp_ptr;
+  }
+  return;
+}
+
+template <>
+void RandomNumberGenerator<IqsPosit24es1>::GaussianRandomNumbers
+( IqsPosit24es1 *value, std::size_t size , std::string shared )
+{
+  std::mt19937 * generator;
+  // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
+  generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
+
+  IqsPosit24es1 * temp_ptr = value;
+  for (std::size_t i=0; i<size; ++i)
+  {
+       *temp_ptr = n_distribution(*generator);
+       ++temp_ptr;
+  }
+  return;
+}
+
+template <>
+void RandomNumberGenerator<IqsPosit24es2>::GaussianRandomNumbers
+( IqsPosit24es2 *value, std::size_t size , std::string shared )
+{
+  std::mt19937 * generator;
+  // Assuming that to generate a Gaussian number one needs 2 uniformly distributed numbers.
+  generator = this->SelectGeneratorAndUpdateCounter(2*size, shared);
+
+  IqsPosit24es2 * temp_ptr = value;
   for (std::size_t i=0; i<size; ++i)
   {
        *temp_ptr = n_distribution(*generator);

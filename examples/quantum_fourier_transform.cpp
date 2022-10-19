@@ -247,6 +247,87 @@ int main(int argc, char **argv)
     if (myrank == 0)
         printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", e1, e2);
   }
+
+  // IqsPosit24es0 precision.
+  {
+    using Type = ComplexPosit24es0;
+
+    if (myrank == 0) std::cout << "\nstate initialization (IqsPosit24es0 precision)\n";
+    iqs::RandomNumberGenerator<IqsPosit24es0> rng_dp;
+    rng_dp.SetSeedStreamPtrs(777);
+    iqs::QubitRegister<Type> psi1(num_qubits, "base", 0);
+    psi1.SetRngPtr(&rng_dp);
+    psi1.Initialize("rand",1);
+    assert( sw::universal::abs(psi1.ComputeNorm()-1.)<1e-10);
+    iqs::QubitRegister<Type> psi2(psi1);
+
+    if (myrank == 0) std::cout << "CFFT (IqsPosit24es0 precision)\n";
+    cfft<Type>(psi1);
+    psi2.EnableStatistics();
+    psi2.TurnOffSpecialize();
+
+    if (myrank == 0) std::cout << "QFT  (IqsPosit24es0 precision)\n";
+    qft<Type>(psi2);
+    psi2.GetStatistics();
+    IqsPosit24es0 e1 = psi2.MaxAbsDiff(psi1);
+    IqsPosit24es0 e2 = psi2.MaxL2NormDiff(psi1);
+    if (myrank == 0)
+        printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", double(e1), double(e2));
+  }
+
+  // IqsPosit24es1 precision.
+  {
+    using Type = ComplexPosit24es1;
+
+    if (myrank == 0) std::cout << "\nstate initialization (IqsPosit24es1 precision)\n";
+    iqs::RandomNumberGenerator<IqsPosit24es1> rng_dp;
+    rng_dp.SetSeedStreamPtrs(777);
+    iqs::QubitRegister<Type> psi1(num_qubits, "base", 0);
+    psi1.SetRngPtr(&rng_dp);
+    psi1.Initialize("rand",1);
+    assert( sw::universal::abs(psi1.ComputeNorm()-1.)<1e-10);
+    iqs::QubitRegister<Type> psi2(psi1);
+
+    if (myrank == 0) std::cout << "CFFT (IqsPosit24es1 precision)\n";
+    cfft<Type>(psi1);
+    psi2.EnableStatistics();
+    psi2.TurnOffSpecialize();
+
+    if (myrank == 0) std::cout << "QFT  (IqsPosit24es1 precision)\n";
+    qft<Type>(psi2);
+    psi2.GetStatistics();
+    IqsPosit24es1 e1 = psi2.MaxAbsDiff(psi1);
+    IqsPosit24es1 e2 = psi2.MaxL2NormDiff(psi1);
+    if (myrank == 0)
+        printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", double(e1), double(e2));
+  }
+
+  // IqsPosit24es2 precision.
+  {
+    using Type = ComplexPosit24es2;
+
+    if (myrank == 0) std::cout << "\nstate initialization (IqsPosit24es2 precision)\n";
+    iqs::RandomNumberGenerator<IqsPosit24es2> rng_dp;
+    rng_dp.SetSeedStreamPtrs(777);
+    iqs::QubitRegister<Type> psi1(num_qubits, "base", 0);
+    psi1.SetRngPtr(&rng_dp);
+    psi1.Initialize("rand",1);
+    assert( sw::universal::abs(psi1.ComputeNorm()-1.)<1e-10);
+    iqs::QubitRegister<Type> psi2(psi1);
+
+    if (myrank == 0) std::cout << "CFFT (IqsPosit24es2 precision)\n";
+    cfft<Type>(psi1);
+    psi2.EnableStatistics();
+    psi2.TurnOffSpecialize();
+
+    if (myrank == 0) std::cout << "QFT  (IqsPosit24es2 precision)\n";
+    qft<Type>(psi2);
+    psi2.GetStatistics();
+    IqsPosit24es2 e1 = psi2.MaxAbsDiff(psi1);
+    IqsPosit24es2 e2 = psi2.MaxL2NormDiff(psi1);
+    if (myrank == 0)
+        printf("DP::qufft error vs classical max(absdiff: %le l2normdiff: %le)\n", double(e1), double(e2));
+  }
              
   return 0;
 }
