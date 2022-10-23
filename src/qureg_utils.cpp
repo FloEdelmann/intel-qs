@@ -277,9 +277,11 @@ std::string PrintVector(Type *state, std::size_t size, std::size_t num_elements,
     // std::string bin = dec2bin(myrank * size + i, num_qubits, false);
     std::string bin = permutation->data2program((std::size_t)my_data_rank * size + i);
     char s[4096];
+    double real = double(state[i].real());
+    double im = double(state[i].imag());
     sprintf(s, "\t%-13.8lf + i * %-13.8lf   %% |%s> p=%lf\n",
-            std::real(state[i]), std::imag(state[i]),
-            (const char *)bin.c_str(), std::norm(state[i]) );
+            real, im,
+            (const char *)bin.c_str(), double(norm(state[i])) );
     str = str + s;
     cumulative_probability += std::norm(state[i]);
   }

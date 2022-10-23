@@ -38,6 +38,8 @@ if (iqs::mpi::Environment::GetStateRank()==0) std::cout
 
 int main(int argc, char **argv)
 {
+  using Complex = ComplexPosit24<0>;
+  using BaseType = typename Complex::value_type;
   unsigned myrank=0, nprocs=1;
   iqs::mpi::Environment env(argc, argv);
   if (env.IsUsefulRank()==false) return 0;
@@ -49,13 +51,13 @@ int main(int argc, char **argv)
           fprintf(stderr, "example to be launched with a single process\n");
       exit(1);
   }
-  double expectation;
+  Complex expectation;
 
   MPIout << "------------------\n"
          << "   Single qubit   \n"
          << "------------------\n\n";
 
-  iqs::QubitRegister<ComplexDP> psi(1,"base",1);
+  iqs::QubitRegister<Complex> psi(1,"base",1);
   psi.EnableStatistics();  
   psi.ApplyHadamard(0);
 
