@@ -199,7 +199,7 @@ typename QubitRegister<Type>::BaseType QubitRegister<Type>::ComputeNorm()
 #pragma omp parallel for reduction(+ : local_normsq)
   for(std::size_t i = 0; i < lcl; i++)
   {
-     local_normsq += std::norm(state[i]);
+     local_normsq += norm(state[i]);
   }
 
   BaseType global_normsq;
@@ -266,9 +266,9 @@ Type QubitRegister<Type>::ComputeOverlap( QubitRegister<Type> &psi)
 /// index of the computational state and corresponding amplitude.
 /// Partial sum of |amplitude|^2 is computed.
 //------------------------------------------------------------------------------
-template <class Type, class BaseType>
+template <class Type>
 std::string PrintVector(Type *state, std::size_t size, std::size_t num_elements,
-                        BaseType &cumulative_probability,
+                        double &cumulative_probability,
                         Permutation *permutation,
                         int my_data_rank)
 {
@@ -283,7 +283,7 @@ std::string PrintVector(Type *state, std::size_t size, std::size_t num_elements,
             real, im,
             (const char *)bin.c_str(), double(norm(state[i])) );
     str = str + s;
-    cumulative_probability += std::norm(state[i]);
+    cumulative_probability += double(norm(state[i]));
   }
   return std::string(str);
 }
@@ -301,7 +301,7 @@ template <class Type>
 void QubitRegister<Type>::Print(std::string x, std::vector<std::size_t> qubits)
 {
   TODO(Second argument of Print() is not used!)
-  BaseType cumulative_probability = 0;
+  double cumulative_probability = 0;
 
   int my_rank = iqs::mpi::Environment::GetStateRank();
   int nprocs = iqs::mpi::Environment::GetStateSize();
@@ -316,7 +316,7 @@ void QubitRegister<Type>::Print(std::string x, std::vector<std::size_t> qubits)
       // print permutation
       assert(qubit_permutation);
       printf("qubit permutation: %s\n", qubit_permutation->GetMapStr().c_str());
-      std::string s = PrintVector<Type, BaseType>(state, LocalSize(), num_qubits,
+      std::string s = PrintVector<Type>(state, LocalSize(), num_qubits,
                                                   cumulative_probability, qubit_permutation, my_rank);
       printf("%s=[\n", (const char *)x.c_str());
       printf("%s", (const char *)s.c_str());
@@ -357,7 +357,7 @@ void QubitRegister<Type>::Print(std::string x, std::vector<std::size_t> qubits)
 #endif
   }
 
-  BaseType glb_cumulative_probability;
+  double glb_cumulative_probability;
 #ifdef INTELQS_HAS_MPI
   MPI_Reduce(&cumulative_probability, &glb_cumulative_probability, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
 #else
