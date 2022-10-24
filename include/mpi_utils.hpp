@@ -42,7 +42,7 @@ template <typename Posit> struct ComplexBitblock {
     real_posit.setBitblock(real);
     Posit imag_posit;
     imag_posit.setBitblock(imag);
-    return std::complex<Posit>(real_posit, imag_posit);
+    return std::complex(real_posit, imag_posit);
   }
 };
 
@@ -61,13 +61,18 @@ constexpr size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
 #ifndef BIGMPI
 
 template <size_t es>
-void posit_buffer_to_byte_buffer(const ComplexPosit24<es>* posit_buffer, std::vector<ComplexBitblock<IqsPosit24<es>>> &byte_buffer, const size_t posit_count) {
-  assert(byte_buffer.size() >= posit_count);
+std::vector<ComplexBitblock<IqsPosit24<es>>>
+posit_buffer_to_byte_buffer(const ComplexPosit24<es> *posit_buffer,
+                            const size_t posit_count) {
+
+  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_buffer;
 
   for(auto in = posit_buffer; in < posit_buffer + posit_count; in++) {
     auto& num = *in;
     byte_buffer.push_back(num);
   }
+
+  return byte_buffer;
 }
 
 template <size_t es>
@@ -114,8 +119,6 @@ static void mpi_sum_posit24(void *in, void *in_out, int *len, MPI_Datatype *data
     throw std::runtime_error("Invalid datatype for posit24 addition.");
   }
 }
-
-
 
 static void mpi_max_posit24(void *in, void *in_out, int *len, MPI_Datatype *datatype) {
   if (*len != 1) {
@@ -222,10 +225,9 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
                           ComplexPosit24<es> *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                           MPI_Comm comm, MPI_Status *status)
 {
-  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_sendbuf(sendcount);
   std::vector<ComplexBitblock<IqsPosit24<es>>> byte_recvbuf(recvcount);
 
-  posit_buffer_to_byte_buffer<es>(sendbuf, byte_sendbuf, sendcount);
+  auto byte_sendbuf = posit_buffer_to_byte_buffer<es>(sendbuf, sendcount);
 
   auto scale = sizeof(ComplexBitblock<IqsPosit24<es>>);
   int ret_val = MPI_Sendrecv(byte_sendbuf.data(), sendcount * scale, MPI_BYTE, dest, sendtag,
@@ -233,7 +235,7 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
                              comm, status);
   
   /* std::transform(); */
-  byte_buffer_to_posit_buffer<es>(byte_sendbuf, recvbuf, recvcount);
+  byte_buffer_to_posit_buffer<es>(byte_recvbuf, recvbuf, recvcount);
 
   return ret_val;
 }
@@ -253,9 +255,8 @@ static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
 template<size_t es>
 static int MPI_Bcast_x(ComplexPosit24<es> *data, int root, MPI_Comm comm)
 {
-  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_sendbuf(1);
 
-  posit_buffer_to_byte_buffer<es>(data, byte_sendbuf, 1);
+  auto byte_sendbuf = posit_buffer_to_byte_buffer<es>(data, 1);
 
   size_t scale = sizeof(ComplexBitblock<IqsPosit24<es>>);
 
