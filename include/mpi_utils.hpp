@@ -9,8 +9,8 @@
 // used or not.
 /////////////////////////////////////////////////////////////////////////////////////////
 
-#include <complex>
 #include <climits>
+#include <complex>
 #include <mpi.h>
 
 #include "utils.hpp"
@@ -27,22 +27,32 @@ namespace mpi {
 
 template <typename Posit> using Bitblock = decltype(Posit().get());
 
+/**
+ * A small wrapper for a packet sets of bytes representing a
+ * std::complex<Posit>.
+ *
+ * The conversion is janky, because universal expects a subclass of std::bitset.
+ * However, it only uses 2 x num_bytes for Posit<num_bytes, es>.
+ */
 template <typename Posit> struct __attribute__((__packed__)) ComplexBitblock {
   using bits = Bitblock<Posit>;
 
   static constexpr size_t nbits = Posit::nbits;
   static constexpr size_t nbytes = nbits / CHAR_BIT;
 
+  // Construct with any Posit
   ComplexBitblock(std::complex<Posit> p) {
     buf_from_bits(p.real().get(), real);
     buf_from_bits(p.imag().get(), imag);
   }
 
+  // Needed for default construction in std::vector
   ComplexBitblock() = default;
 
   uint8_t real[nbytes];
   uint8_t imag[nbytes];
 
+  // Convert back to posit
   std::complex<Posit> to_posit() const {
     Posit real_posit;
     real_posit.setBitblock(bits_from_buf(real));
@@ -51,19 +61,25 @@ template <typename Posit> struct __attribute__((__packed__)) ComplexBitblock {
     return std::complex(real_posit, imag_posit);
   }
 
+private:
+  // Convert an array of bytes to a bitarray<nbits>
   bits bits_from_buf(const uint8_t arr[nbits]) const {
     unsigned long val =
         ((((unsigned long)arr[0]) << 16) | (((unsigned long)arr[1]) << 8) |
          (unsigned long)arr[2]);
-    // Unfortunately, universal does not expose Bitblock::Bitblock(unsigned long),
-    // so we have to live with this hack
+    // Unfortunately, universal does not expose Bitblock::Bitblock(unsigned
+    // long), so we have to live with this hack
     std::bitset<nbits> newval{val};
     bits retval;
-    auto& bitset = retval.reset();
+    // Loophole to get the underlying bitset :p
+    auto &bitset = retval.reset();
     bitset = newval;
     return retval;
   }
 
+  // Convert a bitset<nbits> to an array of bytes
+  //
+  // This is currently not portable across architectures
   void buf_from_bits(const bits set, uint8_t *out) const {
     auto val = set.to_ulong();
 
@@ -76,7 +92,8 @@ template <typename Posit> struct __attribute__((__packed__)) ComplexBitblock {
 
 // B-)
 // Thats just 6 byte
-static_assert(sizeof(ComplexBitblock<IqsPosit24<2>>) == 2 * IqsPosit24<2>::nbits / CHAR_BIT);
+static_assert(sizeof(ComplexBitblock<IqsPosit24<2>>) ==
+              2 * IqsPosit24<2>::nbits / CHAR_BIT);
 
 extern MPI_Datatype mpi_datatype_handle_posit24_es0;
 extern MPI_Datatype mpi_datatype_handle_posit24_es1;
@@ -117,6 +134,8 @@ void byte_buffer_to_posit_buffer(
   }
 }
 
+// Basic reduction function - just pass in the reduction as 'func(Posit, Posit)
+// -> Posit'
 template <typename Posit, typename F>
 static void posit_reduce_bitblock(Bitblock<Posit> *in, Bitblock<Posit> *in_out,
                                   const F &func) {
