@@ -39,13 +39,14 @@ int main(int argc, char **argv)
 
    //// Grover Search EXAMPLE ////
 
+      using Complex = ComplexPosit24<2>;
       if (myid == 0) printf("\n --- GROVER EXAMPLE --- \n");
       int Ngrover = 4;
       // Create the state of a quantum register, having N qubits.
       // The state is initialized as a computational basis state (using the keyword "base")
       // corresponding to the index 0. The index corresponds to a N-bit integer in decimal
       // representation. With N qubits there are 2^N indices, from 0 to 2^{N-1}.
-      iqs::QubitRegister<ComplexDP> psig(Ngrover, "base", 0);
+      iqs::QubitRegister<Complex> psig(Ngrover, "base", 0);
 	  
       psig.Print("Initial State =");
 
