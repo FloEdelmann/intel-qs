@@ -23,7 +23,28 @@ namespace iqs {
 
 namespace mpi {
 
-using Bitblock24 = sw::universal::internal::bitblock<24>;
+template<typename Posit>
+using Bitblock = decltype(Posit().get());
+
+template <typename Posit> struct ComplexBitblock {
+  using bits = Bitblock<Posit>;
+
+  ComplexBitblock(std::complex<Posit> p)
+      : real(p.real().get()), imag(p.imag().get()) {}
+
+  ComplexBitblock() = default;
+
+  bits real;
+  bits imag;
+
+  std::complex<Posit> to_posit() const {
+    Posit real_posit;
+    real_posit.setBitblock(real);
+    Posit imag_posit;
+    imag_posit.setBitblock(imag);
+    return std::complex<Posit>(real_posit, imag_posit);
+  }
+};
 
 extern MPI_Datatype mpi_datatype_handle_posit24_es0;
 extern MPI_Datatype mpi_datatype_handle_posit24_es1;
@@ -40,59 +61,53 @@ constexpr size_t bytes_per_complex_posit24 = 2 * bytes_per_posit24;
 #ifndef BIGMPI
 
 template <size_t es>
-void posit_buffer_to_byte_buffer(const ComplexPosit24<es>* posit_buffer, std::vector<uint8_t> &byte_buffer, const size_t posit_count) {
-  auto * const outbuf = byte_buffer.data();
-  assert(byte_buffer.size() >= posit_count * bytes_per_posit24 * 2);
-  for (size_t i = 0; i < posit_count; i++) {
-    Bitblock24 real_bits = posit_buffer[i].real().get();
-    Bitblock24 imag_bits = posit_buffer[i].imag().get();
+void posit_buffer_to_byte_buffer(const ComplexPosit24<es>* posit_buffer, std::vector<ComplexBitblock<IqsPosit24<es>>> &byte_buffer, const size_t posit_count) {
+  assert(byte_buffer.size() >= posit_count);
 
-    std::memcpy(outbuf + (2*i) * bytes_per_posit24, &real_bits, bytes_per_posit24);
-    std::memcpy(outbuf + (2*i + 1) * bytes_per_posit24, &imag_bits, bytes_per_posit24);
+  for(auto in = posit_buffer; in < posit_buffer + posit_count; in++) {
+    auto& num = *in;
+    byte_buffer.push_back(num);
   }
 }
 
 template <size_t es>
-void byte_buffer_to_posit_buffer(const std::vector<uint8_t> &byte_buffer, ComplexPosit24<es> *posit_buffer, size_t byte_count) {
-  const auto inbuf = byte_buffer.data();
-  for (size_t i = 0; i < byte_count; i += 2 * bytes_per_posit24) {
-    Bitblock24 real_bits;
-    Bitblock24 imag_bits;
-
-    std::memcpy(&real_bits, inbuf + i, bytes_per_posit24);
-    std::memcpy(&imag_bits, inbuf + i + bytes_per_posit24, bytes_per_posit24);
-    
-    IqsPosit24<es> real = IqsPosit24<es>().setBitblock(real_bits);
-    IqsPosit24<es> imag = IqsPosit24<es>().setBitblock(imag_bits);
-
-    posit_buffer[i / bytes_per_complex_posit24] = ComplexPosit24<es>(real, imag);
+void byte_buffer_to_posit_buffer(const std::vector<ComplexBitblock<IqsPosit24<es>>> &byte_buffer, ComplexPosit24<es> *posit_buffer, size_t) {
+  size_t i = 0;
+  for(auto &bs : byte_buffer) {
+    posit_buffer[i++] = bs.to_posit();
   }
 }
 
-template <size_t es>
-static void sum_posit24_bitblock(Bitblock24 *in, Bitblock24 *in_out) {
-  IqsPosit24<es> in_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in);
-  IqsPosit24<es> in_out_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in_out);
+template <typename Posit, typename F>
+static void posit_reduce_bitblock(Bitblock<Posit> *in, Bitblock<Posit> *in_out, const F& func) {
+  Posit in_posit = Posit().setBitblock((const Bitblock<Posit>)*in);
+  Posit in_out_posit = Posit().setBitblock((const Bitblock<Posit>)*in_out);
 
-  IqsPosit24<es> sum = in_posit + in_out_posit;
-  Bitblock24 sum_bits = sum.get();
-
-  std::memcpy(in_out, &sum_bits, bytes_per_posit24);
+  Posit result = func(in_posit, in_out_posit);  //,  > in_out_posit ? in_posit : in_out_posit;
+  *in_out = result.get();
 }
 
 static void mpi_sum_posit24(void *in, void *in_out, int *len, MPI_Datatype *datatype) {
   if (*len != 1) {
     throw std::runtime_error("mpi_sum_posit24: len > 1 not implemented.");
   }
+
+  auto reduce = [](const auto& l, const auto& r) {
+    return l + r;
+  };
   
+  constexpr size_t nbits = 24;
   if (*datatype == mpi_datatype_handle_posit24_es0) {
-    sum_posit24_bitblock<0>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 0>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else if (*datatype == mpi_datatype_handle_posit24_es1) {
-    sum_posit24_bitblock<1>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 1>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else if (*datatype == mpi_datatype_handle_posit24_es2) {
-    sum_posit24_bitblock<2>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 2>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else {
     std::cout << "Error: MPI datatype not supported: " << *datatype << std::endl;
@@ -100,30 +115,29 @@ static void mpi_sum_posit24(void *in, void *in_out, int *len, MPI_Datatype *data
   }
 }
 
-template <size_t es>
-static void max_posit24_bitblock(Bitblock24 *in, Bitblock24 *in_out) {
-  IqsPosit24<es> in_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in);
-  IqsPosit24<es> in_out_posit = IqsPosit24<es>().setBitblock((const Bitblock24)*in_out);
 
-  IqsPosit24<es> max = in_posit > in_out_posit ? in_posit : in_out_posit;
-  Bitblock24 max_bits = max.get();
-
-  std::memcpy(in_out, &max_bits, bytes_per_posit24);
-}
 
 static void mpi_max_posit24(void *in, void *in_out, int *len, MPI_Datatype *datatype) {
   if (*len != 1) {
     throw std::runtime_error("mpi_max_posit24: len > 1 not implemented.");
   }
 
+  auto reduce = [](const auto& l, const auto& r) {
+    return max(l, r);
+  };
+
+  constexpr size_t nbits = 24;
   if (*datatype == mpi_datatype_handle_posit24_es0) {
-    max_posit24_bitblock<0>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 0>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else if (*datatype == mpi_datatype_handle_posit24_es1) {
-    max_posit24_bitblock<1>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 1>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else if (*datatype == mpi_datatype_handle_posit24_es2) {
-    max_posit24_bitblock<2>((Bitblock24*)in, (Bitblock24*)in_out);
+    using Posit = sw::universal::posit<nbits, 2>;
+    posit_reduce_bitblock<Posit>((Bitblock<Posit>*)in, (Bitblock<Posit>*)in_out, reduce);
   }
   else {
     std::cout << "Error: MPI datatype not supported: " << *datatype << std::endl;
@@ -208,17 +222,17 @@ static int MPI_Sendrecv_x(ComplexPosit24<es> *sendbuf, size_t sendcount, size_t 
                           ComplexPosit24<es> *recvbuf, size_t recvcount, size_t source, size_t recvtag,
                           MPI_Comm comm, MPI_Status *status)
 {
-  size_t byte_sendcount = sendcount * bytes_per_complex_posit24;
-  size_t byte_recvcount = recvcount / bytes_per_complex_posit24;
-  std::vector<uint8_t> byte_sendbuf(byte_sendcount);
-  std::vector<uint8_t> byte_recvbuf(byte_recvcount);
+  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_sendbuf(sendcount);
+  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_recvbuf(recvcount);
 
   posit_buffer_to_byte_buffer<es>(sendbuf, byte_sendbuf, sendcount);
 
-  int ret_val = MPI_Sendrecv(byte_sendbuf.data(), byte_sendcount, mpi_datatype_handle_complex_posit24, dest, sendtag,
-                             byte_recvbuf.data(), byte_recvcount, mpi_datatype_handle_complex_posit24, source, recvtag,
+  auto scale = sizeof(ComplexBitblock<IqsPosit24<es>>);
+  int ret_val = MPI_Sendrecv(byte_sendbuf.data(), sendcount * scale, MPI_BYTE, dest, sendtag,
+                             byte_recvbuf.data(), recvcount * scale, MPI_BYTE, source, recvtag,
                              comm, status);
   
+  /* std::transform(); */
   byte_buffer_to_posit_buffer<es>(byte_sendbuf, recvbuf, recvcount);
 
   return ret_val;
@@ -239,11 +253,13 @@ static int MPI_Bcast_x(ComplexDP *data, int root, MPI_Comm comm)
 template<size_t es>
 static int MPI_Bcast_x(ComplexPosit24<es> *data, int root, MPI_Comm comm)
 {
-  std::vector<uint8_t> byte_sendbuf(bytes_per_complex_posit24);
+  std::vector<ComplexBitblock<IqsPosit24<es>>> byte_sendbuf(1);
 
   posit_buffer_to_byte_buffer<es>(data, byte_sendbuf, 1);
 
-  int ret_val = MPI_Bcast(byte_sendbuf.data(), 1, mpi_datatype_handle_complex_posit24, root, comm);
+  size_t scale = sizeof(ComplexBitblock<IqsPosit24<es>>);
+
+  int ret_val = MPI_Bcast(byte_sendbuf.data(), scale, MPI_BYTE, root, comm);
   
   byte_buffer_to_posit_buffer<es>(byte_sendbuf, data, 1);
 
