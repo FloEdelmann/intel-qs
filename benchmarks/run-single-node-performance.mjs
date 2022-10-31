@@ -12,10 +12,24 @@ const outputDirectory = new URL(`./output/${currentDate}_single_node_performance
 const csvFile = new URL('./single_node_performance.csv', outputDirectory);
 const csvFileWithPapi = new URL('./single_node_performance_with_papi.csv', outputDirectory);
 
+const papiEvents = {
+  'PAPI_L1_TCM': 'Level 1 cache misses',
+  'PAPI_L2_TCM': 'Level 2 cache misses',
+  'PAPI_L3_TCM': 'Level 3 cache misses',
+  'PAPI_FP_INS': 'Floating point instructions',
+  'PAPI_FP_OPS': 'Floating point operations',
+  'PAPI_SP_OPS': 'Single precision floating point operations',
+  'PAPI_DP_OPS': 'Double precision floating point operations',
+}
+
 await mkdir(outputDirectory, { recursive: true });
 
 const childProcess = spawn('./bin/single_node_performance.exe', {
   cwd: workingDirectory,
+  env: {
+    ...process.env,
+    PAPI_EVENTS: Object.keys(papiEvents).join(','),
+  },
   shell: true,
 });
 
@@ -41,6 +55,7 @@ childProcess.on('close', async () => {
     .pipe(parseCsv({
       headers: true,
       trim: true,
+      comment: '[', // ignore MPI output
     }))
     .pipe(formatCsv({
       headers: true,
@@ -52,8 +67,19 @@ childProcess.on('close', async () => {
     .pipe(writeStream);
 });
 
-const getPapiRowData = (papiData, rowCount) => Object.fromEntries(
-  Object.entries(papiData.threads['0'].regions[String(rowCount)])
-    .filter(([key]) => key !== 'name' && key !== 'parent_region_id')
-    .map(([key, value]) => [key.trim().replace(/[:-]/g, '_'), value]),
-);
+const getPapiRowData = (papiData, rowCount) => {
+  const papiRowData = papiData.threads[0].regions[rowCount];
+  // console.log({ papiRowData });
+
+  if (!papiRowData) {
+    return {};
+  }
+  
+  const regionName = Object.keys(papiRowData)[0];
+
+  return Object.fromEntries(
+    Object.entries(papiRowData[regionName])
+      .filter(([key]) => key !== 'name' && key !== 'parent_region_id')
+      .map(([key, value]) => [key.trim().replace(/[:-]/g, '_'), value]),
+  );
+}

@@ -20,12 +20,13 @@ void benchmark(const std::string type_name, const int num_qubits, const int num_
   for (unsigned control_qubit = 0; control_qubit < num_qubits; control_qubit++) {
     for (unsigned target_qubit = 0; target_qubit < num_qubits; target_qubit++) {
       iqs::QubitRegister<Type> qubit_register(num_qubits, "++++");
+      std::string region_name = "computation_" + type_name + "_target_" + std::to_string(control_qubit) + "_control_" + std::to_string(target_qubit);
 
       // MPI barrier and start the timer.
       iqs::mpi::StateBarrier();
       gettimeofday(&time, (struct timezone*)0);
       start = time.tv_sec + time.tv_usec * 1.0e-6;
-      papi_retval = PAPI_hl_region_begin("computation");
+      papi_retval = PAPI_hl_region_begin(region_name.c_str());
       if (papi_retval != PAPI_OK) {
         std::cout << "PAPI start call was failed";
       }
@@ -37,7 +38,7 @@ void benchmark(const std::string type_name, const int num_qubits, const int num_
         }
       }
 
-      papi_retval = PAPI_hl_region_end("computation");
+      papi_retval = PAPI_hl_region_end(region_name.c_str());
       if (papi_retval != PAPI_OK) {
         std::cout << "PAPI end call was failed";
       }
