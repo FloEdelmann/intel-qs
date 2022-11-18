@@ -66,8 +66,9 @@ int main(int argc, char **argv) {
   int my_rank = env.GetStateRank();
   int num_ranks = env.GetStateSize();
 
-  int num_qubits = 10;
-  int num_repetitions = 3;
+  assert(argc == 3);
+  int num_qubits = std::atoi(argv[1]);
+  int num_repetitions = std::atoi(argv[2]);
 
   cout.precision(std::numeric_limits<float>::max_digits10);
 

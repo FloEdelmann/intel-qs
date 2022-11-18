@@ -24,7 +24,10 @@ const papiEvents = {
 
 await mkdir(outputDirectory, { recursive: true });
 
-const childProcess = spawn('./bin/single_node_performance.exe', {
+const numQubits = 10;
+const numRepetitions = 3;
+
+const childProcess = spawn(`./bin/single_node_performance.exe ${numQubits} ${numRepetitions}`, {
   cwd: workingDirectory,
   env: {
     ...process.env,
@@ -74,12 +77,30 @@ const getPapiRowData = (papiData, rowCount) => {
   if (!papiRowData) {
     return {};
   }
-  
-  const regionName = Object.keys(papiRowData)[0];
 
-  return Object.fromEntries(
-    Object.entries(papiRowData[regionName])
-      .filter(([key]) => key !== 'name' && key !== 'parent_region_id')
-      .map(([key, value]) => [key.trim().replace(/[:-]/g, '_'), value]),
-  );
+  let regionName;
+  let entries;
+
+  if ('name' in papiRowData) {
+    // new format
+    regionName = papiRowData.name;
+    entries = Object.entries(papiRowData);
+
+    // console.log('new format', { regionName, entries });
+  }
+  else {
+    // old format
+    regionName = Object.keys(papiRowData)[0];
+    entries = Object.entries(papiRowData[regionName]);
+
+    // console.log('old format', { regionName, entries });
+  }
+
+  const filteredEntries = entries.filter(([key]) => key !== 'name' && key !== 'parent_region_id');
+  // console.log({ filteredEntries });
+
+  const mappedEntries = filteredEntries.map(([key, value]) => [key.trim().replace(/[:-]/g, '_'), value]);
+  // console.log({ mappedEntries });
+
+  return Object.fromEntries(mappedEntries);
 }
