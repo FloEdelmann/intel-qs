@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
   std::cout << "type, control_qubit, target_qubit, time_in_sec, l2_norm\n";
 
-  benchmark<ComplexSP>(        "float32es5", num_qubits, num_repetitions);
+  benchmark<ComplexSP>(        "float32es8", num_qubits, num_repetitions);
   benchmark<ComplexPosit24es0>("posit24es0", num_qubits, num_repetitions);
   benchmark<ComplexPosit24es1>("posit24es1", num_qubits, num_repetitions);
   benchmark<ComplexPosit24es2>("posit24es2", num_qubits, num_repetitions);
