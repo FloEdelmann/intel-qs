@@ -24,7 +24,7 @@ const papiEvents = {
 
 await mkdir(outputDirectory, { recursive: true });
 
-const numQubits = 10;
+const numQubits = 30;
 const numRepetitions = 3;
 
 const childProcess = spawn(`./bin/single_node_performance.exe ${numQubits} ${numRepetitions}`, {

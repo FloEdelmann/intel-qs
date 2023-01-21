@@ -5,6 +5,10 @@ from plotnine import *
 
 # read dataset
 data = pandas.read_csv('./output/2022-11-23_20-39-53_single_node_performance/single_node_performance_with_papi.csv')
+num_qubits = 25
+# data = pandas.read_csv('./output/2022-11-18_14-44-06_single_node_performance/single_node_performance_with_papi.csv')
+# num_qubits = 30
+
 grouped = data.groupby(data.type)
 print(grouped.head())
 
@@ -17,7 +21,7 @@ aggregated = grouped.aggregate({
   'PAPI_L3_TCM': ['mean', 'median', 'std', 'min', 'max'],
 })
 
-output_directory = '../../master-thesis/Bilder/'
+output_prefix = '../../master-thesis/Bilder/result_'+str(num_qubits)+'x'+str(num_qubits)+'_'
 
 def format_number(x):
   if x == 0:
@@ -113,8 +117,8 @@ def plot_single_node_performance(property, title, filename, bidirectional_color_
       strip_background=element_text(color='white'),
     ))
 
-  plot.save(output_directory + filename + '.png', dpi=300, limitsize=False)
-  # plot.save(output_directory + filename + '.pdf', limitsize=False)
+  plot.save(output_prefix + filename + '.png', dpi=300, limitsize=False)
+  # plot.save(output_prefix + filename + '.pdf', limitsize=False)
 
 def plot_single_node_performance_aggregated(property, title, filename):
   print(property)
@@ -145,8 +149,8 @@ def plot_single_node_performance_aggregated(property, title, filename):
       text=element_text(family='TeX Gyre Schola', size=25),
     ))
 
-  plot.save(output_directory + filename + '.png', dpi=300, limitsize=False)
-  # plot.save(output_directory + filename + '.pdf', limitsize=False)
+  plot.save(output_prefix + filename + '.png', dpi=300, limitsize=False)
+  # plot.save(output_prefix + filename + '.pdf', limitsize=False)
 
 def plot_single_node_cache_misses(filename):
   print('Cache misses')
@@ -184,18 +188,18 @@ def plot_single_node_cache_misses(filename):
       strip_background=element_text(color='white'),
     ))
 
-  plot.save(output_directory + filename + '.png', dpi=300, limitsize=False)
-  # plot.save(output_directory + filename + '.pdf', limitsize=False)
+  plot.save(output_prefix + filename + '.png', dpi=300, limitsize=False)
+  # plot.save(output_prefix + filename + '.pdf', limitsize=False)
 
-plot_single_node_performance('time_in_sec', 'Time (seconds)', 'plot_single_node_time')
-plot_single_node_performance('cycles', 'CPU cycles', 'plot_single_node_cycles')
-plot_single_node_performance('PAPI_L1_TCM', 'Level 1 cache misses', 'plot_single_node_l1_misses')
-plot_single_node_performance('PAPI_L2_TCM', 'Level 2 cache misses', 'plot_single_node_l2_misses')
-plot_single_node_performance('PAPI_L3_TCM', 'Level 3 cache misses', 'plot_single_node_l3_misses')
-plot_single_node_performance('l2_norm', 'L2 norm', 'plot_single_node_norm', True)
+plot_single_node_performance('time_in_sec', 'Time (seconds)', 'heatmap_time')
+plot_single_node_performance('cycles', 'CPU cycles', 'heatmap_cycles')
+plot_single_node_performance('PAPI_L1_TCM', 'Level 1 cache misses', 'heatmap_l1_misses')
+plot_single_node_performance('PAPI_L2_TCM', 'Level 2 cache misses', 'heatmap_l2_misses')
+plot_single_node_performance('PAPI_L3_TCM', 'Level 3 cache misses', 'heatmap_l3_misses')
+plot_single_node_performance('l2_norm', 'L2 norm', 'heatmap_norm', True)
 
-plot_single_node_performance_aggregated('time_in_sec', 'Time (seconds)', 'plot_single_node_time_aggregated')
-plot_single_node_performance_aggregated('cycles', 'CPU cycles', 'plot_single_node_cycles_aggregated')
-plot_single_node_performance_aggregated('l2_norm', 'L2 norm', 'plot_single_node_norm_aggregated')
+plot_single_node_performance_aggregated('time_in_sec', 'Time (seconds)', 'boxplot_time')
+plot_single_node_performance_aggregated('cycles', 'CPU cycles', 'boxplot_cycles')
+plot_single_node_performance_aggregated('l2_norm', 'L2 norm', 'boxplot_norm')
 
-plot_single_node_cache_misses('plot_single_node_cache_misses_aggregated')
+plot_single_node_cache_misses('boxplot_cache_misses')
