@@ -20,7 +20,7 @@ void benchmark(const std::string type_name, const int num_qubits, const int num_
   for (unsigned control_qubit = 0; control_qubit < num_qubits; control_qubit++) {
     for (unsigned target_qubit = 0; target_qubit < num_qubits; target_qubit++) {
       iqs::QubitRegister<Type> qubit_register(num_qubits, "++++");
-      std::string region_name = "computation_" + type_name + "_target_" + std::to_string(control_qubit) + "_control_" + std::to_string(target_qubit);
+      std::string region_name = "computation_" + type_name + "_control_" + std::to_string(control_qubit) + "_target_" + std::to_string(target_qubit);
 
       // MPI barrier and start the timer.
       iqs::mpi::StateBarrier();
